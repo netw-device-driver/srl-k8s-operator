@@ -285,6 +285,7 @@ spec:
                         ddm-events:
                           type: boolean
                         forward-error-correction:
+                          default: disabled
                           enum:
                           - base-r
                           - disabled

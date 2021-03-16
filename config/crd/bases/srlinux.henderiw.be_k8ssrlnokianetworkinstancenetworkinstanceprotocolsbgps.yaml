@@ -242,6 +242,8 @@ spec:
                                   - disabled
                                   - replace
                                   type: string
+                              required:
+                              - mode
                               type: object
                             replace-peer-as:
                               type: boolean
@@ -491,6 +493,8 @@ spec:
                                     - timers
                                     - update
                                     type: string
+                                required:
+                                - name
                                 type: object
                               type: array
                           type: object
@@ -644,6 +648,8 @@ spec:
                                   - disabled
                                   - replace
                                   type: string
+                              required:
+                              - mode
                               type: object
                             replace-peer-as:
                               type: boolean
@@ -889,6 +895,8 @@ spec:
                                     - timers
                                     - update
                                     type: string
+                                required:
+                                - name
                                 type: object
                               type: array
                           type: object
@@ -989,6 +997,8 @@ spec:
                               - timers
                               - update
                               type: string
+                          required:
+                          - name
                           type: object
                         type: array
                     type: object

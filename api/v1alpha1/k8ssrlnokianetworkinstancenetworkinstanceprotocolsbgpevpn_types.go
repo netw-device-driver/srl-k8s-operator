@@ -64,34 +64,32 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesRout
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes struct {
-	BridgeTable *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
 	RouteTable  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
+	BridgeTable *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=8
-	// +kubebuilder:default:=1
-	Ecmp *uint8 `json:"ecmp,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=`vxlan`
-	// +kubebuilder:default:=vxlan
-	EncapsulationType *string `json:"encapsulation-type"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	Evi            *uint32                                                                  `json:"evi"`
-	Routes         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
-	VxlanInterface *string                                                                  `json:"vxlan-interface,omitempty"`
-	Id             *string                                                                  `json:"id"`
-	// +kubebuilder:validation:Optional
+	VxlanInterface *string `json:"vxlan-interface,omitempty"`
+	Id             *string `json:"id"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state"`
+	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	// +kubebuilder:default:=0
 	DefaultAdminTag *uint32 `json:"default-admin-tag,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8
+	// +kubebuilder:default:=1
+	Ecmp *uint8 `json:"ecmp,omitempty"`
+	// +kubebuilder:validation:Enum=`vxlan`
+	// +kubebuilder:default:=vxlan
+	EncapsulationType *string `json:"encapsulation-type,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Evi    *uint32                                                                  `json:"evi"`
+	Routes *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn struct

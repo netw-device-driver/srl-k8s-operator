@@ -67,13 +67,13 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstance struct {
-	RouteTarget *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Id                 *uint8                                                                              `json:"id"`
 	ExportPolicy       *string                                                                             `json:"export-policy,omitempty"`
 	ImportPolicy       *string                                                                             `json:"import-policy,omitempty"`
 	RouteDistinguisher *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
+	RouteTarget        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn struct

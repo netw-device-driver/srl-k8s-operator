@@ -211,6 +211,8 @@ spec:
                                         - dynamic
                                         - static
                                         type: string
+                                    required:
+                                    - route-type
                                     type: object
                                   type: array
                               type: object
@@ -234,6 +236,8 @@ spec:
                                         - evpn
                                         - static
                                         type: string
+                                    required:
+                                    - route-type
                                     type: object
                                   type: array
                               type: object
@@ -498,6 +502,8 @@ spec:
                                         - dynamic
                                         - static
                                         type: string
+                                    required:
+                                    - route-type
                                     type: object
                                   type: array
                               type: object
@@ -521,6 +527,8 @@ spec:
                                         - evpn
                                         - static
                                         type: string
+                                    required:
+                                    - route-type
                                     type: object
                                   type: array
                               type: object

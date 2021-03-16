@@ -50,13 +50,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceFai
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTracePacket struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTracePacket struct {
-	Detail *string `json:"detail,omitempty"`
-	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`drop`;`egress`;`in-and-egress`;`ingress`
-	Modifier *string `json:"modifier"`
-	// +kubebuilder:validation:Optional
+	Modifier *string `json:"modifier,omitempty"`
 	// +kubebuilder:validation:Enum=`all`;`dbdescr`;`hello`;`ls-ack`;`ls-request`;`ls-update`
-	Type *string `json:"type"`
+	Type   *string `json:"type,omitempty"`
+	Detail *string `json:"detail,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTrace struct
@@ -73,52 +71,49 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceTra
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterface struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterface struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=10
-	HelloInterval *uint32 `json:"hello-interval,omitempty"`
+	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceFailureDetection `json:"failure-detection,omitempty"`
+	// +kubebuilder:validation:Enum=`all`;`except-own-rtrlsa`;`except-own-rtrlsa-and-defaults`;`none`
+	// +kubebuilder:default:=none
+	LsaFilterOut *string `json:"lsa-filter-out,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	// +kubebuilder:default:=5
 	RetransmitInterval *uint32 `json:"retransmit-interval,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState       *string                                                                                   `json:"admin-state"`
-	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceFailureDetection `json:"failure-detection,omitempty"`
-	// +kubebuilder:validation:Minimum=512
-	// +kubebuilder:validation:Maximum=9486
-	Mtu     *uint32 `json:"mtu,omitempty"`
-	Passive *bool   `json:"passive,omitempty"`
-	// +kubebuilder:default:=true
-	AdvertiseRouterCapability *bool                                                                                   `json:"advertise-router-capability,omitempty"`
-	Authentication            *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceAuthentication `json:"authentication,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=`all`;`except-own-rtrlsa`;`except-own-rtrlsa-and-defaults`;`none`
-	// +kubebuilder:default:=none
-	LsaFilterOut *string `json:"lsa-filter-out"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=1
-	Priority *uint16 `json:"priority,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	Metric       *uint16                                                                               `json:"metric,omitempty"`
-	TraceOptions *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceTraceOptions `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	// +kubebuilder:default:=1
-	TransitDelay  *uint32 `json:"transit-delay,omitempty"`
-	InterfaceName *string `json:"interface-name"`
-	// +kubebuilder:default:=true
-	AdvertiseSubnet *bool `json:"advertise-subnet,omitempty"`
+	TransitDelay   *uint32                                                                                 `json:"transit-delay,omitempty"`
+	Authentication *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceAuthentication `json:"authentication,omitempty"`
 	// +kubebuilder:validation:Minimum=2
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=40
 	DeadInterval *uint32 `json:"dead-interval,omitempty"`
-	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=512
+	// +kubebuilder:validation:Maximum=9486
+	Mtu *uint32 `json:"mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=1
+	Priority *uint16 `json:"priority,omitempty"`
+	// +kubebuilder:default:=true
+	AdvertiseRouterCapability *bool `json:"advertise-router-capability,omitempty"`
+	// +kubebuilder:default:=true
+	AdvertiseSubnet *bool `json:"advertise-subnet,omitempty"`
 	// +kubebuilder:validation:Enum=`broadcast`;`point-to-point`
-	InterfaceType *string `json:"interface-type"`
+	InterfaceType *string `json:"interface-type,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	Metric        *uint16 `json:"metric,omitempty"`
+	Passive       *bool   `json:"passive,omitempty"`
+	InterfaceName *string `json:"interface-name"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default:=10
+	HelloInterval *uint32                                                                               `json:"hello-interval,omitempty"`
+	TraceOptions  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterfaceTraceOptions `json:"trace-options,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaNssaAreaRange struct
@@ -149,14 +144,19 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaNssa struct 
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaStub struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaStub struct {
-	Summaries *bool `json:"summaries,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	DefaultMetric *uint16 `json:"default-metric,omitempty"`
+	Summaries     *bool   `json:"summaries,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceArea struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceArea struct {
+	// +kubebuilder:default:=false
+	BgpLsExclude *bool                                                                       `json:"bgp-ls-exclude,omitempty"`
+	Nssa         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaNssa        `json:"nssa,omitempty"`
+	Stub         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaStub        `json:"stub,omitempty"`
+	Interface    []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterface `json:"interface,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	// +kubebuilder:validation:Pattern=`[0-9\.]*`
@@ -167,11 +167,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceArea struct {
 	AreaRange                 []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaAreaRange `json:"area-range,omitempty"`
 	BlackholeAggregate        *bool                                                                       `json:"blackhole-aggregate,omitempty"`
 	ExportPolicy              *string                                                                     `json:"export-policy,omitempty"`
-	Nssa                      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaNssa        `json:"nssa,omitempty"`
-	Stub                      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaStub        `json:"stub,omitempty"`
-	// +kubebuilder:default:=false
-	BgpLsExclude *bool                                                                       `json:"bgp-ls-exclude,omitempty"`
-	Interface    []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAreaInterface `json:"interface,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAsbr struct
@@ -236,6 +231,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverloadRtrAdvLs
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverload struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverload struct {
 	// +kubebuilder:default:=false
+	OverloadIncludeExt2 *bool `json:"overload-include-ext-2,omitempty"`
+	// +kubebuilder:default:=false
 	OverloadIncludeExtStub *bool                                                                              `json:"overload-include-ext-stub,omitempty"`
 	OverloadOnBoot         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverloadOverloadOnBoot `json:"overload-on-boot,omitempty"`
 	RtrAdvLsaLimit         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverloadRtrAdvLsaLimit `json:"rtr-adv-lsa-limit,omitempty"`
@@ -243,18 +240,16 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverload struct 
 	Active *bool `json:"active,omitempty"`
 	// +kubebuilder:default:=false
 	OverloadIncludeExt1 *bool `json:"overload-include-ext-1,omitempty"`
-	// +kubebuilder:default:=false
-	OverloadIncludeExt2 *bool `json:"overload-include-ext-2,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTeDatabaseInstallBgpLs struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTeDatabaseInstallBgpLs struct {
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	BgpLsIdentifier *uint32 `json:"bgp-ls-identifier,omitempty"`
-	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=-1
 	IgpIdentifier *uint64 `json:"igp-identifier,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	BgpLsIdentifier *uint32 `json:"bgp-ls-identifier,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTeDatabaseInstall struct
@@ -299,6 +294,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimers struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
 	// +kubebuilder:default:=1000
+	RedistributeDelay *uint32                                                                   `json:"redistribute-delay,omitempty"`
+	SpfWait           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimersSpfWait `json:"spf-wait,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1000
+	// +kubebuilder:default:=1000
 	IncrementalSpfWait *uint32 `json:"incremental-spf-wait,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
@@ -309,11 +309,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimers struct {
 	// +kubebuilder:default:=1000
 	LsaArrival  *uint32                                                                       `json:"lsa-arrival,omitempty"`
 	LsaGenerate *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimersLsaGenerate `json:"lsa-generate,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=1000
-	// +kubebuilder:default:=1000
-	RedistributeDelay *uint32                                                                   `json:"redistribute-delay,omitempty"`
-	SpfWait           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimersSpfWait `json:"spf-wait,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptionsTraceLsdb struct
@@ -324,20 +319,17 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptionsTrac
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	RouterId *string `json:"router-id,omitempty"`
-	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`all`;`external`;`inter-area-prefix`;`inter-area-router`;`intra-area-prefix`;`network`;`nssa`;`opaque`;`router`;`summary`
-	Type *string `json:"type"`
+	Type *string `json:"type,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptionsTracePacket struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptionsTracePacket struct {
 	Detail *string `json:"detail,omitempty"`
-	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`drop`;`egress`;`in-and-egress`;`ingress`
-	Modifier *string `json:"modifier"`
-	// +kubebuilder:validation:Optional
+	Modifier *string `json:"modifier,omitempty"`
 	// +kubebuilder:validation:Enum=`all`;`dbdescr`;`hello`;`ls-ack`;`ls-request`;`ls-update`
-	Type *string `json:"type"`
+	Type *string `json:"type,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptionsTraceRoutes struct
@@ -375,61 +367,59 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptions str
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTrafficEngineering struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTrafficEngineering struct {
-	// +kubebuilder:default:=false
-	Advertisement *bool `json:"advertisement,omitempty"`
 	// +kubebuilder:default:=true
 	LegacyLinkAttributeAdvertisement *bool `json:"legacy-link-attribute-advertisement,omitempty"`
+	// +kubebuilder:default:=false
+	Advertisement *bool `json:"advertisement,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstance struct {
-	ExportLimit *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceExportLimit `json:"export-limit,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=8000000000
-	// +kubebuilder:default:=400000000
-	ReferenceBandwidth *uint64                                                            `json:"reference-bandwidth,omitempty"`
-	Area               []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceArea `json:"area,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	InstanceId *uint32 `json:"instance-id,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=64
-	// +kubebuilder:default:=1
-	MaxEcmpPaths *uint8                                                               `json:"max-ecmp-paths,omitempty"`
-	Overload     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverload `json:"overload,omitempty"`
-	Timers       *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimers   `json:"timers,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string `json:"admin-state"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=`area`;`as`;`false`;`link`
-	AdvertiseRouterCapability *string                                                                     `json:"advertise-router-capability"`
-	GracefulRestart           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceGracefulRestart `json:"graceful-restart,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=10
-	Preference         *uint8                                                                         `json:"preference,omitempty"`
-	TeDatabaseInstall  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTeDatabaseInstall  `json:"te-database-install,omitempty"`
-	TraceOptions       *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptions       `json:"trace-options,omitempty"`
-	TrafficEngineering *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
-	AddressFamily      *string                                                                        `json:"address-family,omitempty"`
-	Asbr               *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAsbr               `json:"asbr,omitempty"`
-	ExportPolicy       *string                                                                        `json:"export-policy,omitempty"`
-	ExternalDbOverflow *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceExternalDbOverflow `json:"external-db-overflow,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=150
 	ExternalPreference *uint8 `json:"external-preference,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=10
+	Preference    *uint8                                                             `json:"preference,omitempty"`
+	Timers        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTimers `json:"timers,omitempty"`
+	Version       *string                                                            `json:"version"`
+	AddressFamily *string                                                            `json:"address-family,omitempty"`
+	// +kubebuilder:validation:Enum=`area`;`as`;`false`;`link`
+	AdvertiseRouterCapability *string `json:"advertise-router-capability,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	InstanceId         *uint32                                                                        `json:"instance-id,omitempty"`
+	Overload           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceOverload           `json:"overload,omitempty"`
+	TraceOptions       *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTraceOptions       `json:"trace-options,omitempty"`
+	ExportLimit        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceExportLimit        `json:"export-limit,omitempty"`
+	ExportPolicy       *string                                                                        `json:"export-policy,omitempty"`
+	Area               []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceArea             `json:"area,omitempty"`
+	TrafficEngineering *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
+	Asbr               *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceAsbr               `json:"asbr,omitempty"`
+	ExternalDbOverflow *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceExternalDbOverflow `json:"external-db-overflow,omitempty"`
+	GracefulRestart    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceGracefulRestart    `json:"graceful-restart,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +kubebuilder:default:=1
+	MaxEcmpPaths *uint8 `json:"max-ecmp-paths,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8000000000
+	// +kubebuilder:default:=400000000
+	ReferenceBandwidth *uint64 `json:"reference-bandwidth,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	RouterId *string `json:"router-id,omitempty"`
-	Version  *string `json:"version"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState        *string                                                                       `json:"admin-state,omitempty"`
+	TeDatabaseInstall *SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfInstanceTeDatabaseInstall `json:"te-database-install,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsOspf struct
