@@ -29,12 +29,12 @@ const (
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator struct
 type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AsNumber *uint32 `json:"as-number,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	Address *string `json:"address,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	AsNumber *uint32 `json:"as-number,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities struct
@@ -49,9 +49,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities struc
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct
 type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
-	Aggregator   *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
-	Communities  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
-	GenerateIcmp *bool                                                                  `json:"generate-icmp,omitempty"`
+	GenerateIcmp *bool `json:"generate-icmp,omitempty"`
 	// +kubebuilder:default:=false
 	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
@@ -61,7 +59,9 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state"`
+	AdminState  *string                                                                `json:"admin-state"`
+	Aggregator  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
+	Communities *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes struct

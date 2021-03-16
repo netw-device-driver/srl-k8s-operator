@@ -4828,7 +4828,7 @@ metadata:
   name: srl-k8s-operator-manager-role
 rules:
 - apiGroups:
-  - fsc.henderiw.be
+  - ndd.henderiw.be
   resources:
   - networknodes
   verbs:
@@ -4916,7 +4916,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupses
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups
   verbs:
   - create
   - delete
@@ -4928,13 +4928,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupses/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupses/status
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups/status
   verbs:
   - get
   - patch
@@ -5020,7 +5020,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsises
   verbs:
   - create
   - delete
@@ -5032,13 +5032,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsises/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises/status
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsises/status
   verbs:
   - get
   - patch

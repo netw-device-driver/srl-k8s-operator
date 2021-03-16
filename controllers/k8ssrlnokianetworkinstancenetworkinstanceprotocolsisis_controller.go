@@ -31,7 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 
-	fscv1 "github.com/fsc-demo-wim/fsc-proxy/api/v1"
+	nddv1 "github.com/netw-device-driver/netw-device-controller/api/v1"
+
 	"github.com/netw-device-driver/netwdevpb"
 	srlinuxv1alpha1 "github.com/srl-wim/srl-k8s-operator/api/v1alpha1"
 	"github.com/srl-wim/srl-k8s-operator/pkg/natssrl"
@@ -46,10 +47,10 @@ type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisReconciler struct {
 	Ctx    context.Context
 }
 
-// +kubebuilder:rbac:groups=fsc.henderiw.be,resources=networknodes,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises/finalizers,verbs=update
+// +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networknodes,verbs=get;list;watch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolsises,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolsises/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolsises/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -213,7 +214,7 @@ func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisReconciler) FindT
 		client.MatchingLabels{},
 	}
 
-	nn := &fscv1.NetworkNodeList{}
+	nn := &nddv1.NetworkNodeList{}
 	if err := r.List(r.Ctx, nn, selectors...); err != nil {
 		r.Log.Error(err, "Failed to get NetworkNode List ")
 		return nil, err

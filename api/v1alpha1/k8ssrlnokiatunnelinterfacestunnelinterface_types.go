@@ -83,10 +83,10 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressInnerEthernetHea
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress struct {
-	DestinationGroups   *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups   `json:"destination-groups,omitempty"`
 	InnerEthernetHeader *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
 	// +kubebuilder:default:=use-system-ipv4-address
-	SourceIp *string `json:"source-ip,omitempty"`
+	SourceIp          *string                                                                       `json:"source-ip,omitempty"`
+	DestinationGroups *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups `json:"destination-groups,omitempty"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress struct

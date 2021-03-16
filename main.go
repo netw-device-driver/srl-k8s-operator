@@ -33,7 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	fscv1 "github.com/fsc-demo-wim/fsc-proxy/api/v1"
+	nddv1 "github.com/netw-device-driver/netw-device-controller/api/v1"
 	srlinuxv1alpha1 "github.com/srl-wim/srl-k8s-operator/api/v1alpha1"
 	"github.com/srl-wim/srl-k8s-operator/controllers"
 	// +kubebuilder:scaffold:imports
@@ -51,7 +51,7 @@ func init() {
 
 	utilruntime.Must(srlinuxv1alpha1.AddToScheme(scheme))
 
-	utilruntime.Must(fscv1.AddToScheme(scheme))
+	utilruntime.Must(nddv1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
