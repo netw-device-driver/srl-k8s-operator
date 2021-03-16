@@ -70,7 +70,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes str
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct {
-	Id *string `json:"id"`
+	VxlanInterface *string `json:"vxlan-interface,omitempty"`
+	Id             *string `json:"id"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
@@ -89,9 +90,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct {
 	EncapsulationType *string `json:"encapsulation-type"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
-	Evi            *uint32                                                                  `json:"evi"`
-	Routes         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
-	VxlanInterface *string                                                                  `json:"vxlan-interface,omitempty"`
+	Evi    *uint32                                                                  `json:"evi"`
+	Routes *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn struct

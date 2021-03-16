@@ -37,11 +37,11 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget st
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct {
-	RouteDistinguisher *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
-	RouteTarget        *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
-	Id *uint8 `json:"id"`
+	Id                 *uint8                                                                           `json:"id"`
+	RouteDistinguisher *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
+	RouteTarget        *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpn struct
@@ -70,11 +70,11 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlg struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlg struct {
+	Capabilities *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=32767
-	PreferenceValue *uint32                                                                                                                                 `json:"preference-value,omitempty"`
-	Capabilities    *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
+	PreferenceValue *uint32 `json:"preference-value,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithm struct
@@ -120,12 +120,6 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct {
-	Interface *string `json:"interface,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=`all-active`;`single-active`
-	// +kubebuilder:default:=all-active
-	MultiHomingMode *string                                                                                           `json:"multi-homing-mode"`
-	Routes          *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentRoutes `json:"routes,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -138,7 +132,13 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 	DfElection *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection `json:"df-election,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
+	Esi       *string `json:"esi,omitempty"`
+	Interface *string `json:"interface,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Enum=`all-active`;`single-active`
+	// +kubebuilder:default:=all-active
+	MultiHomingMode *string                                                                                           `json:"multi-homing-mode"`
+	Routes          *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentRoutes `json:"routes,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance struct

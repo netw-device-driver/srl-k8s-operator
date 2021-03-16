@@ -4283,7 +4283,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceaggregateroutess
+  - k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes
   verbs:
   - create
   - delete
@@ -4295,13 +4295,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceaggregateroutess/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceaggregateroutess/status
+  - k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes/status
   verbs:
   - get
   - patch
@@ -4309,7 +4309,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupss
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups
   verbs:
   - create
   - delete
@@ -4321,13 +4321,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupss/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupss/status
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups/status
   verbs:
   - get
   - patch
@@ -4413,7 +4413,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisiss
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis
   verbs:
   - create
   - delete
@@ -4425,13 +4425,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisiss/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisiss/status
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis/status
   verbs:
   - get
   - patch
@@ -4517,7 +4517,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancestaticroutess
+  - k8ssrlnokianetworkinstancenetworkinstancestaticroutes
   verbs:
   - create
   - delete
@@ -4529,13 +4529,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancestaticroutess/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstancestaticroutes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancestaticroutess/status
+  - k8ssrlnokianetworkinstancenetworkinstancestaticroutes/status
   verbs:
   - get
   - patch

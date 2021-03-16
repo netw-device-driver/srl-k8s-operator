@@ -30,6 +30,11 @@ const (
 // SrlNokiaNetworkInstanceNetworkInstanceStaticRoutesRoute struct
 type SrlNokiaNetworkInstanceNetworkInstanceStaticRoutesRoute struct {
 	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	// +kubebuilder:default:=1
+	Metric       *uint32 `json:"metric,omitempty"`
+	NextHopGroup *string `json:"next-hop-group,omitempty"`
+	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=5
 	Preference *uint8 `json:"preference,omitempty"`
@@ -41,11 +46,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceStaticRoutesRoute struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	// +kubebuilder:default:=1
-	Metric       *uint32 `json:"metric,omitempty"`
-	NextHopGroup *string `json:"next-hop-group,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceStaticRoutes struct

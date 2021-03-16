@@ -40,24 +40,21 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroup
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination struct {
-	InnerEthernetHeader *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16777215
-	Vni *uint32 `json:"vni,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state"`
+	AdminState          *string                                                                                                          `json:"admin-state"`
+	InnerEthernetHeader *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16777215
+	Vni *uint32 `json:"vni,omitempty"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -68,6 +65,9 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroup
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                                         `json:"admin-state"`
 	Destination []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups struct
@@ -98,23 +98,23 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress struct {
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct {
+	Type *string `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                                           `json:"index"`
 	BridgeTable *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress      `json:"egress,omitempty"`
 	Ingress     *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress     `json:"ingress,omitempty"`
-	Type        *string                                                           `json:"type"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterface struct
 type SrlNokiaTunnelInterfacesTunnelInterface struct {
-	VxlanInterface []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface `json:"vxlan-interface,omitempty"`
 	// +kubebuilder:validation:MinLength=6
 	// +kubebuilder:validation:MaxLength=8
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(vxlan(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9]))`
-	Name *string `json:"name"`
+	Name           *string                                                  `json:"name"`
+	VxlanInterface []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface `json:"vxlan-interface,omitempty"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceSpec struct

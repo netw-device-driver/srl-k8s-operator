@@ -37,14 +37,14 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupBlackhole struct {
 type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetectionEnableBfd struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16384
+	LocalDiscriminator *uint32 `json:"local-discriminator,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16384
 	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16384
-	LocalDiscriminator *uint32 `json:"local-discriminator,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetection struct
