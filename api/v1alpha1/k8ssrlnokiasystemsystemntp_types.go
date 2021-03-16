@@ -41,10 +41,10 @@ type SrlNokiaSystemSystemNtpServer struct {
 
 // SrlNokiaSystemSystemNtp struct
 type SrlNokiaSystemSystemNtp struct {
+	Server []*SrlNokiaSystemSystemNtpServer `json:"server,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	AdminState      *string                          `json:"admin-state,omitempty"`
-	NetworkInstance *string                          `json:"network-instance"`
-	Server          []*SrlNokiaSystemSystemNtpServer `json:"server,omitempty"`
+	AdminState      *string `json:"admin-state,omitempty"`
+	NetworkInstance *string `json:"network-instance"`
 }
 
 // SrlNokiaSystemSystemNtpSpec struct

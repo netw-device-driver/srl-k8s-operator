@@ -54,6 +54,7 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroup
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct {
+	Destination []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
 	Esi *string `json:"esi,omitempty"`
@@ -64,8 +65,7 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroup
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState  *string                                                                                         `json:"admin-state,omitempty"`
-	Destination []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups struct
@@ -96,13 +96,13 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress struct {
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct {
+	Type *string `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                                           `json:"index"`
 	BridgeTable *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress      `json:"egress,omitempty"`
 	Ingress     *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress     `json:"ingress,omitempty"`
-	Type        *string                                                           `json:"type"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterface struct

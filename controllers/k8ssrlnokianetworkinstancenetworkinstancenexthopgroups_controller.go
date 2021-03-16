@@ -107,7 +107,7 @@ func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsReconciler) Recon
 	r.Log.WithValues("Target", *t).Info("Target Info")
 
 	level := int32(2)
-	topic := "srl" + "." + *t + "." + "K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroups" + strcase.UpperCamelCase(o.Name)
+	topic := "ndd" + "." + *t + "." + "K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroups" + strcase.UpperCamelCase(o.Name)
 
 	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 

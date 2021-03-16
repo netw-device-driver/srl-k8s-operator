@@ -107,7 +107,7 @@ func (r *K8sSrlNokiaInterfacesInterfaceReconciler) Reconcile(ctx context.Context
 	r.Log.WithValues("Target", *t).Info("Target Info")
 
 	level := int32(1)
-	topic := "srl" + "." + *t + "." + "K8sSrlNokiaInterfacesInterface" + strcase.UpperCamelCase(o.Name)
+	topic := "ndd" + "." + *t + "." + "K8sSrlNokiaInterfacesInterface" + strcase.UpperCamelCase(o.Name)
 
 	hkeys0 := make([]string, 0)
 	for _, n := range *o.Spec.SrlNokiaInterfacesInterface {

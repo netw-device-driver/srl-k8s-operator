@@ -62,10 +62,10 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities struct {
-	// +kubebuilder:default:=true
-	AcDf *bool `json:"ac-df,omitempty"`
 	// +kubebuilder:default:=false
 	NonRevertive *bool `json:"non-revertive,omitempty"`
+	// +kubebuilder:default:=true
+	AcDf *bool `json:"ac-df,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlg struct
@@ -95,9 +95,9 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection struct {
+	Timers                           *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionTimers    `json:"timers,omitempty"`
 	Algorithm                        *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithm `json:"algorithm,omitempty"`
 	InterfaceStandbySignalingOnNonDf *bool                                                                                                          `json:"interface-standby-signaling-on-non-df,omitempty"`
-	Timers                           *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionTimers    `json:"timers,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentRoutesEthernetSegment struct
@@ -117,9 +117,6 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi       *string `json:"esi,omitempty"`
 	Interface *string `json:"interface,omitempty"`
 	// +kubebuilder:validation:Enum=`all-active`;`single-active`
 	// +kubebuilder:default:=all-active
@@ -134,6 +131,9 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 	// +kubebuilder:default:=disable
 	AdminState *string                                                                                               `json:"admin-state,omitempty"`
 	DfElection *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection `json:"df-election,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance struct
@@ -145,13 +145,13 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers struct {
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=100
-	// +kubebuilder:default:=3
-	ActivationTimer *uint32 `json:"activation-timer,omitempty"`
-	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=6000
 	// +kubebuilder:default:=10
 	BootTimer *uint32 `json:"boot-timer,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +kubebuilder:default:=3
+	ActivationTimer *uint32 `json:"activation-timer,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegments struct

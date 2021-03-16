@@ -64,8 +64,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesRout
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes struct {
-	RouteTable  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
 	BridgeTable *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
+	RouteTable  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct

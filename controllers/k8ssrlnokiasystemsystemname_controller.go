@@ -107,7 +107,7 @@ func (r *K8sSrlNokiaSystemSystemNameReconciler) Reconcile(ctx context.Context, r
 	r.Log.WithValues("Target", *t).Info("Target Info")
 
 	level := int32(2)
-	topic := "srl" + "." + *t + "." + "K8sSrlNokiaSystemSystemName" + strcase.UpperCamelCase(o.Name)
+	topic := "ndd" + "." + *t + "." + "K8sSrlNokiaSystemSystemName" + strcase.UpperCamelCase(o.Name)
 
 	dependencies := make([]string, 0)
 

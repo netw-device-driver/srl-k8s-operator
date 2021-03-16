@@ -107,7 +107,7 @@ func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnReconciler) Rec
 	r.Log.WithValues("Target", *t).Info("Target Info")
 
 	level := int32(3)
-	topic := "srl" + "." + *t + "." + "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn" + strcase.UpperCamelCase(o.Name)
+	topic := "ndd" + "." + *t + "." + "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn" + strcase.UpperCamelCase(o.Name)
 
 	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 

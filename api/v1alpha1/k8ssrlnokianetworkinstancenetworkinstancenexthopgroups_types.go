@@ -54,11 +54,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetec
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop struct
 type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	IpAddress            *string `json:"ip-address,omitempty"`
-	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
 	// +kubebuilder:default:=true
 	Resolve *bool `json:"resolve,omitempty"`
 	// +kubebuilder:validation:Minimum=0
@@ -68,20 +63,25 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop struct {
 	// +kubebuilder:default:=enable
 	AdminState       *string                                                                          `json:"admin-state,omitempty"`
 	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetection `json:"failure-detection,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
+	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	IpAddress            *string `json:"ip-address,omitempty"`
+	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroup struct
 type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroup struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string                                                            `json:"admin-state,omitempty"`
-	Blackhole  *SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupBlackhole `json:"blackhole,omitempty"`
-	Nexthop    []*SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop `json:"nexthop,omitempty"`
+	Nexthop []*SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop `json:"nexthop,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string                                                            `json:"admin-state,omitempty"`
+	Blackhole  *SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupBlackhole `json:"blackhole,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroups struct

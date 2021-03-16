@@ -49,18 +49,18 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities struc
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct
 type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
+	GenerateIcmp *bool `json:"generate-icmp,omitempty"`
+	// +kubebuilder:default:=false
+	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
 	Prefix *string `json:"prefix"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState   *string                                                                `json:"admin-state,omitempty"`
-	Aggregator   *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
-	Communities  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
-	GenerateIcmp *bool                                                                  `json:"generate-icmp,omitempty"`
-	// +kubebuilder:default:=false
-	SummaryOnly *bool `json:"summary-only,omitempty"`
+	AdminState  *string                                                                `json:"admin-state,omitempty"`
+	Aggregator  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
+	Communities *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes struct

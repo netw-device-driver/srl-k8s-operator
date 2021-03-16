@@ -37,10 +37,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAttachedBit stru
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAuthentication struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAuthentication struct {
-	CsnpAuthentication  *bool   `json:"csnp-authentication,omitempty"`
 	HelloAuthentication *bool   `json:"hello-authentication,omitempty"`
 	Keychain            *string `json:"keychain,omitempty"`
 	PsnpAuthentication  *bool   `json:"psnp-authentication,omitempty"`
+	CsnpAuthentication  *bool   `json:"csnp-authentication,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAutoCost struct
@@ -107,11 +107,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv6Uni
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLdpSynchronization struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLdpSynchronization struct {
-	Disable  *string `json:"disable,omitempty"`
-	EndOfLib *bool   `json:"end-of-lib,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	HoldDownTimer *uint16 `json:"hold-down-timer,omitempty"`
+	Disable       *string `json:"disable,omitempty"`
+	EndOfLib      *bool   `json:"end-of-lib,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevelAuthentication struct
@@ -133,6 +133,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevelTi
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevel struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevel struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=127
+	// +kubebuilder:default:=64
+	Priority *uint8                                                                           `json:"priority,omitempty"`
+	Timers   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevelTimers `json:"timers,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	LevelNumber    *uint8                                                                                   `json:"level-number"`
@@ -145,23 +150,18 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevel s
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16777215
 	Metric *uint32 `json:"metric,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=127
-	// +kubebuilder:default:=64
-	Priority *uint8                                                                           `json:"priority,omitempty"`
-	Timers   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevelTimers `json:"timers,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTimers struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTimers struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=100000
-	// +kubebuilder:default:=100
-	LspPacingInterval *uint64 `json:"lsp-pacing-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=10
 	CsnpInterval *uint16 `json:"csnp-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100000
+	// +kubebuilder:default:=100
+	LspPacingInterval *uint64 `json:"lsp-pacing-interval,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTraceOptions struct
@@ -172,24 +172,24 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTraceOp
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterface struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterface struct {
-	// +kubebuilder:validation:Enum=`broadcast`;`point-to-point`
-	CircuitType *string `json:"circuit-type,omitempty"`
 	// +kubebuilder:validation:Enum=`adaptive`;`disable`;`loose`;`strict`
 	// +kubebuilder:default:=disable
-	HelloPadding       *string                                                                                 `json:"hello-padding,omitempty"`
-	Ipv4Unicast        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv4Unicast        `json:"ipv4-unicast,omitempty"`
-	Ipv6Unicast        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv6Unicast        `json:"ipv6-unicast,omitempty"`
-	LdpSynchronization *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLdpSynchronization `json:"ldp-synchronization,omitempty"`
-	// +kubebuilder:default:=false
-	Passive       *bool                                                                       `json:"passive,omitempty"`
-	Timers        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTimers `json:"timers,omitempty"`
-	InterfaceName *string                                                                     `json:"interface-name"`
+	HelloPadding  *string                                                                           `json:"hello-padding,omitempty"`
+	Ipv4Unicast   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv4Unicast  `json:"ipv4-unicast,omitempty"`
+	Ipv6Unicast   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv6Unicast  `json:"ipv6-unicast,omitempty"`
+	Level         []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevel      `json:"level,omitempty"`
+	TraceOptions  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTraceOptions `json:"trace-options,omitempty"`
+	InterfaceName *string                                                                           `json:"interface-name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState     *string                                                                             `json:"admin-state,omitempty"`
 	Authentication *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceAuthentication `json:"authentication,omitempty"`
-	Level          []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevel        `json:"level,omitempty"`
-	TraceOptions   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTraceOptions   `json:"trace-options,omitempty"`
+	// +kubebuilder:validation:Enum=`broadcast`;`point-to-point`
+	CircuitType        *string                                                                                 `json:"circuit-type,omitempty"`
+	LdpSynchronization *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLdpSynchronization `json:"ldp-synchronization,omitempty"`
+	// +kubebuilder:default:=false
+	Passive *bool                                                                       `json:"passive,omitempty"`
+	Timers  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTimers `json:"timers,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv4Unicast struct
@@ -220,10 +220,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLdpSynchronizati
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelAuthentication struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelAuthentication struct {
+	PsnpAuthentication  *bool   `json:"psnp-authentication,omitempty"`
 	CsnpAuthentication  *bool   `json:"csnp-authentication,omitempty"`
 	HelloAuthentication *bool   `json:"hello-authentication,omitempty"`
 	Keychain            *string `json:"keychain,omitempty"`
-	PsnpAuthentication  *bool   `json:"psnp-authentication,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelRoutePreference struct
@@ -244,6 +244,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelTraceOption
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevel struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevel struct {
+	RoutePreference *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelRoutePreference `json:"route-preference,omitempty"`
+	TraceOptions    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelTraceOptions    `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	LevelNumber    *uint8                                                                          `json:"level-number"`
@@ -252,17 +254,15 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevel struct {
 	BgpLsExclude *bool `json:"bgp-ls-exclude,omitempty"`
 	// +kubebuilder:validation:Enum=`narrow`;`wide`
 	// +kubebuilder:default:=wide
-	MetricStyle     *string                                                                          `json:"metric-style,omitempty"`
-	RoutePreference *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelRoutePreference `json:"route-preference,omitempty"`
-	TraceOptions    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelTraceOptions    `json:"trace-options,omitempty"`
+	MetricStyle *string `json:"metric-style,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadImmediate struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadImmediate struct {
 	// +kubebuilder:default:=false
-	SetBit *bool `json:"set-bit,omitempty"`
-	// +kubebuilder:default:=false
 	MaxMetric *bool `json:"max-metric,omitempty"`
+	// +kubebuilder:default:=false
+	SetBit *bool `json:"set-bit,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadOnBoot struct
@@ -276,22 +276,22 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadOnBoot s
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverload struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverload struct {
+	OnBoot *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadOnBoot `json:"on-boot,omitempty"`
 	// +kubebuilder:default:=false
 	AdvertiseExternal *bool `json:"advertise-external,omitempty"`
 	// +kubebuilder:default:=false
 	AdvertiseInterlevel *bool                                                                         `json:"advertise-interlevel,omitempty"`
 	Immediate           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadImmediate `json:"immediate,omitempty"`
-	OnBoot              *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadOnBoot    `json:"on-boot,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstallBgpLs struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstallBgpLs struct {
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	BgpLsIdentifier *uint32 `json:"bgp-ls-identifier,omitempty"`
-	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=-1
 	IgpIdentifier *uint64 `json:"igp-identifier,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	BgpLsIdentifier *uint32 `json:"bgp-ls-identifier,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstall struct
@@ -303,16 +303,16 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstal
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimersLspGeneration struct {
 	// +kubebuilder:validation:Minimum=10
 	// +kubebuilder:validation:Maximum=100000
-	// +kubebuilder:default:=1000
-	SecondWait *uint64 `json:"second-wait,omitempty"`
-	// +kubebuilder:validation:Minimum=10
-	// +kubebuilder:validation:Maximum=100000
 	// +kubebuilder:default:=10
 	InitialWait *uint64 `json:"initial-wait,omitempty"`
 	// +kubebuilder:validation:Minimum=10
 	// +kubebuilder:validation:Maximum=120000
 	// +kubebuilder:default:=5000
 	MaxWait *uint64 `json:"max-wait,omitempty"`
+	// +kubebuilder:validation:Minimum=10
+	// +kubebuilder:validation:Maximum=100000
+	// +kubebuilder:default:=1000
+	SecondWait *uint64 `json:"second-wait,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimersLspRefresh struct
@@ -376,43 +376,43 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTransport struct
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstance struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}`
-	Net      *string                                                              `json:"net,omitempty"`
-	Overload *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverload `json:"overload,omitempty"`
-	// +kubebuilder:default:=false
-	PoiTlv *bool                                                              `json:"poi-tlv,omitempty"`
-	Timers *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimers `json:"timers,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string                                                                 `json:"admin-state,omitempty"`
-	Interface  []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterface `json:"interface,omitempty"`
-	Level      []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevel     `json:"level,omitempty"`
-	// +kubebuilder:validation:Enum=`L1`;`L1L2`;`L2`
-	// +kubebuilder:default:=L2
-	LevelCapability    *string                                                                        `json:"level-capability,omitempty"`
-	LdpSynchronization *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLdpSynchronization `json:"ldp-synchronization,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=64
-	// +kubebuilder:default:=1
-	MaxEcmpPaths                  *uint8                                                                                    `json:"max-ecmp-paths,omitempty"`
-	TeDatabaseInstall             *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstall             `json:"te-database-install,omitempty"`
-	Transport                     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTransport                     `json:"transport,omitempty"`
-	AttachedBit                   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAttachedBit                   `json:"attached-bit,omitempty"`
-	AutoCost                      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAutoCost                      `json:"auto-cost,omitempty"`
-	ExportPolicy                  *string                                                                                   `json:"export-policy,omitempty"`
-	Ipv6Unicast                   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv6Unicast                   `json:"ipv6-unicast,omitempty"`
-	Authentication                *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAuthentication                `json:"authentication,omitempty"`
-	InterLevelPropagationPolicies *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterLevelPropagationPolicies `json:"inter-level-propagation-policies,omitempty"`
-	TraceOptions                  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTraceOptions                  `json:"trace-options,omitempty"`
-	TrafficEngineering            *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTrafficEngineering            `json:"traffic-engineering,omitempty"`
+	TeDatabaseInstall *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstall `json:"te-database-install,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Name            *string                                                                     `json:"name"`
-	GracefulRestart *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceGracefulRestart `json:"graceful-restart,omitempty"`
-	Ipv4Unicast     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv4Unicast     `json:"ipv4-unicast,omitempty"`
+	Name           *string                                                                    `json:"name"`
+	Authentication *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAuthentication `json:"authentication,omitempty"`
+	ExportPolicy   *string                                                                    `json:"export-policy,omitempty"`
+	Overload       *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverload       `json:"overload,omitempty"`
+	// +kubebuilder:validation:Enum=`L1`;`L1L2`;`L2`
+	// +kubebuilder:default:=L2
+	LevelCapability *string `json:"level-capability,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +kubebuilder:default:=1
+	MaxEcmpPaths *uint8 `json:"max-ecmp-paths,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}`
+	Net *string `json:"net,omitempty"`
+	// +kubebuilder:default:=false
+	PoiTlv             *bool                                                                          `json:"poi-tlv,omitempty"`
+	GracefulRestart    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceGracefulRestart    `json:"graceful-restart,omitempty"`
+	Ipv4Unicast        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv4Unicast        `json:"ipv4-unicast,omitempty"`
+	LdpSynchronization *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLdpSynchronization `json:"ldp-synchronization,omitempty"`
+	Level              []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevel            `json:"level,omitempty"`
+	TraceOptions       *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTraceOptions       `json:"trace-options,omitempty"`
+	Transport          *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTransport          `json:"transport,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState                    *string                                                                                   `json:"admin-state,omitempty"`
+	AttachedBit                   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAttachedBit                   `json:"attached-bit,omitempty"`
+	Interface                     []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterface                   `json:"interface,omitempty"`
+	TrafficEngineering            *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTrafficEngineering            `json:"traffic-engineering,omitempty"`
+	AutoCost                      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAutoCost                      `json:"auto-cost,omitempty"`
+	InterLevelPropagationPolicies *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterLevelPropagationPolicies `json:"inter-level-propagation-policies,omitempty"`
+	Ipv6Unicast                   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv6Unicast                   `json:"ipv6-unicast,omitempty"`
+	Timers                        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimers                        `json:"timers,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis struct
