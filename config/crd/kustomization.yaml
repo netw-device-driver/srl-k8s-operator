@@ -17,6 +17,8 @@ resources:
 - bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstancestaticroutes.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokiatunnelinterfacestunnelinterfaces.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemnetworkinstances.yaml
+- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgpevpns.yaml
+- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgpvpns.yaml
 
 # +kubebuilder:scaffold:crdkustomizeresource
 
