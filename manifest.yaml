@@ -4114,6 +4114,224 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
+  name: k8ssrlnokiasystemsystemnetworkinstances.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: K8sSrlNokiaSystemSystemNetworkInstance
+    listKind: K8sSrlNokiaSystemSystemNetworkInstanceList
+    plural: k8ssrlnokiasystemsystemnetworkinstances
+    singular: k8ssrlnokiasystemsystemnetworkinstance
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: K8sSrlNokiaSystemSystemNetworkInstance is the Schema for the K8sSrlNokiaSystemSystemNetworkInstances API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlNokiaSystemSystemNetworkInstanceSpec struct
+            properties:
+              network-instance:
+                description: SrlNokiaSystemSystemNetworkInstance struct
+                properties:
+                  protocols:
+                    description: SrlNokiaSystemSystemNetworkInstanceProtocols struct
+                    properties:
+                      bgp-vpn:
+                        description: SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpn struct
+                        properties:
+                          bgp-instance:
+                            items:
+                              description: SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct
+                              properties:
+                                id:
+                                  maximum: 2
+                                  minimum: 1
+                                  type: integer
+                                route-distinguisher:
+                                  description: SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher struct
+                                  type: object
+                                route-target:
+                                  description: SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget struct
+                                  type: object
+                              required:
+                              - id
+                              type: object
+                            type: array
+                        type: object
+                      evpn:
+                        description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpn struct
+                        properties:
+                          ethernet-segments:
+                            description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegments struct
+                            properties:
+                              bgp-instance:
+                                items:
+                                  description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance struct
+                                  properties:
+                                    ethernet-segment:
+                                      items:
+                                        description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct
+                                        properties:
+                                          admin-state:
+                                            default: disable
+                                            enum:
+                                            - disable
+                                            - enable
+                                            type: string
+                                          df-election:
+                                            description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection struct
+                                            properties:
+                                              algorithm:
+                                                description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithm struct
+                                                properties:
+                                                  default-alg:
+                                                    description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmDefaultAlg struct
+                                                    properties:
+                                                      capabilities:
+                                                        description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmDefaultAlgCapabilities struct
+                                                        properties:
+                                                          ac-df:
+                                                            default: true
+                                                            type: boolean
+                                                        type: object
+                                                    type: object
+                                                  preference-alg:
+                                                    description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlg struct
+                                                    properties:
+                                                      capabilities:
+                                                        description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities struct
+                                                        properties:
+                                                          ac-df:
+                                                            default: true
+                                                            type: boolean
+                                                          non-revertive:
+                                                            default: false
+                                                            type: boolean
+                                                        type: object
+                                                      preference-value:
+                                                        default: 32767
+                                                        format: int32
+                                                        maximum: 65535
+                                                        minimum: 0
+                                                        type: integer
+                                                    type: object
+                                                  type:
+                                                    default: default
+                                                    enum:
+                                                    - default
+                                                    - preference
+                                                    type: string
+                                                type: object
+                                              interface-standby-signaling-on-non-df:
+                                                type: boolean
+                                              timers:
+                                                description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionTimers struct
+                                                properties:
+                                                  activation-timer:
+                                                    format: int32
+                                                    maximum: 100
+                                                    minimum: 0
+                                                    type: integer
+                                                type: object
+                                            type: object
+                                          esi:
+                                            pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}'
+                                            type: string
+                                          interface:
+                                            type: string
+                                          multi-homing-mode:
+                                            default: all-active
+                                            enum:
+                                            - all-active
+                                            - single-active
+                                            type: string
+                                          name:
+                                            maxLength: 255
+                                            minLength: 1
+                                            pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                                            type: string
+                                          routes:
+                                            description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentRoutes struct
+                                            properties:
+                                              ethernet-segment:
+                                                description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentRoutesEthernetSegment struct
+                                                properties:
+                                                  originating-ip:
+                                                    default: use-system-ipv4-address
+                                                    enum:
+                                                    - use-system-ipv4-address
+                                                    type: string
+                                                type: object
+                                              next-hop:
+                                                default: use-system-ipv4-address
+                                                enum:
+                                                - use-system-ipv4-address
+                                                type: string
+                                            type: object
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                  type: object
+                                type: array
+                              timers:
+                                description: SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers struct
+                                properties:
+                                  activation-timer:
+                                    default: 3
+                                    format: int32
+                                    maximum: 100
+                                    minimum: 0
+                                    type: integer
+                                  boot-timer:
+                                    default: 10
+                                    format: int32
+                                    maximum: 6000
+                                    minimum: 0
+                                    type: integer
+                                type: object
+                            type: object
+                        type: object
+                    type: object
+                type: object
+            required:
+            - network-instance
+            type: object
+          status:
+            description: SrlNokiaSystemSystemNetworkInstanceStatus struct
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
   name: k8ssrlnokiasystemsystemntps.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
@@ -4173,6 +4391,169 @@ spec:
             type: object
           status:
             description: SrlNokiaSystemSystemNtpStatus struct
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: k8ssrlnokiatunnelinterfacestunnelinterfaces.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: K8sSrlNokiaTunnelInterfacesTunnelInterface
+    listKind: K8sSrlNokiaTunnelInterfacesTunnelInterfaceList
+    plural: k8ssrlnokiatunnelinterfacestunnelinterfaces
+    singular: k8ssrlnokiatunnelinterfacestunnelinterface
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: K8sSrlNokiaTunnelInterfacesTunnelInterface is the Schema for the K8sSrlNokiaTunnelInterfacesTunnelInterfaces API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlNokiaTunnelInterfacesTunnelInterfaceSpec struct
+            properties:
+              tunnel-interface:
+                items:
+                  description: SrlNokiaTunnelInterfacesTunnelInterface struct
+                  properties:
+                    name:
+                      maxLength: 8
+                      minLength: 6
+                      pattern: (vxlan(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9]))
+                      type: string
+                    vxlan-interface:
+                      items:
+                        description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct
+                        properties:
+                          bridge-table:
+                            description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceBridgeTable struct
+                            type: object
+                          egress:
+                            description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress struct
+                            properties:
+                              destination-groups:
+                                description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups struct
+                                properties:
+                                  group:
+                                    items:
+                                      description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct
+                                      properties:
+                                        admin-state:
+                                          default: enable
+                                          enum:
+                                          - disable
+                                          - enable
+                                          type: string
+                                        destination:
+                                          items:
+                                            description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination struct
+                                            properties:
+                                              admin-state:
+                                                default: enable
+                                                enum:
+                                                - disable
+                                                - enable
+                                                type: string
+                                              index:
+                                                maximum: 65535
+                                                minimum: 0
+                                                type: integer
+                                              inner-ethernet-header:
+                                                description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader struct
+                                                properties:
+                                                  destination-mac:
+                                                    pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                                    type: string
+                                                type: object
+                                              vni:
+                                                format: int32
+                                                maximum: 16777215
+                                                minimum: 1
+                                                type: integer
+                                            required:
+                                            - index
+                                            type: object
+                                          type: array
+                                        esi:
+                                          pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}'
+                                          type: string
+                                        name:
+                                          maxLength: 255
+                                          minLength: 1
+                                          pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                                          type: string
+                                      required:
+                                      - name
+                                      type: object
+                                    type: array
+                                type: object
+                              inner-ethernet-header:
+                                description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressInnerEthernetHeader struct
+                                properties:
+                                  source-mac:
+                                    default: use-system-mac
+                                    type: string
+                                type: object
+                              source-ip:
+                                default: use-system-ipv4-address
+                                type: string
+                            type: object
+                          index:
+                            format: int32
+                            maximum: 99999999
+                            minimum: 0
+                            type: integer
+                          ingress:
+                            description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress struct
+                            properties:
+                              vni:
+                                format: int32
+                                maximum: 16777215
+                                minimum: 1
+                                type: integer
+                            required:
+                            - vni
+                            type: object
+                          type:
+                            type: string
+                        required:
+                        - index
+                        - type
+                        type: object
+                      type: array
+                  required:
+                  - name
+                  type: object
+                type: array
+            required:
+            - tunnel-interface
+            type: object
+          status:
+            description: SrlNokiaTunnelInterfacesTunnelInterfaceStatus struct
             type: object
         type: object
     served: true
