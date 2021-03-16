@@ -37,14 +37,14 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupBlackhole struct {
 type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetectionEnableBfd struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16384
-	LocalDiscriminator *uint32 `json:"local-discriminator,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16384
 	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16384
+	LocalDiscriminator *uint32 `json:"local-discriminator,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetection struct
@@ -54,6 +54,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetec
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop struct
 type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop struct {
+	// +kubebuilder:default:=true
+	Resolve *bool `json:"resolve,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	Index *uint16 `json:"index"`
@@ -67,12 +69,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop struct {
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	IpAddress            *string `json:"ip-address,omitempty"`
 	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
-	// +kubebuilder:default:=true
-	Resolve *bool `json:"resolve,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroup struct
 type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroup struct {
+	Nexthop []*SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop `json:"nexthop,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -83,7 +84,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroup struct {
 	// +kubebuilder:default:=enable
 	AdminState *string                                                            `json:"admin-state"`
 	Blackhole  *SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupBlackhole `json:"blackhole,omitempty"`
-	Nexthop    []*SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop `json:"nexthop,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceNextHopGroups struct

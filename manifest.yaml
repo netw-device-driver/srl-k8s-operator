@@ -4916,7 +4916,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupses
   verbs:
   - create
   - delete
@@ -4928,13 +4928,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupses/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroups/status
+  - k8ssrlnokianetworkinstancenetworkinstancenexthopgroupses/status
   verbs:
   - get
   - patch
@@ -5020,7 +5020,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises
   verbs:
   - create
   - delete
@@ -5032,13 +5032,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis/status
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsisises/status
   verbs:
   - get
   - patch
@@ -5046,7 +5046,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxs
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes
   verbs:
   - create
   - delete
@@ -5058,13 +5058,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxs/finalizers
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxs/status
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes/status
   verbs:
   - get
   - patch

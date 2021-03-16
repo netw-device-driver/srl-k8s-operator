@@ -45,10 +45,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBrid
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct {
+	// +kubebuilder:default:=use-system-ipv4-address
+	NextHop        *string                                                                                           `json:"next-hop,omitempty"`
 	InclusiveMcast *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast `json:"inclusive-mcast,omitempty"`
 	MacIp          *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp          `json:"mac-ip,omitempty"`
-	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop *string `json:"next-hop,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp struct
@@ -70,8 +70,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes str
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct {
-	VxlanInterface *string `json:"vxlan-interface,omitempty"`
-	Id             *string `json:"id"`
+	Id *string `json:"id"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
@@ -90,8 +89,9 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstance struct {
 	EncapsulationType *string `json:"encapsulation-type"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
-	Evi    *uint32                                                                  `json:"evi"`
-	Routes *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
+	Evi            *uint32                                                                  `json:"evi"`
+	Routes         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
+	VxlanInterface *string                                                                  `json:"vxlan-interface,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn struct

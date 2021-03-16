@@ -55,6 +55,10 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroup
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup struct {
+	Destination []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -63,11 +67,7 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroup
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState  *string                                                                                         `json:"admin-state"`
-	Destination []*SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
+	AdminState *string `json:"admin-state"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups struct
@@ -98,13 +98,13 @@ type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress struct {
 
 // SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct
 type SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface struct {
-	Type *string `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                                           `json:"index"`
 	BridgeTable *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress      `json:"egress,omitempty"`
 	Ingress     *SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress     `json:"ingress,omitempty"`
+	Type        *string                                                           `json:"type"`
 }
 
 // SrlNokiaTunnelInterfacesTunnelInterface struct

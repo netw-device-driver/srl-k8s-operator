@@ -47,9 +47,9 @@ type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler struct {
 }
 
 // +kubebuilder:rbac:groups=fsc.henderiw.be,resources=networknodes,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxs,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxs/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxs/finalizers,verbs=update
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
