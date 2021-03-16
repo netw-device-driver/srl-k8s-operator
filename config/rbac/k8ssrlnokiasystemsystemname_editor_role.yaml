@@ -1,0 +1,24 @@
+# permissions for end users to edit k8ssrlnokiasystemsystemnames.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8ssrlnokiasystemsystemname-editor-role
+rules:
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiasystemsystemnames
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiasystemsystemnames/status
+  verbs:
+  - get

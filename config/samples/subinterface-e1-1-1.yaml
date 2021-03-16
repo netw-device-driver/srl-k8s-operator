@@ -1,0 +1,23 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaInterfacesInterfaceSubinterface
+metadata:
+  name: e1-1-1
+  labels:
+    target: leaf1
+spec:
+  interface-name: ethernet-1/1
+  subinterface:
+    index: 1
+    admin-state: enable
+    description: "k8s-subinterfaace-e1.1.1"
+    type: bridged
+    ipv4:
+      address:
+        - ip-prefix: 10.10.10.1/24
+    ipv6:
+      address:
+        - ip-prefix: 2000:10::1/64
+    vlan:
+      encap:
+        single-tagged:
+          vlan-id: 1

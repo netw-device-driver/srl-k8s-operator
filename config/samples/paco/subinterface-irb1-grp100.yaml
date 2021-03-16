@@ -1,0 +1,29 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaInterfacesInterfaceSubinterface
+metadata:
+  name: subinterface-irb1-grp100
+  labels:
+    target: leaf1
+spec:
+  interface-name: irb1
+  subinterface:
+  - index: 101
+    admin-state: enable
+    description: "k8s-irb1.101"
+    ipv4:
+      address: 
+      - ip-prefix: 10.1.11.1/24
+  - index: 103
+    admin-state: enable
+    description: "k8s-irb1.103"
+    ipv4:
+      address: 
+      - ip-prefix: 10.1.13.30/27
+      - ip-prefix: 10.1.13.62/27
+      - ip-prefix: 10.1.13.94/27
+      - ip-prefix: 10.1.13.126/27
+      - ip-prefix: 10.1.13.158/27
+      - ip-prefix: 10.1.13.190/27
+      - ip-prefix: 10.1.13.222/27
+      - ip-prefix: 10.1.13.254/27
+

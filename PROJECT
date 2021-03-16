@@ -1,0 +1,77 @@
+domain: henderiw.be
+layout: go.kubebuilder.io/v3
+projectName: srl-k8s-operator
+repo: github.com/srl-wim/srl-k8s-operator
+resources:
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaInterfacesInterface
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaInterfacesInterfaceSubinterface
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstance
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroups
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsOspf
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstanceNetworkInstanceStaticRoutes
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaNetworkInstance
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaSystemSystemMtu
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaSystemSystemName
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaSystemSystemNetworkInstance
+  version: v1alpha1
+- crdVersion: v1
+  group: srlinux
+  kind: K8sSrlNokiaSystemSystemNtp
+  version: v1alpha1
+version: 3-alpha
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}

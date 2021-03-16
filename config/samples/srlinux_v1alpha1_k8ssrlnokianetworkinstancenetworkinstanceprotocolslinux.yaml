@@ -1,0 +1,7 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux
+metadata:
+  name: k8ssrlnokianetworkinstancenetworkinstanceprotocolslinux-sample
+spec:
+  # Add fields here
+  foo: bar

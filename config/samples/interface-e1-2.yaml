@@ -1,0 +1,14 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaInterfacesInterface
+metadata:
+  name: e1-2
+  labels:
+    target: leaf1
+spec:
+  interface:
+    - name: ethernet-1/2
+      admin-state: enable
+      description: "k8s-ethernet-1/2"
+      mtu: 2000
+      vlan-tagging: false
+

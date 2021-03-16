@@ -1,0 +1,842 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: k8ssrlnokiainterfacesinterfacesubinterfaces.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: K8sSrlNokiaInterfacesInterfaceSubinterface
+    listKind: K8sSrlNokiaInterfacesInterfaceSubinterfaceList
+    plural: k8ssrlnokiainterfacesinterfacesubinterfaces
+    singular: k8ssrlnokiainterfacesinterfacesubinterface
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: K8sSrlNokiaInterfacesInterfaceSubinterface is the Schema for
+          the K8sSrlNokiaInterfacesInterfaceSubinterfaces API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlNokiaInterfacesInterfaceSubinterfaceSpec struct
+            properties:
+              interface-name:
+                type: string
+              subinterface:
+                items:
+                  description: SrlNokiaInterfacesInterfaceSubinterface struct
+                  properties:
+                    acl:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceAcl struct
+                      properties:
+                        input:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceAclInput
+                            struct
+                          properties:
+                            ipv4-filter:
+                              type: string
+                            ipv6-filter:
+                              type: string
+                          type: object
+                        output:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceAclOutput
+                            struct
+                          properties:
+                            ipv4-filter:
+                              type: string
+                            ipv6-filter:
+                              type: string
+                          type: object
+                      type: object
+                    admin-state:
+                      default: enable
+                      enum:
+                      - disable
+                      - enable
+                      type: string
+                    anycast-gw:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceAnycastGw
+                        struct
+                      properties:
+                        anycast-gw-mac:
+                          pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                          type: string
+                        virtual-router-id:
+                          default: 1
+                          maximum: 255
+                          minimum: 1
+                          type: integer
+                      type: object
+                    bridge-table:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceBridgeTable
+                        struct
+                      properties:
+                        discard-unknown-src-mac:
+                          default: false
+                          type: boolean
+                        mac-duplication:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacDuplication
+                            struct
+                          properties:
+                            action:
+                              default: use-net-instance-action
+                              enum:
+                              - blackhole
+                              - oper-down
+                              - stop-learning
+                              - use-net-instance-action
+                              type: string
+                          type: object
+                        mac-learning:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLearning
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            aging:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLearningAging
+                                struct
+                              properties:
+                                admin-state:
+                                  default: enable
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                              type: object
+                          type: object
+                        mac-limit:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLimit
+                            struct
+                          properties:
+                            maximum-entries:
+                              default: 250
+                              format: int32
+                              maximum: 8192
+                              minimum: 1
+                              type: integer
+                            warning-threshold-pct:
+                              default: 95
+                              format: int32
+                              maximum: 100
+                              minimum: 6
+                              type: integer
+                          type: object
+                      type: object
+                    description:
+                      maxLength: 255
+                      minLength: 1
+                      pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                      type: string
+                    index:
+                      format: int32
+                      maximum: 9999
+                      minimum: 0
+                      type: integer
+                    ip-mtu:
+                      maximum: 9486
+                      minimum: 1280
+                      type: integer
+                    ipv4:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4 struct
+                      properties:
+                        address:
+                          items:
+                            description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4Address
+                              struct
+                            properties:
+                              anycast-gw:
+                                type: boolean
+                              ip-prefix:
+                                pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))
+                                type: string
+                              primary:
+                                type: string
+                            required:
+                            - ip-prefix
+                            type: object
+                          type: array
+                        allow-directed-broadcast:
+                          default: false
+                          type: boolean
+                        arp:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4Arp
+                            struct
+                          properties:
+                            debug:
+                              enum:
+                              - messages
+                              type: string
+                            duplicate-address-detection:
+                              default: true
+                              type: boolean
+                            evpn:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpEvpn
+                                struct
+                              properties:
+                                advertise:
+                                  items:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpEvpnAdvertise
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        default: 0
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - static
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            host-route:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpHostRoute
+                                struct
+                              properties:
+                                populate:
+                                  items:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpHostRoutePopulate
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 1
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - evpn
+                                        - static
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            learn-unsolicited:
+                              default: false
+                              type: boolean
+                            neighbor:
+                              items:
+                                description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpNeighbor
+                                  struct
+                                properties:
+                                  ipv4-address:
+                                    pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                    type: string
+                                  link-layer-address:
+                                    pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                    type: string
+                                required:
+                                - ipv4-address
+                                - link-layer-address
+                                type: object
+                              type: array
+                            timeout:
+                              default: 14400
+                              maximum: 65535
+                              minimum: 60
+                              type: integer
+                          type: object
+                        dhcp-client:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpClient
+                            struct
+                          properties:
+                            trace-options:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpClientTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                          type: object
+                        dhcp-relay:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelay
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            gi-address:
+                              pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                              type: string
+                            option:
+                              enum:
+                              - circuit-id
+                              - remote-id
+                              type: string
+                            server:
+                              pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                              type: string
+                            trace-options:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelayTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                            use-gi-addr-as-src-ip-addr:
+                              default: false
+                              type: boolean
+                          type: object
+                        vrrp:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4Vrrp
+                            struct
+                          properties:
+                            vrrp-group:
+                              items:
+                                description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroup
+                                  struct
+                                properties:
+                                  accept-mode:
+                                    type: boolean
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  advertise-interval:
+                                    default: 1000
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  authentication:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication
+                                      struct
+                                    properties:
+                                      keychain:
+                                        type: string
+                                    type: object
+                                  init-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  interface-tracking:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking
+                                      struct
+                                    properties:
+                                      track-interface:
+                                        items:
+                                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTrackingTrackInterface
+                                            struct
+                                          properties:
+                                            interface:
+                                              type: string
+                                            priority-decrement:
+                                              maximum: 255
+                                              minimum: 0
+                                              type: integer
+                                          required:
+                                          - interface
+                                          type: object
+                                        type: array
+                                    type: object
+                                  master-inherit-interval:
+                                    default: false
+                                    type: boolean
+                                  oper-interval:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  preempt:
+                                    type: boolean
+                                  preempt-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  priority:
+                                    default: 100
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  statistics:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics
+                                      struct
+                                    type: object
+                                  version:
+                                    default: 2
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  virtual-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  virtual-router-id:
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - virtual-router-id
+                                type: object
+                              type: array
+                          type: object
+                      type: object
+                    ipv6:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6 struct
+                      properties:
+                        address:
+                          items:
+                            description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6Address
+                              struct
+                            properties:
+                              anycast-gw:
+                                type: boolean
+                              ip-prefix:
+                                pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                type: string
+                              primary:
+                                type: string
+                            required:
+                            - ip-prefix
+                            type: object
+                          type: array
+                        dhcp-client:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6DhcpClient
+                            struct
+                          properties:
+                            trace-options:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6DhcpClientTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                          type: object
+                        dhcp-relay:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6DhcpRelay
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            option:
+                              enum:
+                              - interface-id
+                              - remote-id
+                              type: string
+                            server:
+                              pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                              type: string
+                            source-address:
+                              pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                              type: string
+                            trace-options:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6DhcpRelayTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                          type: object
+                        neighbor-discovery:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscovery
+                            struct
+                          properties:
+                            debug:
+                              enum:
+                              - messages
+                              type: string
+                            duplicate-address-detection:
+                              default: true
+                              type: boolean
+                            evpn:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryEvpn
+                                struct
+                              properties:
+                                advertise:
+                                  items:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryEvpnAdvertise
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        default: 0
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - static
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            host-route:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute
+                                struct
+                              properties:
+                                populate:
+                                  items:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryHostRoutePopulate
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 1
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - evpn
+                                        - static
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            learn-unsolicited:
+                              default: none
+                              enum:
+                              - both
+                              - global
+                              - link-local
+                              - none
+                              type: string
+                            neighbor:
+                              items:
+                                description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryNeighbor
+                                  struct
+                                properties:
+                                  ipv6-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  link-layer-address:
+                                    pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                    type: string
+                                required:
+                                - ipv6-address
+                                - link-layer-address
+                                type: object
+                              type: array
+                            reachable-time:
+                              default: 30
+                              format: int32
+                              maximum: 3600
+                              minimum: 30
+                              type: integer
+                            stale-time:
+                              default: 14400
+                              format: int32
+                              maximum: 65535
+                              minimum: 60
+                              type: integer
+                          type: object
+                        router-advertisement:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisement
+                            struct
+                          properties:
+                            debug:
+                              enum:
+                              - messages
+                              type: string
+                            router-role:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRole
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                current-hop-limit:
+                                  default: 64
+                                  maximum: 255
+                                  minimum: 0
+                                  type: integer
+                                ip-mtu:
+                                  maximum: 9486
+                                  minimum: 1280
+                                  type: integer
+                                managed-configuration-flag:
+                                  default: false
+                                  type: boolean
+                                max-advertisement-interval:
+                                  default: 600
+                                  maximum: 1800
+                                  minimum: 4
+                                  type: integer
+                                min-advertisement-interval:
+                                  default: 200
+                                  maximum: 1350
+                                  minimum: 3
+                                  type: integer
+                                other-configuration-flag:
+                                  default: false
+                                  type: boolean
+                                prefix:
+                                  items:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix
+                                      struct
+                                    properties:
+                                      autonomous-flag:
+                                        default: false
+                                        type: boolean
+                                      ipv6-prefix:
+                                        pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                        type: string
+                                      on-link-flag:
+                                        default: false
+                                        type: boolean
+                                      preferred-lifetime:
+                                        default: 604800
+                                        format: int32
+                                        type: integer
+                                      valid-lifetime:
+                                        default: 2592000
+                                        format: int32
+                                        type: integer
+                                    required:
+                                    - ipv6-prefix
+                                    type: object
+                                  type: array
+                                reachable-time:
+                                  default: 0
+                                  format: int32
+                                  maximum: 3600000
+                                  minimum: 0
+                                  type: integer
+                                retransmit-time:
+                                  default: 0
+                                  format: int32
+                                  maximum: 1800000
+                                  minimum: 0
+                                  type: integer
+                                router-lifetime:
+                                  default: 1800
+                                  maximum: 9000
+                                  minimum: 0
+                                  type: integer
+                              type: object
+                          type: object
+                        vrrp:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6Vrrp
+                            struct
+                          properties:
+                            vrrp-group:
+                              items:
+                                description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroup
+                                  struct
+                                properties:
+                                  accept-mode:
+                                    type: boolean
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  advertise-interval:
+                                    default: 1000
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  authentication:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication
+                                      struct
+                                    properties:
+                                      keychain:
+                                        type: string
+                                    type: object
+                                  init-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  interface-tracking:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking
+                                      struct
+                                    properties:
+                                      track-interface:
+                                        items:
+                                          description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface
+                                            struct
+                                          properties:
+                                            interface:
+                                              type: string
+                                            priority-decrement:
+                                              maximum: 255
+                                              minimum: 0
+                                              type: integer
+                                          required:
+                                          - interface
+                                          type: object
+                                        type: array
+                                    type: object
+                                  master-inherit-interval:
+                                    default: false
+                                    type: boolean
+                                  oper-interval:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  preempt:
+                                    type: boolean
+                                  preempt-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  priority:
+                                    default: 100
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  statistics:
+                                    description: SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics
+                                      struct
+                                    type: object
+                                  version:
+                                    default: 3
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  virtual-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  virtual-router-id:
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - virtual-router-id
+                                type: object
+                              type: array
+                          type: object
+                      type: object
+                    l2-mtu:
+                      maximum: 9500
+                      minimum: 1500
+                      type: integer
+                    local-mirror-destination:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceLocalMirrorDestination
+                        struct
+                      properties:
+                        admin-state:
+                          default: enable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                      type: object
+                    qos:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceQos struct
+                      properties:
+                        input:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceQosInput
+                            struct
+                          properties:
+                            classifiers:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceQosInputClassifiers
+                                struct
+                              properties:
+                                dscp:
+                                  type: string
+                                ipv4-dscp:
+                                  type: string
+                                ipv6-dscp:
+                                  type: string
+                                mpls-traffic-class:
+                                  type: string
+                              type: object
+                          type: object
+                        output:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceQosOutput
+                            struct
+                          properties:
+                            rewrite-rules:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceQosOutputRewriteRules
+                                struct
+                              properties:
+                                dscp:
+                                  type: string
+                                ipv4-dscp:
+                                  type: string
+                                ipv6-dscp:
+                                  type: string
+                                mpls-traffic-class:
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type:
+                      type: string
+                    vlan:
+                      description: SrlNokiaInterfacesInterfaceSubinterfaceVlan struct
+                      properties:
+                        encap:
+                          description: SrlNokiaInterfacesInterfaceSubinterfaceVlanEncap
+                            struct
+                          properties:
+                            single-tagged:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceVlanEncapSingleTagged
+                                struct
+                              properties:
+                                vlan-id:
+                                  type: string
+                              type: object
+                            untagged:
+                              description: SrlNokiaInterfacesInterfaceSubinterfaceVlanEncapUntagged
+                                struct
+                              type: object
+                          type: object
+                      type: object
+                  required:
+                  - index
+                  type: object
+                type: array
+            required:
+            - interface-name
+            - subinterface
+            type: object
+          status:
+            description: SrlNokiaInterfacesInterfaceSubinterfaceStatus struct
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

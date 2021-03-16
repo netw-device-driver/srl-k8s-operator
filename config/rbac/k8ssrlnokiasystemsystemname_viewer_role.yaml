@@ -1,0 +1,20 @@
+# permissions for end users to view k8ssrlnokiasystemsystemnames.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8ssrlnokiasystemsystemname-viewer-role
+rules:
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiasystemsystemnames
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiasystemsystemnames/status
+  verbs:
+  - get

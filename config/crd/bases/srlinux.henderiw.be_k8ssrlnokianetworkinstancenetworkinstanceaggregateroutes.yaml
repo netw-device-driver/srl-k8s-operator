@@ -1,0 +1,109 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes
+    listKind: K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesList
+    plural: k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes
+    singular: k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes is the
+          Schema for the K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutess
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesSpec
+              struct
+            properties:
+              aggregate-routes:
+                description: SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes
+                  struct
+                properties:
+                  route:
+                    items:
+                      description: SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute
+                        struct
+                      properties:
+                        admin-state:
+                          default: enable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                        aggregator:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator
+                            struct
+                          properties:
+                            address:
+                              pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                              type: string
+                            as-number:
+                              format: int32
+                              maximum: 4294967295
+                              minimum: 1
+                              type: integer
+                          type: object
+                        communities:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities
+                            struct
+                          properties:
+                            add:
+                              pattern: .*:.*:.*
+                              type: string
+                          type: object
+                        generate-icmp:
+                          type: boolean
+                        prefix:
+                          pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                          type: string
+                        summary-only:
+                          default: false
+                          type: boolean
+                      type: object
+                    type: array
+                type: object
+              network-instance-name:
+                type: string
+            required:
+            - aggregate-routes
+            - network-instance-name
+            type: object
+          status:
+            description: SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesStatus
+              struct
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

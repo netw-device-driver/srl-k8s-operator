@@ -1,0 +1,7 @@
+## Append samples you want in your CSV to this file as resources ##
+resources:
+- srlinux_v1alpha1_k8ssrlnokiainterfacesinterface.yaml
+- srlinux_v1alpha1_k8ssrlnokiainterfacesinterfacesubinterface.yaml
+- srlinux_v1alpha1_k8ssrlnokiasystemsystemmtu.yaml
+- srlinux_v1alpha1_k8ssrlnokianetworkinstance.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

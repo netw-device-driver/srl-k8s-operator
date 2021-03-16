@@ -1,0 +1,20 @@
+# permissions for end users to view k8ssrlnokianetworkinstancenetworkinstanceprotocolsises.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis-viewer-role
+rules:
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsises
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsises/status
+  verbs:
+  - get

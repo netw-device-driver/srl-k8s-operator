@@ -1,0 +1,20 @@
+# permissions for end users to view k8ssrlnokiainterfacesinterfaces.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8ssrlnokiainterfacesinterface-viewer-role
+rules:
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiainterfacesinterfaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiainterfacesinterfaces/status
+  verbs:
+  - get

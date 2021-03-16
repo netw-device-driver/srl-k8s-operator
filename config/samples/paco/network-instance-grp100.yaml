@@ -1,0 +1,39 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaNetworkInstanceNetworkInstance
+metadata:
+  name: network-instance-group-100
+  labels:
+    target: leaf1
+spec:
+  network-instance:
+  - name: macVrf101
+    type: mac-vrf
+    admin-state: enable
+    description: "k8s-macVrf101"
+    interface:
+    - name: irb1.101
+    - name: lag1.101
+    - name: lag2-101
+    bridge-table:
+      mac-duplication:
+        admin-state: enable
+        action: blackhole
+  - name: macVrf103
+    type: mac-vrf
+    admin-state: enable
+    description: "k8s-macVrf103"
+    interface:
+    - name: irb1.103
+    - name: lag1.103
+    - name: lag2-103
+    bridge-table:
+      mac-duplication:
+        admin-state: enable
+        action: blackhole
+  - name: ipVrf105
+    type: ip-vrf
+    admin-state: enable
+    description: "k8s-ipVrf105"
+    interface:
+    - name: irb1.101
+    - name: irb1.103

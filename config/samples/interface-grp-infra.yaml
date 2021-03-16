@@ -1,0 +1,20 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaInterfacesInterface
+metadata:
+  name: interface-group-infra
+  labels:
+    target: leaf1
+spec:
+  interface:
+  - name: ethernet-1/1
+    admin-state: enable
+    description: "k8s-server-1"
+    ethernet:
+      aggregate-id: lag1
+      port-speed: 10G
+  - name: ethernet-1/2
+    admin-state: enable
+    description: "k8s-server-2"
+    ethernet:
+      aggregate-id: lag2
+      port-speed: 10G

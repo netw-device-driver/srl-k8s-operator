@@ -1,0 +1,25 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: K8sSrlNokiaInterfacesInterfaceSubinterface
+metadata:
+  name: subinterface-lag2-grp100
+  labels:
+    target: leaf1
+spec:
+  interface-name: lag2
+  subinterface:
+  - index: 101
+    admin-state: enable
+    description: "k8s-lag2.101"
+    type: bridged
+    vlan:
+      encap:
+        single-tagged:
+          vlan-id: 101
+  - index: 103
+    admin-state: enable
+    description: "k8s-lag2.103"
+    type: bridged
+    vlan:
+      encap:
+        single-tagged:
+          vlan-id: 103

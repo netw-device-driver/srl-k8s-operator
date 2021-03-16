@@ -1,0 +1,20 @@
+# permissions for end users to view k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgps.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgp-viewer-role
+rules:
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgps/status
+  verbs:
+  - get

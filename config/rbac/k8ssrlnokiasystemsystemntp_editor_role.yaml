@@ -1,0 +1,24 @@
+# permissions for end users to edit k8ssrlnokiasystemsystemntps.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8ssrlnokiasystemsystemntp-editor-role
+rules:
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiasystemsystemntps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiasystemsystemntps/status
+  verbs:
+  - get

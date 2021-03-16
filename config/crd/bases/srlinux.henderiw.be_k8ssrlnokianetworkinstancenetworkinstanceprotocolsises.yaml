@@ -1,0 +1,615 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: k8ssrlnokianetworkinstancenetworkinstanceprotocolsises.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis
+    listKind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisList
+    plural: k8ssrlnokianetworkinstancenetworkinstanceprotocolsises
+    singular: k8ssrlnokianetworkinstancenetworkinstanceprotocolsisis
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis is the
+          Schema for the K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsiss API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisSpec struct
+            properties:
+              isis:
+                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis struct
+                properties:
+                  instance:
+                    items:
+                      description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstance
+                        struct
+                      properties:
+                        admin-state:
+                          default: disable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                        attached-bit:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAttachedBit
+                            struct
+                          properties:
+                            ignore:
+                              default: false
+                              type: boolean
+                            suppress:
+                              default: false
+                              type: boolean
+                          type: object
+                        authentication:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAuthentication
+                            struct
+                          properties:
+                            csnp-authentication:
+                              type: boolean
+                            hello-authentication:
+                              type: boolean
+                            keychain:
+                              type: string
+                            psnp-authentication:
+                              type: boolean
+                          type: object
+                        auto-cost:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceAutoCost
+                            struct
+                          properties:
+                            reference-bandwidth:
+                              format: int64
+                              maximum: 8000000000
+                              minimum: 1
+                              type: integer
+                          type: object
+                        export-policy:
+                          type: string
+                        graceful-restart:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceGracefulRestart
+                            struct
+                          properties:
+                            helper-mode:
+                              default: false
+                              type: boolean
+                          type: object
+                        inter-level-propagation-policies:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterLevelPropagationPolicies
+                            struct
+                          properties:
+                            level1-to-level2:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterLevelPropagationPoliciesLevel1ToLevel2
+                                struct
+                              properties:
+                                summary-address:
+                                  items:
+                                    description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterLevelPropagationPoliciesLevel1ToLevel2SummaryAddress
+                                      struct
+                                    properties:
+                                      ip-prefix:
+                                        pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                        type: string
+                                      route-tag:
+                                        format: int32
+                                        maximum: 4294967295
+                                        minimum: 1
+                                        type: integer
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                        interface:
+                          items:
+                            description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterface
+                              struct
+                            properties:
+                              admin-state:
+                                default: enable
+                                enum:
+                                - disable
+                                - enable
+                                type: string
+                              authentication:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceAuthentication
+                                  struct
+                                properties:
+                                  hello-authentication:
+                                    type: boolean
+                                  keychain:
+                                    type: string
+                                type: object
+                              circuit-type:
+                                enum:
+                                - broadcast
+                                - point-to-point
+                                type: string
+                              hello-padding:
+                                default: disable
+                                enum:
+                                - adaptive
+                                - disable
+                                - loose
+                                - strict
+                                type: string
+                              interface-name:
+                                type: string
+                              ipv4-unicast:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv4Unicast
+                                  struct
+                                properties:
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  enable-bfd:
+                                    default: false
+                                    type: boolean
+                                  include-bfd-tlv:
+                                    default: false
+                                    type: boolean
+                                type: object
+                              ipv6-unicast:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceIpv6Unicast
+                                  struct
+                                properties:
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  enable-bfd:
+                                    default: false
+                                    type: boolean
+                                  include-bfd-tlv:
+                                    default: false
+                                    type: boolean
+                                type: object
+                              ldp-synchronization:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLdpSynchronization
+                                  struct
+                                properties:
+                                  disable:
+                                    type: string
+                                  end-of-lib:
+                                    type: boolean
+                                  hold-down-timer:
+                                    maximum: 1800
+                                    minimum: 1
+                                    type: integer
+                                type: object
+                              level:
+                                items:
+                                  description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevel
+                                    struct
+                                  properties:
+                                    authentication:
+                                      description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevelAuthentication
+                                        struct
+                                      properties:
+                                        keychain:
+                                          type: string
+                                      type: object
+                                    disable:
+                                      default: false
+                                      type: boolean
+                                    ipv6-unicast-metric:
+                                      format: int32
+                                      maximum: 16777215
+                                      minimum: 1
+                                      type: integer
+                                    level-number:
+                                      maximum: 2
+                                      minimum: 1
+                                      type: integer
+                                    metric:
+                                      format: int32
+                                      maximum: 16777215
+                                      minimum: 1
+                                      type: integer
+                                    priority:
+                                      default: 64
+                                      maximum: 127
+                                      minimum: 0
+                                      type: integer
+                                    timers:
+                                      description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceLevelTimers
+                                        struct
+                                      properties:
+                                        hello-interval:
+                                          default: 9
+                                          format: int32
+                                          maximum: 20000
+                                          minimum: 1
+                                          type: integer
+                                        hello-multiplier:
+                                          default: 3
+                                          maximum: 100
+                                          minimum: 2
+                                          type: integer
+                                      type: object
+                                  required:
+                                  - level-number
+                                  type: object
+                                type: array
+                              passive:
+                                default: false
+                                type: boolean
+                              timers:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTimers
+                                  struct
+                                properties:
+                                  csnp-interval:
+                                    default: 10
+                                    maximum: 65535
+                                    minimum: 1
+                                    type: integer
+                                  lsp-pacing-interval:
+                                    default: 100
+                                    format: int64
+                                    maximum: 100000
+                                    minimum: 0
+                                    type: integer
+                                type: object
+                              trace-options:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceInterfaceTraceOptions
+                                  struct
+                                properties:
+                                  trace:
+                                    enum:
+                                    - adjacencies
+                                    - packets-all
+                                    - packets-l1-csnp
+                                    - packets-l1-hello
+                                    - packets-l1-lsp
+                                    - packets-l1-psnp
+                                    - packets-l2-csnp
+                                    - packets-l2-hello
+                                    - packets-l2-lsp
+                                    - packets-l2-psnp
+                                    - packets-p2p-hello
+                                    type: string
+                                type: object
+                            required:
+                            - interface-name
+                            type: object
+                          type: array
+                        ipv4-unicast:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv4Unicast
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                          type: object
+                        ipv6-unicast:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceIpv6Unicast
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            multi-topology:
+                              default: false
+                              type: boolean
+                          type: object
+                        ldp-synchronization:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLdpSynchronization
+                            struct
+                          properties:
+                            end-of-lib:
+                              default: false
+                              type: boolean
+                            hold-down-timer:
+                              default: 60
+                              maximum: 1800
+                              minimum: 1
+                              type: integer
+                          type: object
+                        level:
+                          items:
+                            description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevel
+                              struct
+                            properties:
+                              authentication:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelAuthentication
+                                  struct
+                                properties:
+                                  csnp-authentication:
+                                    type: boolean
+                                  hello-authentication:
+                                    type: boolean
+                                  keychain:
+                                    type: string
+                                  psnp-authentication:
+                                    type: boolean
+                                type: object
+                              bgp-ls-exclude:
+                                default: false
+                                type: boolean
+                              level-number:
+                                maximum: 2
+                                minimum: 1
+                                type: integer
+                              metric-style:
+                                default: wide
+                                enum:
+                                - narrow
+                                - wide
+                                type: string
+                              route-preference:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelRoutePreference
+                                  struct
+                                properties:
+                                  external:
+                                    maximum: 255
+                                    minimum: 1
+                                    type: integer
+                                  internal:
+                                    maximum: 255
+                                    minimum: 1
+                                    type: integer
+                                type: object
+                              trace-options:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceLevelTraceOptions
+                                  struct
+                                properties:
+                                  trace:
+                                    enum:
+                                    - adjacencies
+                                    - lsdb
+                                    - routes
+                                    - spf
+                                    type: string
+                                type: object
+                            required:
+                            - level-number
+                            type: object
+                          type: array
+                        level-capability:
+                          default: L2
+                          enum:
+                          - L1
+                          - L1L2
+                          - L2
+                          type: string
+                        max-ecmp-paths:
+                          default: 1
+                          maximum: 64
+                          minimum: 1
+                          type: integer
+                        name:
+                          maxLength: 255
+                          minLength: 1
+                          pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                          type: string
+                        net:
+                          pattern: '[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}'
+                          type: string
+                        overload:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverload
+                            struct
+                          properties:
+                            advertise-external:
+                              default: false
+                              type: boolean
+                            advertise-interlevel:
+                              default: false
+                              type: boolean
+                            immediate:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadImmediate
+                                struct
+                              properties:
+                                max-metric:
+                                  default: false
+                                  type: boolean
+                                set-bit:
+                                  default: false
+                                  type: boolean
+                              type: object
+                            on-boot:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceOverloadOnBoot
+                                struct
+                              properties:
+                                max-metric:
+                                  type: boolean
+                                set-bit:
+                                  type: boolean
+                                timeout:
+                                  maximum: 1800
+                                  minimum: 60
+                                  type: integer
+                              type: object
+                          type: object
+                        poi-tlv:
+                          default: false
+                          type: boolean
+                        te-database-install:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstall
+                            struct
+                          properties:
+                            bgp-ls:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTeDatabaseInstallBgpLs
+                                struct
+                              properties:
+                                bgp-ls-identifier:
+                                  format: int32
+                                  maximum: 4294967295
+                                  minimum: 0
+                                  type: integer
+                                igp-identifier:
+                                  format: int64
+                                  maximum: -1
+                                  minimum: 0
+                                  type: integer
+                              type: object
+                          type: object
+                        timers:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimers
+                            struct
+                          properties:
+                            lsp-generation:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimersLspGeneration
+                                struct
+                              properties:
+                                initial-wait:
+                                  default: 10
+                                  format: int64
+                                  maximum: 100000
+                                  minimum: 10
+                                  type: integer
+                                max-wait:
+                                  default: 5000
+                                  format: int64
+                                  maximum: 120000
+                                  minimum: 10
+                                  type: integer
+                                second-wait:
+                                  default: 1000
+                                  format: int64
+                                  maximum: 100000
+                                  minimum: 10
+                                  type: integer
+                              type: object
+                            lsp-lifetime:
+                              default: 1200
+                              maximum: 65535
+                              minimum: 350
+                              type: integer
+                            lsp-refresh:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimersLspRefresh
+                                struct
+                              properties:
+                                half-lifetime:
+                                  default: true
+                                  type: boolean
+                                interval:
+                                  default: 600
+                                  maximum: 65535
+                                  minimum: 150
+                                  type: integer
+                              type: object
+                            spf:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTimersSpf
+                                struct
+                              properties:
+                                initial-wait:
+                                  default: 1000
+                                  format: int64
+                                  maximum: 100000
+                                  minimum: 10
+                                  type: integer
+                                max-wait:
+                                  default: 10000
+                                  format: int64
+                                  maximum: 120000
+                                  minimum: 10
+                                  type: integer
+                                second-wait:
+                                  default: 1000
+                                  format: int64
+                                  maximum: 100000
+                                  minimum: 10
+                                  type: integer
+                              type: object
+                          type: object
+                        trace-options:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTraceOptions
+                            struct
+                          properties:
+                            trace:
+                              enum:
+                              - adjacencies
+                              - graceful-restart
+                              - interfaces
+                              - packets-all
+                              - packets-l1-csnp
+                              - packets-l1-hello
+                              - packets-l1-lsp
+                              - packets-l1-psnp
+                              - packets-l2-csnp
+                              - packets-l2-hello
+                              - packets-l2-lsp
+                              - packets-l2-psnp
+                              - packets-p2p-hello
+                              - routes
+                              - summary-addresses
+                              type: string
+                          type: object
+                        traffic-engineering:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTrafficEngineering
+                            struct
+                          properties:
+                            advertisement:
+                              default: false
+                              type: boolean
+                            legacy-link-attribute-advertisement:
+                              default: true
+                              type: boolean
+                          type: object
+                        transport:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisInstanceTransport
+                            struct
+                          properties:
+                            lsp-mtu-size:
+                              default: 1492
+                              maximum: 9490
+                              minimum: 490
+                              type: integer
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                type: object
+              network-instance-name:
+                type: string
+            required:
+            - isis
+            - network-instance-name
+            type: object
+          status:
+            description: SrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisStatus
+              struct
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
