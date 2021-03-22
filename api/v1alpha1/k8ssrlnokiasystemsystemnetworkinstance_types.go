@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -37,11 +38,11 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget st
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct {
+	RouteTarget *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Id                 *uint8                                                                           `json:"id"`
 	RouteDistinguisher *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
-	RouteTarget        *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpn struct
@@ -62,10 +63,10 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlgCapabilities struct {
-	// +kubebuilder:default:=false
-	NonRevertive *bool `json:"non-revertive,omitempty"`
 	// +kubebuilder:default:=true
 	AcDf *bool `json:"ac-df,omitempty"`
+	// +kubebuilder:default:=false
+	NonRevertive *bool `json:"non-revertive,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithmPreferenceAlg struct
@@ -95,9 +96,9 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection struct {
-	Timers                           *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionTimers    `json:"timers,omitempty"`
 	Algorithm                        *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionAlgorithm `json:"algorithm,omitempty"`
 	InterfaceStandbySignalingOnNonDf *bool                                                                                                          `json:"interface-standby-signaling-on-non-df,omitempty"`
+	Timers                           *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElectionTimers    `json:"timers,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentRoutesEthernetSegment struct
@@ -117,6 +118,10 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct {
+	DfElection *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection `json:"df-election,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi       *string `json:"esi,omitempty"`
 	Interface *string `json:"interface,omitempty"`
 	// +kubebuilder:validation:Enum=`all-active`;`single-active`
 	// +kubebuilder:default:=all-active
@@ -129,11 +134,7 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
-	AdminState *string                                                                                               `json:"admin-state,omitempty"`
-	DfElection *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection `json:"df-election,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance struct
@@ -145,19 +146,19 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers struct {
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=6000
-	// +kubebuilder:default:=10
-	BootTimer *uint32 `json:"boot-timer,omitempty"`
-	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=3
 	ActivationTimer *uint32 `json:"activation-timer,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=6000
+	// +kubebuilder:default:=10
+	BootTimer *uint32 `json:"boot-timer,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegments struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegments struct {
-	BgpInstance []*SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance `json:"bgp-instance,omitempty"`
 	Timers      *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers        `json:"timers,omitempty"`
+	BgpInstance []*SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance `json:"bgp-instance,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpn struct
@@ -183,6 +184,15 @@ type SrlNokiaSystemSystemNetworkInstanceSpec struct {
 
 // SrlNokiaSystemSystemNetworkInstanceStatus struct
 type SrlNokiaSystemSystemNetworkInstanceStatus struct {
+	// Target provides the status of the configuration on the device
+	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
+
+	// UsedSpec provides the spec used for the configuration
+	UsedSpec *SrlNokiaSystemSystemNetworkInstanceSpec `json:"usedSpec,omitempty"`
+
+	// LastUpdated identifies when this status was last observed.
+	// +optional
+	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -208,4 +218,37 @@ type K8sSrlNokiaSystemSystemNetworkInstanceList struct {
 
 func init() {
 	SchemeBuilder.Register(&K8sSrlNokiaSystemSystemNetworkInstance{}, &K8sSrlNokiaSystemSystemNetworkInstanceList{})
+}
+
+// NewEvent creates a new event associated with the object and ready
+// to be published to the kubernetes API.
+func (o *K8sSrlNokiaSystemSystemNetworkInstance) NewEvent(reason, message string) corev1.Event {
+	t := metav1.Now()
+	return corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName: reason + "-",
+			Namespace:    o.ObjectMeta.Namespace,
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:       "SrlNokiaSystemSystemNetworkInstance",
+			Namespace:  o.Namespace,
+			Name:       o.Name,
+			UID:        o.UID,
+			APIVersion: GroupVersion.String(),
+		},
+		Reason:  reason,
+		Message: message,
+		Source: corev1.EventSource{
+			Component: "srl-controller",
+		},
+		FirstTimestamp:      t,
+		LastTimestamp:       t,
+		Count:               1,
+		Type:                corev1.EventTypeNormal,
+		ReportingController: "srlinux.henderiw.be/srl-controller",
+	}
+}
+
+func (o *K8sSrlNokiaSystemSystemNetworkInstance) SetConfigStatus(t *string, c *ConfigStatus) {
+	o.Status.Target[*t].ConfigStatus = c
 }

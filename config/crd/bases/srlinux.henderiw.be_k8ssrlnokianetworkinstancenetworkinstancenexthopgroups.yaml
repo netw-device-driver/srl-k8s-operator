@@ -128,6 +128,133 @@ spec:
           status:
             description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsStatus
               struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  network-instance-name:
+                    type: string
+                  next-hop-groups:
+                    description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroups
+                      struct
+                    properties:
+                      group:
+                        items:
+                          description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroup
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            blackhole:
+                              description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupBlackhole
+                                struct
+                              properties:
+                                generate-icmp:
+                                  default: false
+                                  type: boolean
+                              type: object
+                            name:
+                              maxLength: 255
+                              minLength: 1
+                              pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                              type: string
+                            nexthop:
+                              items:
+                                description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthop
+                                  struct
+                                properties:
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  failure-detection:
+                                    description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetection
+                                      struct
+                                    properties:
+                                      enable-bfd:
+                                        description: SrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsGroupNexthopFailureDetectionEnableBfd
+                                          struct
+                                        properties:
+                                          local-address:
+                                            pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                            type: string
+                                          local-discriminator:
+                                            format: int32
+                                            maximum: 16384
+                                            minimum: 1
+                                            type: integer
+                                          remote-discriminator:
+                                            format: int32
+                                            maximum: 16384
+                                            minimum: 1
+                                            type: integer
+                                        type: object
+                                    type: object
+                                  index:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  ip-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  pushed-mpls-label-stack:
+                                    type: string
+                                  resolve:
+                                    default: true
+                                    type: boolean
+                                required:
+                                - index
+                                type: object
+                              type: array
+                          required:
+                          - name
+                          type: object
+                        type: array
+                    type: object
+                required:
+                - network-instance-name
+                - next-hop-groups
+                type: object
             type: object
         type: object
     served: true

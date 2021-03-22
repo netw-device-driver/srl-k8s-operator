@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -47,13 +48,13 @@ type SrlNokiaInterfacesInterfaceSubinterfaceAcl struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceAnycastGw struct
 type SrlNokiaInterfacesInterfaceSubinterfaceAnycastGw struct {
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}`
+	AnycastGwMac *string `json:"anycast-gw-mac,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=1
 	VirtualRouterId *uint8 `json:"virtual-router-id,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}`
-	AnycastGwMac *string `json:"anycast-gw-mac,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacDuplication struct
@@ -92,11 +93,11 @@ type SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLimit struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceBridgeTable struct
 type SrlNokiaInterfacesInterfaceSubinterfaceBridgeTable struct {
-	MacLearning *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLearning `json:"mac-learning,omitempty"`
-	MacLimit    *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLimit    `json:"mac-limit,omitempty"`
 	// +kubebuilder:default:=false
 	DiscardUnknownSrcMac *bool                                                             `json:"discard-unknown-src-mac,omitempty"`
 	MacDuplication       *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
+	MacLearning          *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
+	MacLimit             *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTableMacLimit       `json:"mac-limit,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4Address struct
@@ -149,7 +150,10 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpNeighbor struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4Arp struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv4Arp struct {
-	HostRoute *SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpHostRoute `json:"host-route,omitempty"`
+	// +kubebuilder:default:=true
+	DuplicateAddressDetection *bool                                                    `json:"duplicate-address-detection,omitempty"`
+	Evpn                      *SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpEvpn      `json:"evpn,omitempty"`
+	HostRoute                 *SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpHostRoute `json:"host-route,omitempty"`
 	// +kubebuilder:default:=false
 	LearnUnsolicited *bool                                                     `json:"learn-unsolicited,omitempty"`
 	Neighbor         []*SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpNeighbor `json:"neighbor,omitempty"`
@@ -159,9 +163,6 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4Arp struct {
 	Timeout *uint16 `json:"timeout,omitempty"`
 	// +kubebuilder:validation:Enum=`messages`
 	Debug *string `json:"debug,omitempty"`
-	// +kubebuilder:default:=true
-	DuplicateAddressDetection *bool                                               `json:"duplicate-address-detection,omitempty"`
-	Evpn                      *SrlNokiaInterfacesInterfaceSubinterfaceIpv4ArpEvpn `json:"evpn,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpClientTraceOptions struct
@@ -183,6 +184,9 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelayTraceOptions struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelay struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelay struct {
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	GiAddress *string `json:"gi-address,omitempty"`
@@ -195,9 +199,6 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelay struct {
 	TraceOptions *SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelayTraceOptions `json:"trace-options,omitempty"`
 	// +kubebuilder:default:=false
 	UseGiAddrAsSrcIpAddr *bool `json:"use-gi-addr-as-src-ip-addr,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication struct
@@ -224,10 +225,21 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroup struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroup struct {
-	AcceptMode *bool `json:"accept-mode,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
+	Statistics *SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics `json:"statistics,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default:=1000
+	AdvertiseInterval *uint16 `json:"advertise-interval,omitempty"`
+	Preempt           *bool   `json:"preempt,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	PreemptDelay *uint16 `json:"preempt-delay,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	VirtualRouterId *uint8 `json:"virtual-router-id"`
+	// +kubebuilder:default:=false
+	MasterInheritInterval *bool                                                                      `json:"master-inherit-interval,omitempty"`
+	InterfaceTracking     *SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	OperInterval *uint16 `json:"oper-interval,omitempty"`
@@ -237,31 +249,20 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroup struct {
 	Priority *uint8 `json:"priority,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	VirtualRouterId   *uint8                                                                     `json:"virtual-router-id"`
-	InterfaceTracking *SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=2
 	Version *uint8 `json:"version,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=1000
-	AdvertiseInterval *uint16 `json:"advertise-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	InitDelay      *uint16                                                                 `json:"init-delay,omitempty"`
-	Statistics     *SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics     `json:"statistics,omitempty"`
-	Authentication *SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
-	// +kubebuilder:default:=false
-	MasterInheritInterval *bool `json:"master-inherit-interval,omitempty"`
-	Preempt               *bool `json:"preempt,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	PreemptDelay *uint16 `json:"preempt-delay,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	VirtualAddress *string `json:"virtual-address,omitempty"`
+	AcceptMode     *bool   `json:"accept-mode,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	InitDelay *uint16 `json:"init-delay,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState     *string                                                                 `json:"admin-state,omitempty"`
+	Authentication *SrlNokiaInterfacesInterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4Vrrp struct
@@ -271,13 +272,13 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv4Vrrp struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv4 struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv4 struct {
-	Vrrp    *SrlNokiaInterfacesInterfaceSubinterfaceIpv4Vrrp      `json:"vrrp,omitempty"`
-	Address []*SrlNokiaInterfacesInterfaceSubinterfaceIpv4Address `json:"address,omitempty"`
+	DhcpClient *SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpClient `json:"dhcp-client,omitempty"`
+	DhcpRelay  *SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelay  `json:"dhcp-relay,omitempty"`
+	Vrrp       *SrlNokiaInterfacesInterfaceSubinterfaceIpv4Vrrp       `json:"vrrp,omitempty"`
+	Address    []*SrlNokiaInterfacesInterfaceSubinterfaceIpv4Address  `json:"address,omitempty"`
 	// +kubebuilder:default:=false
-	AllowDirectedBroadcast *bool                                                  `json:"allow-directed-broadcast,omitempty"`
-	Arp                    *SrlNokiaInterfacesInterfaceSubinterfaceIpv4Arp        `json:"arp,omitempty"`
-	DhcpClient             *SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpClient `json:"dhcp-client,omitempty"`
-	DhcpRelay              *SrlNokiaInterfacesInterfaceSubinterfaceIpv4DhcpRelay  `json:"dhcp-relay,omitempty"`
+	AllowDirectedBroadcast *bool                                           `json:"allow-directed-broadcast,omitempty"`
+	Arp                    *SrlNokiaInterfacesInterfaceSubinterfaceIpv4Arp `json:"arp,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6Address struct
@@ -364,6 +365,10 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryNeighbor struct
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscovery struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscovery struct {
+	// +kubebuilder:default:=true
+	DuplicateAddressDetection *bool                                                                  `json:"duplicate-address-detection,omitempty"`
+	Evpn                      *SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryEvpn      `json:"evpn,omitempty"`
+	HostRoute                 *SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute `json:"host-route,omitempty"`
 	// +kubebuilder:validation:Enum=`both`;`global`;`link-local`;`none`
 	// +kubebuilder:default:=none
 	LearnUnsolicited *string                                                                 `json:"learn-unsolicited,omitempty"`
@@ -378,10 +383,6 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscovery struct {
 	StaleTime *uint32 `json:"stale-time,omitempty"`
 	// +kubebuilder:validation:Enum=`messages`
 	Debug *string `json:"debug,omitempty"`
-	// +kubebuilder:default:=true
-	DuplicateAddressDetection *bool                                                                  `json:"duplicate-address-detection,omitempty"`
-	Evpn                      *SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryEvpn      `json:"evpn,omitempty"`
-	HostRoute                 *SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute `json:"host-route,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix struct
@@ -404,16 +405,10 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRole st
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=64
-	CurrentHopLimit *uint8                                                                            `json:"current-hop-limit,omitempty"`
-	Prefix          []*SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix `json:"prefix,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	AdminState *string `json:"admin-state,omitempty"`
-	// +kubebuilder:default:=false
-	ManagedConfigurationFlag *bool `json:"managed-configuration-flag,omitempty"`
-	// +kubebuilder:validation:Minimum=4
-	// +kubebuilder:validation:Maximum=1800
-	// +kubebuilder:default:=600
-	MaxAdvertisementInterval *uint16 `json:"max-advertisement-interval,omitempty"`
+	CurrentHopLimit *uint8 `json:"current-hop-limit,omitempty"`
+	// +kubebuilder:validation:Minimum=1280
+	// +kubebuilder:validation:Maximum=9486
+	IpMtu *uint16 `json:"ip-mtu,omitempty"`
 	// +kubebuilder:validation:Minimum=3
 	// +kubebuilder:validation:Maximum=1350
 	// +kubebuilder:default:=200
@@ -432,9 +427,15 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRole st
 	// +kubebuilder:validation:Maximum=9000
 	// +kubebuilder:default:=1800
 	RouterLifetime *uint16 `json:"router-lifetime,omitempty"`
-	// +kubebuilder:validation:Minimum=1280
-	// +kubebuilder:validation:Maximum=9486
-	IpMtu *uint16 `json:"ip-mtu,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	AdminState *string `json:"admin-state,omitempty"`
+	// +kubebuilder:validation:Minimum=4
+	// +kubebuilder:validation:Maximum=1800
+	// +kubebuilder:default:=600
+	MaxAdvertisementInterval *uint16                                                                           `json:"max-advertisement-interval,omitempty"`
+	Prefix                   []*SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix `json:"prefix,omitempty"`
+	// +kubebuilder:default:=false
+	ManagedConfigurationFlag *bool `json:"managed-configuration-flag,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisement struct
@@ -451,10 +452,10 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication stru
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface struct {
-	Interface *string `json:"interface"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	PriorityDecrement *uint8 `json:"priority-decrement,omitempty"`
+	PriorityDecrement *uint8  `json:"priority-decrement,omitempty"`
+	Interface         *string `json:"interface"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking struct
@@ -468,43 +469,43 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroup struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroup struct {
-	Authentication *SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
-	// +kubebuilder:default:=false
-	MasterInheritInterval *bool                                                               `json:"master-inherit-interval,omitempty"`
-	Preempt               *bool                                                               `json:"preempt,omitempty"`
-	Statistics            *SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics `json:"statistics,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	InitDelay *uint16 `json:"init-delay,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	VirtualAddress *string `json:"virtual-address,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=1000
-	AdvertiseInterval *uint16                                                                    `json:"advertise-interval,omitempty"`
-	InterfaceTracking *SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	OperInterval *uint16 `json:"oper-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=3
 	Version *uint8 `json:"version,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	VirtualRouterId *uint8 `json:"virtual-router-id"`
-	AcceptMode      *bool  `json:"accept-mode,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	PreemptDelay *uint16 `json:"preempt-delay,omitempty"`
+	VirtualRouterId *uint8                                                                  `json:"virtual-router-id"`
+	Authentication  *SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=100
 	Priority *uint8 `json:"priority,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	VirtualAddress *string `json:"virtual-address,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default:=1000
+	AdvertiseInterval *uint16 `json:"advertise-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	PreemptDelay      *uint16                                                                    `json:"preempt-delay,omitempty"`
+	InterfaceTracking *SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
+	// +kubebuilder:default:=false
+	MasterInheritInterval *bool `json:"master-inherit-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	OperInterval *uint16                                                             `json:"oper-interval,omitempty"`
+	Preempt      *bool                                                               `json:"preempt,omitempty"`
+	Statistics   *SrlNokiaInterfacesInterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics `json:"statistics,omitempty"`
+	AcceptMode   *bool                                                               `json:"accept-mode,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	InitDelay *uint16 `json:"init-delay,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6Vrrp struct
@@ -514,12 +515,12 @@ type SrlNokiaInterfacesInterfaceSubinterfaceIpv6Vrrp struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceIpv6 struct
 type SrlNokiaInterfacesInterfaceSubinterfaceIpv6 struct {
-	Address             []*SrlNokiaInterfacesInterfaceSubinterfaceIpv6Address           `json:"address,omitempty"`
 	DhcpClient          *SrlNokiaInterfacesInterfaceSubinterfaceIpv6DhcpClient          `json:"dhcp-client,omitempty"`
 	DhcpRelay           *SrlNokiaInterfacesInterfaceSubinterfaceIpv6DhcpRelay           `json:"dhcp-relay,omitempty"`
 	NeighborDiscovery   *SrlNokiaInterfacesInterfaceSubinterfaceIpv6NeighborDiscovery   `json:"neighbor-discovery,omitempty"`
 	RouterAdvertisement *SrlNokiaInterfacesInterfaceSubinterfaceIpv6RouterAdvertisement `json:"router-advertisement,omitempty"`
 	Vrrp                *SrlNokiaInterfacesInterfaceSubinterfaceIpv6Vrrp                `json:"vrrp,omitempty"`
+	Address             []*SrlNokiaInterfacesInterfaceSubinterfaceIpv6Address           `json:"address,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceLocalMirrorDestination struct
@@ -531,10 +532,10 @@ type SrlNokiaInterfacesInterfaceSubinterfaceLocalMirrorDestination struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceQosInputClassifiers struct
 type SrlNokiaInterfacesInterfaceSubinterfaceQosInputClassifiers struct {
-	Dscp             *string `json:"dscp,omitempty"`
-	Ipv4Dscp         *string `json:"ipv4-dscp,omitempty"`
 	Ipv6Dscp         *string `json:"ipv6-dscp,omitempty"`
 	MplsTrafficClass *string `json:"mpls-traffic-class,omitempty"`
+	Dscp             *string `json:"dscp,omitempty"`
+	Ipv4Dscp         *string `json:"ipv4-dscp,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceQosInput struct
@@ -572,8 +573,8 @@ type SrlNokiaInterfacesInterfaceSubinterfaceVlanEncapUntagged struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceVlanEncap struct
 type SrlNokiaInterfacesInterfaceSubinterfaceVlanEncap struct {
-	SingleTagged *SrlNokiaInterfacesInterfaceSubinterfaceVlanEncapSingleTagged `json:"single-tagged,omitempty"`
 	Untagged     *SrlNokiaInterfacesInterfaceSubinterfaceVlanEncapUntagged     `json:"untagged,omitempty"`
+	SingleTagged *SrlNokiaInterfacesInterfaceSubinterfaceVlanEncapSingleTagged `json:"single-tagged,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceVlan struct
@@ -583,13 +584,19 @@ type SrlNokiaInterfacesInterfaceSubinterfaceVlan struct {
 
 // SrlNokiaInterfacesInterfaceSubinterface struct
 type SrlNokiaInterfacesInterfaceSubinterface struct {
-	// +kubebuilder:validation:Minimum=1280
-	// +kubebuilder:validation:Maximum=9486
-	IpMtu *uint16                                      `json:"ip-mtu,omitempty"`
-	Ipv6  *SrlNokiaInterfacesInterfaceSubinterfaceIpv6 `json:"ipv6,omitempty"`
-	Ipv4  *SrlNokiaInterfacesInterfaceSubinterfaceIpv4 `json:"ipv4,omitempty"`
-	Qos   *SrlNokiaInterfacesInterfaceSubinterfaceQos  `json:"qos,omitempty"`
-	Vlan  *SrlNokiaInterfacesInterfaceSubinterfaceVlan `json:"vlan,omitempty"`
+	AnycastGw   *SrlNokiaInterfacesInterfaceSubinterfaceAnycastGw   `json:"anycast-gw,omitempty"`
+	BridgeTable *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTable `json:"bridge-table,omitempty"`
+	Ipv4        *SrlNokiaInterfacesInterfaceSubinterfaceIpv4        `json:"ipv4,omitempty"`
+	Type        *string                                             `json:"type,omitempty"`
+	Qos         *SrlNokiaInterfacesInterfaceSubinterfaceQos         `json:"qos,omitempty"`
+	// +kubebuilder:validation:Minimum=1500
+	// +kubebuilder:validation:Maximum=9500
+	L2Mtu                  *uint16                                                        `json:"l2-mtu,omitempty"`
+	LocalMirrorDestination *SrlNokiaInterfacesInterfaceSubinterfaceLocalMirrorDestination `json:"local-mirror-destination,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=9999
+	Index *uint32                                     `json:"index"`
+	Acl   *SrlNokiaInterfacesInterfaceSubinterfaceAcl `json:"acl,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -598,17 +605,11 @@ type SrlNokiaInterfacesInterfaceSubinterface struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Description *string `json:"description,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=9999
-	Index       *uint32                                             `json:"index"`
-	Acl         *SrlNokiaInterfacesInterfaceSubinterfaceAcl         `json:"acl,omitempty"`
-	AnycastGw   *SrlNokiaInterfacesInterfaceSubinterfaceAnycastGw   `json:"anycast-gw,omitempty"`
-	BridgeTable *SrlNokiaInterfacesInterfaceSubinterfaceBridgeTable `json:"bridge-table,omitempty"`
-	// +kubebuilder:validation:Minimum=1500
-	// +kubebuilder:validation:Maximum=9500
-	L2Mtu                  *uint16                                                        `json:"l2-mtu,omitempty"`
-	LocalMirrorDestination *SrlNokiaInterfacesInterfaceSubinterfaceLocalMirrorDestination `json:"local-mirror-destination,omitempty"`
-	Type                   *string                                                        `json:"type,omitempty"`
+	// +kubebuilder:validation:Minimum=1280
+	// +kubebuilder:validation:Maximum=9486
+	IpMtu *uint16                                      `json:"ip-mtu,omitempty"`
+	Ipv6  *SrlNokiaInterfacesInterfaceSubinterfaceIpv6 `json:"ipv6,omitempty"`
+	Vlan  *SrlNokiaInterfacesInterfaceSubinterfaceVlan `json:"vlan,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSubinterfaceSpec struct
@@ -619,6 +620,15 @@ type SrlNokiaInterfacesInterfaceSubinterfaceSpec struct {
 
 // SrlNokiaInterfacesInterfaceSubinterfaceStatus struct
 type SrlNokiaInterfacesInterfaceSubinterfaceStatus struct {
+	// Target provides the status of the configuration on the device
+	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
+
+	// UsedSpec provides the spec used for the configuration
+	UsedSpec *SrlNokiaInterfacesInterfaceSubinterfaceSpec `json:"usedSpec,omitempty"`
+
+	// LastUpdated identifies when this status was last observed.
+	// +optional
+	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -644,4 +654,37 @@ type K8sSrlNokiaInterfacesInterfaceSubinterfaceList struct {
 
 func init() {
 	SchemeBuilder.Register(&K8sSrlNokiaInterfacesInterfaceSubinterface{}, &K8sSrlNokiaInterfacesInterfaceSubinterfaceList{})
+}
+
+// NewEvent creates a new event associated with the object and ready
+// to be published to the kubernetes API.
+func (o *K8sSrlNokiaInterfacesInterfaceSubinterface) NewEvent(reason, message string) corev1.Event {
+	t := metav1.Now()
+	return corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName: reason + "-",
+			Namespace:    o.ObjectMeta.Namespace,
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:       "SrlNokiaInterfacesInterfaceSubinterface",
+			Namespace:  o.Namespace,
+			Name:       o.Name,
+			UID:        o.UID,
+			APIVersion: GroupVersion.String(),
+		},
+		Reason:  reason,
+		Message: message,
+		Source: corev1.EventSource{
+			Component: "srl-controller",
+		},
+		FirstTimestamp:      t,
+		LastTimestamp:       t,
+		Count:               1,
+		Type:                corev1.EventTypeNormal,
+		ReportingController: "srlinux.henderiw.be/srl-controller",
+	}
+}
+
+func (o *K8sSrlNokiaInterfacesInterfaceSubinterface) SetConfigStatus(t *string, c *ConfigStatus) {
+	o.Status.Target[*t].ConfigStatus = c
 }

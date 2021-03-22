@@ -56,6 +56,61 @@ spec:
             type: object
           status:
             description: SrlNokiaSystemSystemNameStatus struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  name:
+                    description: SrlNokiaSystemSystemName struct
+                    properties:
+                      domain-name:
+                        maxLength: 253
+                        minLength: 1
+                        pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                        type: string
+                      host-name:
+                        maxLength: 63
+                        minLength: 1
+                        pattern: (([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
             type: object
         type: object
     served: true

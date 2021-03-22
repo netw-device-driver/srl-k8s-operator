@@ -43,7 +43,7 @@ var (
 	scheme         = runtime.NewScheme()
 	setupLog       = ctrl.Log.WithName("setup")
 	srlConcurrency int
-	natsServer     string
+	//natsServer string
 )
 
 func init() {
@@ -64,8 +64,8 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
-	flag.StringVar(&natsServer, "nats-server", "",
-		"The address the natsServer to subscribe to")
+	//flag.StringVar(&natsServer, "nats-server", "",
+	//	"The address the natsServer to subscribe to")
 	flag.IntVar(&srlConcurrency, "srl-oncurrency", 1,
 		"Number of items to process simultaneously")
 	opts := zap.Options{
@@ -116,7 +116,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaInterfacesInterfaceReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaInterfacesInterface}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -127,7 +126,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaInterfacesInterfaceSubinterfaceReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaInterfacesInterfaceSubinterface}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -138,7 +136,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstance}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -149,7 +146,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -160,7 +156,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroups}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -171,7 +166,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -182,7 +176,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -193,7 +186,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -204,7 +196,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -215,7 +206,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -226,7 +216,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsOspf}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -237,7 +226,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceStaticRoutesReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceStaticRoutes}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -248,7 +236,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaSystemSystemMtuReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemMtu}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -259,7 +246,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaSystemSystemNameReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemName}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -270,7 +256,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaSystemSystemNetworkInstanceReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemNetworkInstance}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -281,7 +266,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaSystemSystemNtpReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemNtp}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
@@ -292,7 +276,6 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
 	if err := (&controllers.K8sSrlNokiaTunnelInterfacesTunnelInterfaceReconciler{
 		Client: mgr.GetClient(),
-		Server: &natsServer,
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaTunnelInterfacesTunnelInterface}"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,

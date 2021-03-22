@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -49,7 +50,9 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities struc
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct
 type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
-	GenerateIcmp *bool `json:"generate-icmp,omitempty"`
+	Aggregator   *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
+	Communities  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
+	GenerateIcmp *bool                                                                  `json:"generate-icmp,omitempty"`
 	// +kubebuilder:default:=false
 	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
@@ -58,9 +61,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
 	Prefix *string `json:"prefix"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState  *string                                                                `json:"admin-state,omitempty"`
-	Aggregator  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
-	Communities *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes struct
@@ -76,6 +77,15 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesSpec struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesStatus struct
 type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesStatus struct {
+	// Target provides the status of the configuration on the device
+	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
+
+	// UsedSpec provides the spec used for the configuration
+	UsedSpec *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesSpec `json:"usedSpec,omitempty"`
+
+	// LastUpdated identifies when this status was last observed.
+	// +optional
+	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -101,4 +111,37 @@ type K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesList struct {
 
 func init() {
 	SchemeBuilder.Register(&K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes{}, &K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesList{})
+}
+
+// NewEvent creates a new event associated with the object and ready
+// to be published to the kubernetes API.
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes) NewEvent(reason, message string) corev1.Event {
+	t := metav1.Now()
+	return corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName: reason + "-",
+			Namespace:    o.ObjectMeta.Namespace,
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:       "SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes",
+			Namespace:  o.Namespace,
+			Name:       o.Name,
+			UID:        o.UID,
+			APIVersion: GroupVersion.String(),
+		},
+		Reason:  reason,
+		Message: message,
+		Source: corev1.EventSource{
+			Component: "srl-controller",
+		},
+		FirstTimestamp:      t,
+		LastTimestamp:       t,
+		Count:               1,
+		Type:                corev1.EventTypeNormal,
+		ReportingController: "srlinux.henderiw.be/srl-controller",
+	}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes) SetConfigStatus(t *string, c *ConfigStatus) {
+	o.Status.Target[*t].ConfigStatus = c
 }

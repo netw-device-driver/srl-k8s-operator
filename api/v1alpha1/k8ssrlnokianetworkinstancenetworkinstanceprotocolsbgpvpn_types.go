@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -50,7 +51,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget
 	// +kubebuilder:validation:Pattern=`origin:(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
 	// +kubebuilder:validation:Pattern=`origin:(429496729[0-5]|42949672[0-8][0-9]|4294967[0-1][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|4[0-1][0-9]{7}|[1-3][0-9]{9}|[1-9][0-9]{1,8}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
 	// +kubebuilder:validation:Pattern=`color:[0-1]{2}:(429496729[0-5]|42949672[0-8][0-9]|4294967[0-1][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|4[0-1][0-9]{7}|[1-3][0-9]{9}|[1-9][0-9]{1,8}|[0-9])`
-	ExportRt *string `json:"export-rt,omitempty"`
+	ImportRt *string `json:"import-rt,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9]):(429496729[0-5]|42949672[0-8][0-9]|4294967[0-1][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|4[0-1][0-9]{7}|[1-3][0-9]{9}|[1-9][0-9]{1,8}|[0-9])`
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
@@ -62,18 +63,18 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget
 	// +kubebuilder:validation:Pattern=`origin:(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
 	// +kubebuilder:validation:Pattern=`origin:(429496729[0-5]|42949672[0-8][0-9]|4294967[0-1][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|4[0-1][0-9]{7}|[1-3][0-9]{9}|[1-9][0-9]{1,8}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
 	// +kubebuilder:validation:Pattern=`color:[0-1]{2}:(429496729[0-5]|42949672[0-8][0-9]|4294967[0-1][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|4[0-1][0-9]{7}|[1-3][0-9]{9}|[1-9][0-9]{1,8}|[0-9])`
-	ImportRt *string `json:"import-rt,omitempty"`
+	ExportRt *string `json:"export-rt,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstance struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstance struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=2
-	Id                 *uint8                                                                              `json:"id"`
-	ExportPolicy       *string                                                                             `json:"export-policy,omitempty"`
-	ImportPolicy       *string                                                                             `json:"import-policy,omitempty"`
 	RouteDistinguisher *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
 	RouteTarget        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=2
+	Id           *uint8  `json:"id"`
+	ExportPolicy *string `json:"export-policy,omitempty"`
+	ImportPolicy *string `json:"import-policy,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn struct
@@ -89,6 +90,15 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnSpec struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnStatus struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnStatus struct {
+	// Target provides the status of the configuration on the device
+	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
+
+	// UsedSpec provides the spec used for the configuration
+	UsedSpec *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnSpec `json:"usedSpec,omitempty"`
+
+	// LastUpdated identifies when this status was last observed.
+	// +optional
+	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -114,4 +124,37 @@ type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnList struct {
 
 func init() {
 	SchemeBuilder.Register(&K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn{}, &K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnList{})
+}
+
+// NewEvent creates a new event associated with the object and ready
+// to be published to the kubernetes API.
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn) NewEvent(reason, message string) corev1.Event {
+	t := metav1.Now()
+	return corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName: reason + "-",
+			Namespace:    o.ObjectMeta.Namespace,
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:       "SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn",
+			Namespace:  o.Namespace,
+			Name:       o.Name,
+			UID:        o.UID,
+			APIVersion: GroupVersion.String(),
+		},
+		Reason:  reason,
+		Message: message,
+		Source: corev1.EventSource{
+			Component: "srl-controller",
+		},
+		FirstTimestamp:      t,
+		LastTimestamp:       t,
+		Count:               1,
+		Type:                corev1.EventTypeNormal,
+		ReportingController: "srlinux.henderiw.be/srl-controller",
+	}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn) SetConfigStatus(t *string, c *ConfigStatus) {
+	o.Status.Target[*t].ConfigStatus = c
 }

@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -29,12 +30,6 @@ const (
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication struct {
-	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
-	// +kubebuilder:default:=stop-learning
-	Action *string `json:"action,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:default:=9
 	HoldDownTime *uint32 `json:"hold-down-time,omitempty"`
 	// +kubebuilder:validation:Minimum=1
@@ -45,6 +40,12 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication struct {
 	// +kubebuilder:validation:Maximum=10
 	// +kubebuilder:default:=5
 	NumMoves *uint32 `json:"num-moves,omitempty"`
+	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
+	// +kubebuilder:default:=stop-learning
+	Action *string `json:"action,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearningAging struct
@@ -68,14 +69,14 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=8192
-	// +kubebuilder:default:=250
-	MaximumEntries *int32 `json:"maximum-entries,omitempty"`
 	// +kubebuilder:validation:Minimum=6
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=95
 	WarningThresholdPct *int32 `json:"warning-threshold-pct,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8192
+	// +kubebuilder:default:=250
+	MaximumEntries *int32 `json:"maximum-entries,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMacMac struct
@@ -93,14 +94,14 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTable struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTable struct {
-	MacDuplication *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
-	MacLearning    *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
-	MacLimit       *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit       `json:"mac-limit,omitempty"`
+	MacLimit *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit `json:"mac-limit,omitempty"`
 	// +kubebuilder:default:=false
 	ProtectAnycastGwMac *bool                                                       `json:"protect-anycast-gw-mac,omitempty"`
 	StaticMac           *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac `json:"static-mac,omitempty"`
 	// +kubebuilder:default:=false
-	DiscardUnknownDestMac *bool `json:"discard-unknown-dest-mac,omitempty"`
+	DiscardUnknownDestMac *bool                                                            `json:"discard-unknown-dest-mac,omitempty"`
+	MacDuplication        *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
+	MacLearning           *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceInterface struct
@@ -120,10 +121,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceIpForwarding struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancingResilientHashPrefix struct
 type SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancingResilientHashPrefix struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=64
-	// +kubebuilder:default:=1
-	MaxPaths *uint8 `json:"max-paths,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
@@ -132,6 +129,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancingResilientHashPrefix st
 	// +kubebuilder:validation:Maximum=32
 	// +kubebuilder:default:=1
 	HashBucketsPerPath *uint8 `json:"hash-buckets-per-path,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +kubebuilder:default:=1
+	MaxPaths *uint8 `json:"max-paths,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing struct
@@ -141,9 +142,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceMplsStaticMplsEntry struct
 type SrlNokiaNetworkInstanceNetworkInstanceMplsStaticMplsEntry struct {
-	TopLabel *string `json:"top-label"`
-	// +kubebuilder:default:=false
-	CollectStats *bool   `json:"collect-stats,omitempty"`
 	NextHopGroup *string `json:"next-hop-group,omitempty"`
 	// +kubebuilder:validation:Enum=`pop`;`swap`
 	// +kubebuilder:default:=swap
@@ -151,7 +149,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceMplsStaticMplsEntry struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=5
-	Preference *uint8 `json:"preference,omitempty"`
+	Preference *uint8  `json:"preference,omitempty"`
+	TopLabel   *string `json:"top-label"`
+	// +kubebuilder:default:=false
+	CollectStats *bool `json:"collect-stats,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceMpls struct
@@ -195,13 +196,13 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterfaceDelay stru
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterface struct
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterface struct {
-	InterfaceName  *string                                                                 `json:"interface-name"`
-	AdminGroup     *string                                                                 `json:"admin-group,omitempty"`
 	Delay          *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterfaceDelay `json:"delay,omitempty"`
 	SrlgMembership *string                                                                 `json:"srlg-membership,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16777215
-	TeMetric *uint32 `json:"te-metric,omitempty"`
+	TeMetric      *uint32 `json:"te-metric,omitempty"`
+	InterfaceName *string `json:"interface-name"`
+	AdminGroup    *string `json:"admin-group,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember struct
@@ -239,11 +240,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroup
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering struct
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering struct {
-	AdminGroups *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringAdminGroups `json:"admin-groups,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AutonomousSystem *uint32                                                              `json:"autonomous-system,omitempty"`
-	Interface        []*SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterface `json:"interface,omitempty"`
+	Interface []*SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterface `json:"interface,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	Ipv4TeRouterId *string `json:"ipv4-te-router-id,omitempty"`
@@ -251,6 +248,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering struct {
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	Ipv6TeRouterId       *string                                                                       `json:"ipv6-te-router-id,omitempty"`
 	SharedRiskLinkGroups *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroups `json:"shared-risk-link-groups,omitempty"`
+	AdminGroups          *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringAdminGroups          `json:"admin-groups,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	AutonomousSystem *uint32 `json:"autonomous-system,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface struct
@@ -264,32 +265,32 @@ type SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface struct {
 
 // SrlNokiaNetworkInstanceNetworkInstance struct
 type SrlNokiaNetworkInstanceNetworkInstance struct {
-	BridgeTable     *SrlNokiaNetworkInstanceNetworkInstanceBridgeTable     `json:"bridge-table,omitempty"`
-	IpForwarding    *SrlNokiaNetworkInstanceNetworkInstanceIpForwarding    `json:"ip-forwarding,omitempty"`
-	IpLoadBalancing *SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
-	Mtu             *SrlNokiaNetworkInstanceNetworkInstanceMtu             `json:"mtu,omitempty"`
-	Mpls            *SrlNokiaNetworkInstanceNetworkInstanceMpls            `json:"mpls,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+	Name         *string                                             `json:"name"`
+	Interface    []*SrlNokiaNetworkInstanceNetworkInstanceInterface  `json:"interface,omitempty"`
+	IpForwarding *SrlNokiaNetworkInstanceNetworkInstanceIpForwarding `json:"ip-forwarding,omitempty"`
+	Mtu          *SrlNokiaNetworkInstanceNetworkInstanceMtu          `json:"mtu,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	RouterId           *string                                                   `json:"router-id,omitempty"`
-	TrafficEngineering *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
+	RouterId *string `json:"router-id,omitempty"`
 	// +kubebuilder:default:=default
-	Type *string `json:"type,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
+	Type           *string                                                 `json:"type,omitempty"`
+	VxlanInterface []*SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface `json:"vxlan-interface,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
+	AdminState  *string                                            `json:"admin-state,omitempty"`
+	BridgeTable *SrlNokiaNetworkInstanceNetworkInstanceBridgeTable `json:"bridge-table,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Description    *string                                                 `json:"description,omitempty"`
-	Interface      []*SrlNokiaNetworkInstanceNetworkInstanceInterface      `json:"interface,omitempty"`
-	VxlanInterface []*SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface `json:"vxlan-interface,omitempty"`
+	Description        *string                                                   `json:"description,omitempty"`
+	IpLoadBalancing    *SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing    `json:"ip-load-balancing,omitempty"`
+	Mpls               *SrlNokiaNetworkInstanceNetworkInstanceMpls               `json:"mpls,omitempty"`
+	TrafficEngineering *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceSpec struct
@@ -299,6 +300,15 @@ type SrlNokiaNetworkInstanceNetworkInstanceSpec struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceStatus struct
 type SrlNokiaNetworkInstanceNetworkInstanceStatus struct {
+	// Target provides the status of the configuration on the device
+	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
+
+	// UsedSpec provides the spec used for the configuration
+	UsedSpec *SrlNokiaNetworkInstanceNetworkInstanceSpec `json:"usedSpec,omitempty"`
+
+	// LastUpdated identifies when this status was last observed.
+	// +optional
+	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -324,4 +334,37 @@ type K8sSrlNokiaNetworkInstanceNetworkInstanceList struct {
 
 func init() {
 	SchemeBuilder.Register(&K8sSrlNokiaNetworkInstanceNetworkInstance{}, &K8sSrlNokiaNetworkInstanceNetworkInstanceList{})
+}
+
+// NewEvent creates a new event associated with the object and ready
+// to be published to the kubernetes API.
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstance) NewEvent(reason, message string) corev1.Event {
+	t := metav1.Now()
+	return corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName: reason + "-",
+			Namespace:    o.ObjectMeta.Namespace,
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:       "SrlNokiaNetworkInstanceNetworkInstance",
+			Namespace:  o.Namespace,
+			Name:       o.Name,
+			UID:        o.UID,
+			APIVersion: GroupVersion.String(),
+		},
+		Reason:  reason,
+		Message: message,
+		Source: corev1.EventSource{
+			Component: "srl-controller",
+		},
+		FirstTimestamp:      t,
+		LastTimestamp:       t,
+		Count:               1,
+		Type:                corev1.EventTypeNormal,
+		ReportingController: "srlinux.henderiw.be/srl-controller",
+	}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstance) SetConfigStatus(t *string, c *ConfigStatus) {
+	o.Status.Target[*t].ConfigStatus = c
 }

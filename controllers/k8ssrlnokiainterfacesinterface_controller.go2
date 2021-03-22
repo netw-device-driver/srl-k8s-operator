@@ -167,7 +167,7 @@ func (r *K8sSrlNokiaInterfacesInterfaceReconciler) Reconcile(ctx context.Context
 		)
 		o.Finalizers = append(o.Finalizers,
 			srlinuxv1alpha1.SrlNokiaInterfacesInterfaceFinalizer)
-		err := r.Update(context.TODO(), o)
+		err := r.Update(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to add finalizer")
 		}
@@ -217,9 +217,6 @@ func (r *K8sSrlNokiaInterfacesInterfaceReconciler) Reconcile(ctx context.Context
 		deletepaths = append(deletepaths, fmt.Sprintf("/interface[name=%s]", hkey0))
 	}
 
-	// path to be used for this object
-	path := "/"
-
 	info := make(map[string]*K8sSrlNokiaInterfacesInterfaceReconcileInfo)
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
@@ -254,7 +251,7 @@ func (r *K8sSrlNokiaInterfacesInterfaceReconciler) Reconcile(ctx context.Context
 		}
 		if *initialState == srlinuxv1alpha1.ConfigStatusNone {
 			// update the cache through GRPC
-			err := info[target.TargetName].UpdateCache(path, deletepaths, dependencies)
+			err := info[target.TargetName].UpdateCache(deletepaths, dependencies)
 			if err != nil {
 				err = errors.Wrap(err, fmt.Sprintf("grpc update %q failed", *initialState))
 				return ctrl.Result{}, err
@@ -314,7 +311,7 @@ func (r *K8sSrlNokiaInterfacesInterfaceReconciler) Reconcile(ctx context.Context
 					fmt.Sprintf("failed to save status"))
 			}
 		}
-		SrlNokiaInterfacesInterfacelogResult(info[target.TargetName], result[target.TargetName])
+		logResult(info[target.TargetName], result[target.TargetName])
 
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
@@ -325,7 +322,7 @@ func (r *K8sSrlNokiaInterfacesInterfaceReconciler) Reconcile(ctx context.Context
 	return ctrl.Result{}, nil
 }
 
-func SrlNokiaInterfacesInterfacelogResult(info *K8sSrlNokiaInterfacesInterfaceReconcileInfo, result ctrl.Result) {
+func logResult(info *K8sSrlNokiaInterfacesInterfaceReconcileInfo, result ctrl.Result) {
 	if result.Requeue || result.RequeueAfter != 0 ||
 		!utils.StringInList(info.o.Finalizers,
 			srlinuxv1alpha1.SrlNokiaInterfacesInterfaceFinalizer) {
@@ -457,7 +454,7 @@ func SrlNokiaInterfacesInterfacehasFinalizer(o *srlinuxv1alpha1.K8sSrlNokiaInter
 func (info *K8sSrlNokiaInterfacesInterfaceReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
 	if !info.o.DeletionTimestamp.IsZero() && SrlNokiaInterfacesInterfacehasFinalizer(info.o) {
 
-		// prepare the grpc data
+		// prepare the nats data
 		req := &netwdevpb.CacheUpdateRequest{
 			Resource:             *info.resource,
 			Level:                *info.level,
@@ -477,10 +474,10 @@ func (info *K8sSrlNokiaInterfacesInterfaceReconcileInfo) DeleteCache(deletepaths
 }
 
 // Update Cache
-func (info *K8sSrlNokiaInterfacesInterfaceReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
-
+func (info *K8sSrlNokiaInterfacesInterfaceReconcileInfo) UpdateCache(deletepaths, dependencies []string) error {
+	// path to be used for this object
+	path := "/"
 	// marshal data to json
-
 	d := make([][]byte, 0)
 	for _, obj := range *info.o.Spec.SrlNokiaInterfacesInterface {
 		o := make([]srlinuxv1alpha1.SrlNokiaInterfacesInterface, 0)
@@ -496,7 +493,6 @@ func (info *K8sSrlNokiaInterfacesInterfaceReconcileInfo) UpdateCache(path string
 		}
 		d = append(d, dj)
 	}
-
 	// update the cache
 	req := &netwdevpb.CacheUpdateRequest{
 		Resource:             *info.resource,
@@ -544,10 +540,10 @@ func newK8sSrlNokiaInterfacesInterfaceStateMachine(o *srlinuxv1alpha1.K8sSrlNoki
 	return &r
 }
 
-type SrlNokiaInterfacesInterfacestateHandler func(*K8sSrlNokiaInterfacesInterfaceReconcileInfo) actionResult
+type stateHandler func(*K8sSrlNokiaInterfacesInterfaceReconcileInfo) actionResult
 
-func (o *K8sSrlNokiaInterfacesInterfaceStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlNokiaInterfacesInterfacestateHandler {
-	return map[srlinuxv1alpha1.ConfigStatus]SrlNokiaInterfacesInterfacestateHandler{
+func (o *K8sSrlNokiaInterfacesInterfaceStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]stateHandler {
+	return map[srlinuxv1alpha1.ConfigStatus]stateHandler{
 		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
 		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
 		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,

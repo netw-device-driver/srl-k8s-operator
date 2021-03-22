@@ -29,7 +29,6 @@ spec:
         - /manager
         args:
         - --leader-elect
-        - --nats-server=nats.default.svc.cluster.local
         image: henderiw/srl:latest
         imagePullPolicy: Always
         name: manager

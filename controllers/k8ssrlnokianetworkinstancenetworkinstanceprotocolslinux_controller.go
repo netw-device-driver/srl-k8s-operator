@@ -20,7 +20,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"time"
 
+	"github.com/metal3-io/baremetal-operator/pkg/utils"
 	"github.com/stoewer/go-strcase"
 
 	"github.com/go-logr/logr"
@@ -30,27 +33,104 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"sigs.k8s.io/controller-runtime/pkg/source"
 
 	nddv1 "github.com/netw-device-driver/netw-device-controller/api/v1"
-
 	"github.com/netw-device-driver/netwdevpb"
+
 	srlinuxv1alpha1 "github.com/srl-wim/srl-k8s-operator/api/v1alpha1"
-	"github.com/srl-wim/srl-k8s-operator/pkg/natssrl"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler reconciles a SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux object
 type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler struct {
 	client.Client
-	Server *string
 	Log    logr.Logger
 	Scheme *runtime.Scheme
 	Ctx    context.Context
 }
 
-// +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networknodes,verbs=get;list;watch
+// Instead of passing a zillion arguments to the action of a phase,
+// hold them in a context per device
+type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxTargetReconcileInfo struct {
+	Target map[string]*K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo
+}
+
+type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo struct {
+	target            *string
+	resource          *string
+	o                 *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux
+	level             *int32
+	dependencies      *[]string
+	deletepaths       *[]string
+	request           ctrl.Request
+	events            []corev1.Event
+	errorMessage      *string
+	postSaveCallbacks []func()
+	ctx               context.Context
+	log               logr.Logger
+}
+
+// +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networkdevices,verbs=get;list;watch
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes/finalizers,verbs=update
+
+// SetupWithManager sets up the controller with the Manager.
+func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
+	b := ctrl.NewControllerManagedBy(mgr).
+		For(&srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux{}).
+		WithOptions(option).
+		Watches(
+			&source.Kind{Type: &nddv1.NetworkDevice{}},
+			handler.EnqueueRequestsFromMapFunc(r.NetworkDeviceMapFunc),
+		)
+
+	_, err := b.Build(r)
+	if err != nil {
+		return errors.Wrap(err, "failed setting up with a controller manager")
+	}
+	return nil
+
+}
+
+// NetworkDeviceMapFunc is a handler.ToRequestsFunc to be used to enqeue
+// request for reconciliation of K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux.
+func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Request {
+	result := []ctrl.Request{}
+
+	nd, ok := o.(*nddv1.NetworkDevice)
+	if !ok {
+		panic(fmt.Sprintf("Expected a NodeTopology but got a %T", o))
+	}
+	r.Log.WithValues(nd.GetName(), nd.GetNamespace()).Info("NetworkDevice MapFunction")
+
+	selectors := []client.ListOption{
+		client.InNamespace(nd.Namespace),
+		client.MatchingLabels{},
+	}
+	os := &srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxList{}
+	if err := r.Client.List(context.TODO(), os, selectors...); err != nil {
+		return result
+	}
+
+	for _, o := range os.Items {
+		name := client.ObjectKey{
+			Namespace: o.GetNamespace(),
+			Name:      o.GetName(),
+		}
+		r.Log.WithValues(o.GetName(), o.GetNamespace()).Info("NetworkDevice MapFunction ReQueue")
+		result = append(result, ctrl.Request{NamespacedName: name})
+	}
+
+	// delay a bit to ensure the grpc server is started
+	time.Sleep(2 * time.Second)
+
+	return result
+}
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -64,7 +144,7 @@ type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler struct {
 func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = r.Log.WithValues("K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux", req.NamespacedName)
 
-	r.Log.Info("reconciling K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux")
+	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux")
 
 	o := &srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux{}
 	if err := r.Client.Get(ctx, req.NamespacedName, o); err != nil {
@@ -76,7 +156,7 @@ func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) Reco
 	}
 	o.DeepCopy()
 
-	r.Log.WithValues("Object", o).Info("Object Info")
+	//r.Log.WithValues("Object", o).Info("Object Info")
 
 	// Add a finalizer to newly created objects.
 	if o.DeletionTimestamp.IsZero() && !SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(o) {
@@ -94,20 +174,35 @@ func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) Reco
 		return ctrl.Result{Requeue: true}, nil
 	}
 
-	t, err := r.FindTarget(ctx, o)
+	t, dirty, err := r.FindTarget(ctx, o)
 	if err != nil {
 		switch err.(type) {
 		case *TargetNotFoundError:
+			// save resource status since last target got deleted
+			if dirty {
+				if err = r.saveK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStatus(ctx, o); err != nil {
+					return ctrl.Result{}, errors.Wrap(err,
+						fmt.Sprintf("failed to save status"))
+				}
+			}
 			// when no target is available requeue to retry after requetimer
 			return ctrl.Result{Requeue: true, RequeueAfter: targetNotFoundRetryDelay}, nil
 		default:
 			return ctrl.Result{}, err
 		}
 	}
-	r.Log.WithValues("Target", *t).Info("Target Info")
+	// save resource status since items got deleted
+	if dirty {
+		if err = r.saveK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStatus(ctx, o); err != nil {
+			return ctrl.Result{}, errors.Wrap(err,
+				fmt.Sprintf("failed to save status"))
+		}
+	}
+	r.Log.WithValues("Targets", t).Info("Target Info")
 
+	// initialize the resource parameters
 	level := int32(3)
-	topic := "ndd" + "." + *t + "." + "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux" + strcase.UpperCamelCase(o.Name)
+	resource := "srlinux.henderiw.be" + "." + "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux" + "." + strcase.UpperCamelCase(o.Name)
 
 	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 
@@ -117,121 +212,548 @@ func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) Reco
 
 	deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/linux", hkey0))
 
-	// The object is being deleted
-	if !o.DeletionTimestamp.IsZero() && SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(o) {
+	// path to be used for this object
+	path := fmt.Sprintf("/network-instance[name=%s]/protocols", hkey0)
 
-		// prepare the nats data
-		data := &netwdevpb.ConfigMessage{
-			Level:                level,
-			Action:               netwdevpb.ConfigMessage_Delete,
-			IndividualActionPath: deletepaths,
-			Dependencies:         dependencies,
+	info := make(map[string]*K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo)
+	result := make(map[string]reconcile.Result)
+	actResult := make(map[string]actionResult)
+	for _, target := range t {
+		initialState := new(srlinuxv1alpha1.ConfigStatus)
+		if len(o.Status.Target) == 0 {
+			o.Status.Target = make(map[string]*srlinuxv1alpha1.TargetStatus)
+		}
+		if s, ok := o.Status.Target[target.TargetName]; !ok {
+			o.Status.Target[target.TargetName] = &srlinuxv1alpha1.TargetStatus{
+				ConfigStatus: srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone),
+				ErrorCount:   intPtr(0),
+			}
+			initialState = o.Status.Target[target.TargetName].ConfigStatus
+		} else {
+			initialState = s.ConfigStatus
 		}
 
-		n := &natssrl.Client{
-			Server: *r.Server,
-			Topic:  topic,
+		r.Log.Info("configuration status in reconcile",
+			"target", target.TargetName,
+			"status", initialState)
+		info[target.TargetName] = &K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo{
+			ctx:          ctx,
+			target:       &target.Target,
+			log:          r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
+			o:            o,
+			request:      req,
+			level:        &level,
+			resource:     &resource,
+			dependencies: &dependencies,
+			deletepaths:  &deletepaths,
 		}
-		n.Publish(data)
-
-		r.Log.WithValues(
-			"Topic", n.Topic).WithValues(
-			"Data", data).Info("Published data")
-
-		// remove our finalizer from the list and update it.
-		o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxFinalizer)
-		if err := r.Update(context.Background(), o); err != nil {
-			return ctrl.Result{}, errors.Wrap(err,
-				fmt.Sprintf("failed to remove finalizer"))
+		if *initialState == srlinuxv1alpha1.ConfigStatusNone {
+			// update the cache through GRPC
+			err := info[target.TargetName].UpdateCache(path, deletepaths, dependencies)
+			if err != nil {
+				err = errors.Wrap(err, fmt.Sprintf("grpc update %q failed", *initialState))
+				return ctrl.Result{}, err
+			}
+			// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEDIATELY, NOT SURE WHY
+			//time.Sleep(15 * time.Second)
 		}
-		r.Log.Info("cleanup is complete, removed finalizer",
-			"remaining", o.Finalizers)
-		// Stop reconciliation as the item is being deleted
-		return ctrl.Result{}, nil
+
+		// activate the state machine
+
+		r.Log.Info("object status",
+			"target", target.TargetName,
+			"status", o.Status.Target[target.TargetName])
+		stateMachine := newK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine(o, r, &target.TargetName, info[target.TargetName])
+		actResult[target.TargetName] = stateMachine.ReconcileState(info[target.TargetName])
+		result[target.TargetName], err = actResult[target.TargetName].Result()
+		if err != nil {
+			err = errors.Wrap(err, fmt.Sprintf("action %q failed", *initialState))
+			return result[target.TargetName], err
+		}
 	}
 
-	// path to be used for this object
+	if !o.DeletionTimestamp.IsZero() && SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(o) {
+		deleted := true
+		for _, target := range t {
+			if result[target.TargetName].RequeueAfter != 0 {
+				deleted = false
+			}
+		}
+		if deleted {
+			// delete complete
+			// remove our finalizer from the list and update it.
+			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxFinalizer)
+			if err := r.Update(ctx, o); err != nil {
+				return ctrl.Result{}, errors.Wrap(err,
+					fmt.Sprintf("failed to remove finalizer"))
+			}
+			r.Log.Info("cleanup is complete, removed finalizer",
+				"remaining", o.Finalizers)
+			// Stop reconciliation as the item is deleted
+			return ctrl.Result{}, nil
+		}
+	}
+	// Only save status when we're told to, otherwise we
+	// introduce an infinite loop reconciling the same object over and
+	// over when there is an unrecoverable error (tracked through the
+	// error state).
 
-	path := fmt.Sprintf("/network-instance[name=%s]/protocols", hkey0)
+	for _, target := range t {
+		dirty := false
+		if actResult[target.TargetName].Dirty() {
+			dirty = true
+		}
+		if dirty {
+			if err := r.saveK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStatus(ctx, o); err != nil {
+				return ctrl.Result{}, errors.Wrap(err,
+					fmt.Sprintf("failed to save status"))
+			}
+		}
+		SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxlogResult(info[target.TargetName], result[target.TargetName])
+
+		// requeue for action update and action continue
+		if result[target.TargetName].Requeue {
+			return ctrl.Result{Requeue: true, RequeueAfter: result[target.TargetName].RequeueAfter}, nil
+		}
+	}
+
+	return ctrl.Result{}, nil
+}
+
+func SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxlogResult(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo, result ctrl.Result) {
+	if result.Requeue || result.RequeueAfter != 0 ||
+		!utils.StringInList(info.o.Finalizers,
+			srlinuxv1alpha1.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxFinalizer) {
+		info.log.Info("done",
+			"requeue", result.Requeue,
+			"after", result.RequeueAfter)
+	} else {
+		info.log.Info("stopping on K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux",
+			"message", info.o.Status)
+	}
+}
+
+func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) saveK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStatus(ctx context.Context, o *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux) error {
+	t := metav1.Now()
+	o.Status.DeepCopy()
+	o.Status.LastUpdated = &t
+
+	r.Log.Info("K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux",
+		"status", o.Status)
+
+	if err := r.Client.Status().Update(ctx, o); err != nil {
+		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux ")
+		return err
+	}
+	return nil
+}
+
+// FindTarget finds the SRL target for Object
+func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux) ([]*Target, bool, error) {
+	r.Log.Info("Find target ...")
+
+	// get the target name the resource should get applied to
+	var targetName string
+	var dirty bool
+	if v, ok := o.Labels["target"]; ok {
+		targetName = v
+	}
+	r.Log.WithValues("target", targetName).Info("Trying to find target name device driver")
+	// get network device list, to find the target, based on attached labels
+	selectors := []client.ListOption{
+		client.MatchingLabels{},
+	}
+	ndl := &nddv1.NetworkDeviceList{}
+	if err := r.List(r.Ctx, ndl, selectors...); err != nil {
+		r.Log.Error(err, "Failed to get NetworkDevice List ")
+		return nil, dirty, err
+	}
+	var targets []*Target
+
+	for _, nd := range ndl.Items {
+		// check if the network device has a target label and if it matches,
+		// append the target to the target list
+		//r.Log.WithValues("Network Device", nd).Info("Network Device info")
+		if k, ok := nd.Labels["target"]; ok {
+			if k == targetName {
+				r.Log.WithValues("target", targetName).WithValues("DiscoveryStatus", nd.Status.DiscoveryStatus).Info("Target Label found")
+				// the target matches and the network device driver is in ready state
+				if nd.Status.DiscoveryStatus != nil && *nd.Status.DiscoveryStatus == nddv1.DiscoveryStatusReady {
+					target := &Target{
+						TargetName: nd.Name,
+						Target:     "nddriver-service-" + nd.Name + ".nddriver-system.svc.cluster.local:" + strconv.Itoa(*nd.Status.GrpcServer.Port),
+					}
+					// check if the device was already provisioned
+					if t, ok := o.Status.Target[nd.Name]; ok {
+						// target was already known to the resource and configured, so we exclude
+						if t.ConfigStatus != srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess) {
+							targets = append(targets, target)
+						}
+					} else {
+						// device was not provisionded so far
+						targets = append(targets, target)
+					}
+				}
+			}
+		}
+		// check if the network device has a target-group label and if it matches,
+		// append the target to the target list
+		if k, ok := nd.Labels["target-group"]; ok {
+			if k == targetName {
+				r.Log.WithValues("target", targetName).WithValues("DiscoveryStatus", nd.Status.DiscoveryStatus).Info("Target-group Label found")
+				if nd.Status.DiscoveryStatus != nil && *nd.Status.DiscoveryStatus == nddv1.DiscoveryStatusReady {
+					target := &Target{
+						TargetName: nd.Name,
+						Target:     "nddriver-service-" + nd.Name + ".nddriver-system.svc.cluster.local:" + strconv.Itoa(*nd.Status.GrpcServer.Port),
+					}
+					// check if the device was already provisioned
+					if t, ok := o.Status.Target[nd.Name]; ok {
+						// target was already known to the resource and configured, so we exclude
+						if t.ConfigStatus != srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess) {
+							targets = append(targets, target)
+						}
+					} else {
+						// device was not provisionded so far
+						targets = append(targets, target)
+					}
+				}
+			}
+		}
+	}
+
+	// check for deleted items
+	for activeTargetName := range o.Status.Target {
+		activeTargetDeleted := true
+		for _, target := range targets {
+			if target.TargetName == activeTargetName {
+				activeTargetDeleted = false
+			}
+		}
+		if activeTargetDeleted {
+			// delete the status
+			delete(o.Status.Target, activeTargetName)
+			r.Log.WithValues("target", activeTargetName).Info("Target network device driver got deleted")
+			dirty = true
+		}
+	}
+
+	if len(targets) == 0 {
+		// Target not found, return target not found error
+		return nil, dirty, &TargetNotFoundError{message: "The Target cannot be found, update label or discovery object"}
+	}
+	return targets, dirty, nil
+}
+
+// SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer checks if object has finalizer
+func SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(o *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux) bool {
+	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxFinalizer)
+}
+
+func (info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
+	if !info.o.DeletionTimestamp.IsZero() && SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(info.o) {
+
+		// prepare the grpc data
+		req := &netwdevpb.CacheUpdateRequest{
+			Resource:             *info.resource,
+			Level:                *info.level,
+			Action:               netwdevpb.CacheUpdateRequest_Delete,
+			IndividualActionPath: *deletepaths,
+			Dependencies:         *dependencies,
+		}
+
+		updateCache(info.ctx, info.target, req)
+
+		info.log.WithValues(
+			"Resource", req.Resource).WithValues(
+			"Data", req).Info("Published resource config delete data")
+
+	}
+	return nil
+}
+
+// Update Cache
+func (info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
 
 	// marshal data to json
 
 	dd := struct {
 		Linux *srlinuxv1alpha1.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux `json:"linux"`
 	}{
-		Linux: o.Spec.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux,
+		Linux: info.o.Spec.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux,
 	}
 	d := make([][]byte, 0)
 	dj, err := json.Marshal(dd)
 	if err != nil {
-		return ctrl.Result{}, err
+		return err
 	}
 	d = append(d, dj)
 
-	// prepare the
-	data := &netwdevpb.ConfigMessage{
-		Level:                level,
-		Action:               netwdevpb.ConfigMessage_Update,
+	// update the cache
+	req := &netwdevpb.CacheUpdateRequest{
+		Resource:             *info.resource,
+		Level:                *info.level,
+		Action:               netwdevpb.CacheUpdateRequest_Update,
 		AggregateActionPath:  path,
 		IndividualActionPath: deletepaths,
-		Data:                 d,
+		ConfigData:           d,
 		Dependencies:         dependencies,
 	}
+	updateCache(info.ctx, info.target, req)
 
-	n := &natssrl.Client{
-		Server: *r.Server,
-		Topic:  topic,
-	}
-	n.Publish(data)
-
-	r.Log.WithValues(
-		"Topic", n.Topic).WithValues(
+	info.log.WithValues(
+		"resource", req.Resource).WithValues(
 		"Path", path).WithValues(
-		"Data", data).Info("Published data")
+		"Data", req).Info("Published resource config update data")
 
-	return ctrl.Result{}, nil
+	return nil
 }
 
-// SetupWithManager sets up the controller with the Manager.
-func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux{}).
-		WithOptions(option).
-		Complete(r)
+type K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine struct {
+	Object     *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux
+	Reconciler *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler
+	Target     *string
+	TargetName *string
+	NextState  *srlinuxv1alpha1.ConfigStatus
 }
 
-// FindTarget finds the SRL target for Object
-func (r *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux) (target *string, err error) {
-	r.Log.Info("Find target ...")
-	var targetName string
-	for k, v := range o.Labels {
-		if k == "target" {
-			targetName = v
+// appendEvent
+func (info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) appendEvent(reason, message string) {
+	info.events = append(info.events, info.o.NewEvent(reason, message))
+}
+
+func newK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine(o *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux,
+	reconciler *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler, n *string,
+	info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine {
+	currentState := o.Status.Target[*n].ConfigStatus
+	r := K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine{
+		Object:     o,
+		NextState:  currentState, // Remain in current state by default
+		Reconciler: reconciler,
+		Target:     info.target,
+		TargetName: n,
+	}
+	return &r
+}
+
+type SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxstateHandler func(*K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxstateHandler {
+	return map[srlinuxv1alpha1.ConfigStatus]SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxstateHandler{
+		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
+		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
+		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,
+		srlinuxv1alpha1.ConfigStatusConfigureFailed:  o.handleConfigStatusConfigureFailed,
+		srlinuxv1alpha1.ConfigStatusDeleting:         o.handleDeleting,
+	}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) updateK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
+	info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) {
+	if o.NextState != initialState {
+		info.log.Info("changing configuration state",
+			"old", initialState,
+			"new", o.NextState)
+		o.Object.Status.Target[*o.TargetName].ConfigStatus = o.NextState
+	}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) ReconcileState(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	initialState := o.Object.Status.Target[*o.TargetName].ConfigStatus
+	defer o.updateK8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateFrom(initialState, info)
+
+	if o.checkInitiateDelete() {
+		// initiate cache delete
+		info.log.Info("Initiating K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine deletion")
+		info.DeleteCache(info.deletepaths, info.dependencies)
+		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
+		//time.Sleep(15 * time.Second)
+	}
+
+	if stateHandler, found := o.handlers()[*initialState]; found {
+		return stateHandler(info)
+	}
+
+	info.log.Info("No handler found for state", "state", initialState)
+	return actionError{fmt.Errorf("No handler found for state \"%s\"", *initialState)}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) checkInitiateDelete() bool {
+	if !o.Object.DeletionTimestamp.IsZero() && SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(o.Object) {
+		// Delete requested
+		switch o.NextState {
+		default:
+			// new state deleting
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting)
+		case srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting),
+			srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed),
+			srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess):
+			// Already in deleting state. Allow state machine to run.
+			return false
+		}
+		return true
+	}
+	// delete not requested
+	return false
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) handleNone(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
+	if err != nil {
+		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
+	}
+	info.log.Info("CacheStatusResponse", "Response", cr)
+	if cr.Exists {
+		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
+			info.log.Info("object status",
+				"target", o.Target,
+				"status", o.Object.Status)
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
+			return actionComplete{}
 		}
 	}
-	// get network node list
-	selectors := []client.ListOption{
-		client.MatchingLabels{},
-	}
-
-	nn := &nddv1.NetworkNodeList{}
-	if err := r.List(r.Ctx, nn, selectors...); err != nil {
-		r.Log.Error(err, "Failed to get NetworkNode List ")
-		return nil, err
-	}
-	for _, n := range nn.Items {
-		if n.Name == targetName {
-			target = &targetName
+	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
+		// delete action
+		if !cr.Exists {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
+			return actionComplete{}
+		} else {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+			return actionComplete{}
 		}
+	} else {
+		// update action
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
 	}
-	// Target not found
-	if target == nil {
-		return target, &TargetNotFoundError{message: "The Target cannot be found, update label or discovery object"}
-	}
-	return target, nil
+	return actionUpdate{delay: 10 * time.Second}
 }
 
-// SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer checks if object has finalizer
-func SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxhasFinalizer(o *srlinuxv1alpha1.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux) bool {
-	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxFinalizer)
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) handleConfiguring(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
+	if err != nil {
+		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
+	}
+	info.log.Info("CacheStatusResponse", "Response", cr)
+	if cr.Exists {
+		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
+			return actionComplete{}
+		}
+	}
+	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
+		// delete action
+		if !cr.Exists {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
+			return actionComplete{}
+		} else {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+			return actionComplete{}
+		}
+	} else {
+		// update action
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
+	}
+	return actionUpdate{delay: 10 * time.Second}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) handleConfigStatusConfigureSuccess(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
+	if err != nil {
+		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
+	}
+	info.log.Info("CacheStatusResponse", "Response", cr)
+	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
+		// delete action
+		if !cr.Exists {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
+			return actionComplete{}
+		} else {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+		}
+		return actionUpdate{delay: 10 * time.Second}
+	}
+
+	return actionComplete{}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) handleConfigStatusConfigureFailed(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
+	if err != nil {
+		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
+	}
+	info.log.Info("CacheStatusResponse", "Response", cr)
+	if cr.Exists {
+		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
+			return actionComplete{}
+		}
+	}
+	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
+		// delete action
+		if !cr.Exists {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
+			return actionComplete{}
+		} else {
+			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+			return actionComplete{}
+		}
+	} else {
+		// update action
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
+	}
+	return actionUpdate{delay: 10 * time.Second}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) handleDeleting(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
+	if err != nil {
+		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
+	}
+	info.log.Info("CacheStatusResponse", "Response", cr)
+
+	if !cr.Exists {
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
+		return actionComplete{}
+	} else {
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+	}
+	return actionUpdate{delay: 10 * time.Second}
+
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) DeleteFailed(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
+	if err != nil {
+		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
+	}
+	info.log.Info("CacheStatusResponse", "Response", cr)
+
+	if !cr.Exists {
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
+		return actionComplete{}
+	} else {
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+	}
+	return actionUpdate{delay: 10 * time.Second}
+}
+
+func (o *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxStateMachine) DeleteSuccess(info *K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconcileInfo) actionResult {
+	return actionComplete{}
 }
