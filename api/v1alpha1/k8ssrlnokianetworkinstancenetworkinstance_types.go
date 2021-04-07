@@ -30,12 +30,6 @@ const (
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication struct {
-	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
-	// +kubebuilder:default:=stop-learning
-	Action *string `json:"action,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:default:=9
 	HoldDownTime *uint32 `json:"hold-down-time,omitempty"`
 	// +kubebuilder:validation:Minimum=1
@@ -46,17 +40,23 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication struct {
 	// +kubebuilder:validation:Maximum=10
 	// +kubebuilder:default:=5
 	NumMoves *uint32 `json:"num-moves,omitempty"`
+	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
+	// +kubebuilder:default:=stop-learning
+	Action *string `json:"action,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearningAging struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearningAging struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=60
 	// +kubebuilder:validation:Maximum=86400
 	// +kubebuilder:default:=300
 	AgeTime *int32 `json:"age-time,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning struct
@@ -69,22 +69,22 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=8192
-	// +kubebuilder:default:=250
-	MaximumEntries *int32 `json:"maximum-entries,omitempty"`
 	// +kubebuilder:validation:Minimum=6
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=95
 	WarningThresholdPct *int32 `json:"warning-threshold-pct,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8192
+	// +kubebuilder:default:=250
+	MaximumEntries *int32 `json:"maximum-entries,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMacMac struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMacMac struct {
-	Destination *string `json:"destination"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}`
-	Address *string `json:"address"`
+	Address     *string `json:"address"`
+	Destination *string `json:"destination"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac struct
@@ -94,14 +94,14 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceBridgeTable struct
 type SrlNokiaNetworkInstanceNetworkInstanceBridgeTable struct {
-	// +kubebuilder:default:=false
-	DiscardUnknownDestMac *bool                                                            `json:"discard-unknown-dest-mac,omitempty"`
-	MacDuplication        *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
-	MacLearning           *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
-	MacLimit              *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit       `json:"mac-limit,omitempty"`
+	MacDuplication *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
+	MacLearning    *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
+	MacLimit       *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit       `json:"mac-limit,omitempty"`
 	// +kubebuilder:default:=false
 	ProtectAnycastGwMac *bool                                                       `json:"protect-anycast-gw-mac,omitempty"`
 	StaticMac           *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac `json:"static-mac,omitempty"`
+	// +kubebuilder:default:=false
+	DiscardUnknownDestMac *bool `json:"discard-unknown-dest-mac,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceInterface struct
@@ -121,10 +121,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceIpForwarding struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancingResilientHashPrefix struct
 type SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancingResilientHashPrefix struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))`
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
-	IpPrefix *string `json:"ip-prefix"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=32
 	// +kubebuilder:default:=1
@@ -133,6 +129,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancingResilientHashPrefix st
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxPaths *uint8 `json:"max-paths,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))`
+	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
+	IpPrefix *string `json:"ip-prefix"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing struct
@@ -196,13 +196,13 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterfaceDelay stru
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterface struct
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterface struct {
-	Delay          *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterfaceDelay `json:"delay,omitempty"`
-	SrlgMembership *string                                                                 `json:"srlg-membership,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16777215
-	TeMetric      *uint32 `json:"te-metric,omitempty"`
-	InterfaceName *string `json:"interface-name"`
-	AdminGroup    *string `json:"admin-group,omitempty"`
+	TeMetric       *uint32                                                                 `json:"te-metric,omitempty"`
+	InterfaceName  *string                                                                 `json:"interface-name"`
+	AdminGroup     *string                                                                 `json:"admin-group,omitempty"`
+	Delay          *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringInterfaceDelay `json:"delay,omitempty"`
+	SrlgMembership *string                                                                 `json:"srlg-membership,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember struct
@@ -219,6 +219,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroup
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct {
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+	Name *string `json:"name"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	Cost         *uint32                                                                                          `json:"cost,omitempty"`
@@ -226,11 +231,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroup
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	Value *uint32 `json:"value,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroups struct
@@ -240,6 +240,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroup
 
 // SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering struct
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering struct {
+	AdminGroups *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringAdminGroups `json:"admin-groups,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	AutonomousSystem *uint32                                                              `json:"autonomous-system,omitempty"`
@@ -251,7 +252,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering struct {
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	Ipv6TeRouterId       *string                                                                       `json:"ipv6-te-router-id,omitempty"`
 	SharedRiskLinkGroups *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroups `json:"shared-risk-link-groups,omitempty"`
-	AdminGroups          *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringAdminGroups          `json:"admin-groups,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface struct
@@ -265,32 +265,32 @@ type SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface struct {
 
 // SrlNokiaNetworkInstanceNetworkInstance struct
 type SrlNokiaNetworkInstanceNetworkInstance struct {
-	IpLoadBalancing *SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
-	Mpls            *SrlNokiaNetworkInstanceNetworkInstanceMpls            `json:"mpls,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	RouterId *string `json:"router-id,omitempty"`
-	// +kubebuilder:default:=default
-	Type           *string                                                 `json:"type,omitempty"`
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+	Description    *string                                                 `json:"description,omitempty"`
+	Interface      []*SrlNokiaNetworkInstanceNetworkInstanceInterface      `json:"interface,omitempty"`
+	IpForwarding   *SrlNokiaNetworkInstanceNetworkInstanceIpForwarding     `json:"ip-forwarding,omitempty"`
+	Mpls           *SrlNokiaNetworkInstanceNetworkInstanceMpls             `json:"mpls,omitempty"`
 	VxlanInterface []*SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface `json:"vxlan-interface,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState         *string                                                   `json:"admin-state,omitempty"`
-	BridgeTable        *SrlNokiaNetworkInstanceNetworkInstanceBridgeTable        `json:"bridge-table,omitempty"`
-	Interface          []*SrlNokiaNetworkInstanceNetworkInstanceInterface        `json:"interface,omitempty"`
-	IpForwarding       *SrlNokiaNetworkInstanceNetworkInstanceIpForwarding       `json:"ip-forwarding,omitempty"`
-	Mtu                *SrlNokiaNetworkInstanceNetworkInstanceMtu                `json:"mtu,omitempty"`
+	AdminState  *string                                            `json:"admin-state,omitempty"`
+	BridgeTable *SrlNokiaNetworkInstanceNetworkInstanceBridgeTable `json:"bridge-table,omitempty"`
+	Mtu         *SrlNokiaNetworkInstanceNetworkInstanceMtu         `json:"mtu,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
+	RouterId           *string                                                   `json:"router-id,omitempty"`
 	TrafficEngineering *SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
+	// +kubebuilder:default:=default
+	Type *string `json:"type,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Description *string `json:"description,omitempty"`
+	Name            *string                                                `json:"name"`
+	IpLoadBalancing *SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceSpec struct

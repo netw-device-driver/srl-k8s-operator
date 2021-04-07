@@ -50,6 +50,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities struc
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct
 type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
+	Aggregator   *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator  `json:"aggregator,omitempty"`
 	Communities  *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteCommunities `json:"communities,omitempty"`
 	GenerateIcmp *bool                                                                  `json:"generate-icmp,omitempty"`
 	// +kubebuilder:default:=false
@@ -60,8 +61,7 @@ type SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRoute struct {
 	Prefix *string `json:"prefix"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string                                                               `json:"admin-state,omitempty"`
-	Aggregator *SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesRouteAggregator `json:"aggregator,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes struct

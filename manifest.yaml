@@ -11651,7 +11651,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokiaroutingpolicyroutingpolicys
+  - k8ssrlnokiaroutingpolicyroutingpolicies
   verbs:
   - create
   - delete
@@ -11663,13 +11663,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokiaroutingpolicyroutingpolicys/finalizers
+  - k8ssrlnokiaroutingpolicyroutingpolicies/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - k8ssrlnokiaroutingpolicyroutingpolicys/status
+  - k8ssrlnokiaroutingpolicyroutingpolicies/status
   verbs:
   - get
   - patch

@@ -66,11 +66,11 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpAsPathPrepend
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpAsPath struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpAsPath struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	Replace *uint32                                                                      `json:"replace,omitempty"`
 	Prepend *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
 	Remove  *bool                                                                        `json:"remove,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	Replace *uint32 `json:"replace,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpCommunities struct
@@ -95,10 +95,10 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpOrigin struct
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgp struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgp struct {
-	AsPath          *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpAsPath          `json:"as-path,omitempty"`
-	Communities     *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpCommunities     `json:"communities,omitempty"`
 	LocalPreference *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpLocalPreference `json:"local-preference,omitempty"`
 	Origin          *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpOrigin          `json:"origin,omitempty"`
+	AsPath          *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpAsPath          `json:"as-path,omitempty"`
+	Communities     *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAcceptBgpCommunities     `json:"communities,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAccept struct
@@ -120,10 +120,10 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionReject struct {
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultAction struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultAction struct {
-	Accept     *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
-	NextEntry  *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionNextEntry  `json:"next-entry,omitempty"`
 	NextPolicy *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionNextPolicy `json:"next-policy,omitempty"`
 	Reject     *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionReject     `json:"reject,omitempty"`
+	Accept     *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
+	NextEntry  *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultActionNextEntry  `json:"next-entry,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpAsPathPrepend struct
@@ -166,10 +166,10 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpOrigin stru
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgp struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgp struct {
-	AsPath          *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
 	Communities     *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpCommunities     `json:"communities,omitempty"`
 	LocalPreference *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpLocalPreference `json:"local-preference,omitempty"`
 	Origin          *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpOrigin          `json:"origin,omitempty"`
+	AsPath          *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementActionAccept struct
@@ -226,11 +226,11 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchBgp struct {
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchIsis struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchIsis struct {
+	// +kubebuilder:validation:Enum=`external`;`internal`
+	RouteType *string `json:"route-type,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Level *uint8 `json:"level,omitempty"`
-	// +kubebuilder:validation:Enum=`external`;`internal`
-	RouteType *string `json:"route-type,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchOspf struct
@@ -248,32 +248,32 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchOspf struct {
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatch struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatch struct {
+	Family    *string                                                     `json:"family,omitempty"`
+	Isis      *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchIsis `json:"isis,omitempty"`
 	Ospf      *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchOspf `json:"ospf,omitempty"`
 	PrefixSet *string                                                     `json:"prefix-set,omitempty"`
 	Protocol  *string                                                     `json:"protocol,omitempty"`
 	Bgp       *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchBgp  `json:"bgp,omitempty"`
-	Family    *string                                                     `json:"family,omitempty"`
-	Isis      *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatchIsis `json:"isis,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicyStatement struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatement struct {
-	Match *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatch `json:"match,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	SequenceId *uint32                                                  `json:"sequence-id"`
 	Action     *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementAction `json:"action,omitempty"`
+	Match      *SrlNokiaRoutingPolicyRoutingPolicyPolicyStatementMatch  `json:"match,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPolicy struct
 type SrlNokiaRoutingPolicyRoutingPolicyPolicy struct {
-	DefaultAction *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultAction `json:"default-action,omitempty"`
-	Statement     []*SrlNokiaRoutingPolicyRoutingPolicyPolicyStatement   `json:"statement,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
+	Name          *string                                                `json:"name"`
+	DefaultAction *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultAction `json:"default-action,omitempty"`
+	Statement     []*SrlNokiaRoutingPolicyRoutingPolicyPolicyStatement   `json:"statement,omitempty"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicyPrefixSetPrefix struct
@@ -290,12 +290,12 @@ type SrlNokiaRoutingPolicyRoutingPolicyPrefixSetPrefix struct {
 
 // SrlNokiaRoutingPolicyRoutingPolicyPrefixSet struct
 type SrlNokiaRoutingPolicyRoutingPolicyPrefixSet struct {
+	Prefix []*SrlNokiaRoutingPolicyRoutingPolicyPrefixSetPrefix `json:"prefix,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Name   *string                                              `json:"name"`
-	Prefix []*SrlNokiaRoutingPolicyRoutingPolicyPrefixSetPrefix `json:"prefix,omitempty"`
+	Name *string `json:"name"`
 }
 
 // SrlNokiaRoutingPolicyRoutingPolicy struct

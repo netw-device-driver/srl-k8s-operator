@@ -75,9 +75,9 @@ type K8sSrlNokiaRoutingPolicyRoutingPolicyReconcileInfo struct {
 }
 
 // +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networkdevices,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokiaroutingpolicyroutingpolicys,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokiaroutingpolicyroutingpolicys/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokiaroutingpolicyroutingpolicys/finalizers,verbs=update
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokiaroutingpolicyroutingpolicies,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokiaroutingpolicyroutingpolicies/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=k8ssrlnokiaroutingpolicyroutingpolicies/finalizers,verbs=update
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *K8sSrlNokiaRoutingPolicyRoutingPolicyReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {

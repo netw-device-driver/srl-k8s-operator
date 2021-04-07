@@ -75,11 +75,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighborsAcceptMat
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighborsAccept struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighborsAccept struct {
-	Match []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighborsAcceptMatch `json:"match,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=0
-	MaxSessions *uint16 `json:"max-sessions,omitempty"`
+	MaxSessions *uint16                                                                          `json:"max-sessions,omitempty"`
+	Match       []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighborsAcceptMatch `json:"match,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighbors struct
@@ -90,13 +90,15 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighbors struct {
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEbgpDefaultPolicy struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEbgpDefaultPolicy struct {
 	// +kubebuilder:default:=true
-	ExportRejectAll *bool `json:"export-reject-all,omitempty"`
-	// +kubebuilder:default:=true
 	ImportRejectAll *bool `json:"import-reject-all,omitempty"`
+	// +kubebuilder:default:=true
+	ExportRejectAll *bool `json:"export-reject-all,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEvpnMultipath struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEvpnMultipath struct {
+	// +kubebuilder:default:=true
+	AllowMultipleAs *bool `json:"allow-multiple-as,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
@@ -105,8 +107,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEvpnMultipath struct {
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxPathsLevel2 *uint32 `json:"max-paths-level-2,omitempty"`
-	// +kubebuilder:default:=true
-	AllowMultipleAs *bool `json:"allow-multiple-as,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEvpn struct
@@ -187,8 +187,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupEvpn struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupFailureDetection struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupFailureDetection struct {
-	EnableBfd    *bool `json:"enable-bfd,omitempty"`
 	FastFailover *bool `json:"fast-failover,omitempty"`
+	EnableBfd    *bool `json:"enable-bfd,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupGracefulRestart struct
@@ -214,23 +214,23 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv4UnicastPrefixLim
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv4Unicast struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv4Unicast struct {
-	ReceiveIpv6NextHops *bool `json:"receive-ipv6-next-hops,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	AdminState            *string                                                                        `json:"admin-state,omitempty"`
 	AdvertiseIpv6NextHops *bool                                                                          `json:"advertise-ipv6-next-hops,omitempty"`
 	PrefixLimit           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv4UnicastPrefixLimit `json:"prefix-limit,omitempty"`
+	ReceiveIpv6NextHops   *bool                                                                          `json:"receive-ipv6-next-hops,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv6UnicastPrefixLimit struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv6UnicastPrefixLimit struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=100
-	// +kubebuilder:default:=90
-	WarningThresholdPct *uint8 `json:"warning-threshold-pct,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	// +kubebuilder:default:=4294967295
 	MaxReceivedRoutes *uint32 `json:"max-received-routes,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +kubebuilder:default:=90
+	WarningThresholdPct *uint8 `json:"warning-threshold-pct,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv6Unicast struct
@@ -253,10 +253,10 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupLocalAs struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupRouteReflector struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupRouteReflector struct {
-	Client *bool `json:"client,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	ClusterId *string `json:"cluster-id,omitempty"`
+	Client    *bool   `json:"client,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupSendCommunity struct
@@ -276,13 +276,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupSendDefaultRoute str
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTimers struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTimers struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=21845
-	KeepaliveInterval *uint16 `json:"keepalive-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=5
-	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=120
@@ -291,6 +284,13 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTimers struct {
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=90
 	HoldTime *uint16 `json:"hold-time,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=21845
+	KeepaliveInterval *uint16 `json:"keepalive-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=5
+	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTraceOptionsFlag struct
@@ -321,43 +321,43 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTransport struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroup struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroup struct {
+	SendDefaultRoute *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupSendDefaultRoute `json:"send-default-route,omitempty"`
+	Timers           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTimers           `json:"timers,omitempty"`
+	Transport        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTransport        `json:"transport,omitempty"`
+	Authentication   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupAuthentication   `json:"authentication,omitempty"`
+	Evpn             *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupEvpn             `json:"evpn,omitempty"`
+	ExportPolicy     *string                                                                  `json:"export-policy,omitempty"`
+	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupFailureDetection `json:"failure-detection,omitempty"`
+	GracefulRestart  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupGracefulRestart  `json:"graceful-restart,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Description  *string `json:"description,omitempty"`
-	ExportPolicy *string `json:"export-policy,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	LocalPreference *uint32 `json:"local-preference,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
-	PeerAs           *uint32                                                                  `json:"peer-as,omitempty"`
-	SendDefaultRoute *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupSendDefaultRoute `json:"send-default-route,omitempty"`
-	AsPathOptions    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupAsPathOptions    `json:"as-path-options,omitempty"`
-	GracefulRestart  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupGracefulRestart  `json:"graceful-restart,omitempty"`
-	Ipv4Unicast      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv4Unicast      `json:"ipv4-unicast,omitempty"`
-	Ipv6Unicast      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv6Unicast      `json:"ipv6-unicast,omitempty"`
-	// +kubebuilder:default:=false
-	NextHopSelf   *bool                                                                 `json:"next-hop-self,omitempty"`
+	PeerAs        *uint32                                                               `json:"peer-as,omitempty"`
 	SendCommunity *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupSendCommunity `json:"send-community,omitempty"`
-	Evpn          *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupEvpn          `json:"evpn,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState       *string                                                                  `json:"admin-state,omitempty"`
-	Authentication   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupAuthentication   `json:"authentication,omitempty"`
-	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupFailureDetection `json:"failure-detection,omitempty"`
-	ImportPolicy     *string                                                                  `json:"import-policy,omitempty"`
-	RouteReflector   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupRouteReflector   `json:"route-reflector,omitempty"`
-	Timers           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTimers           `json:"timers,omitempty"`
-	Transport        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTransport        `json:"transport,omitempty"`
+	TraceOptions  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTraceOptions  `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	GroupName    *string                                                              `json:"group-name"`
-	TraceOptions *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupTraceOptions `json:"trace-options,omitempty"`
-	LocalAs      []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupLocalAs    `json:"local-as,omitempty"`
+	GroupName      *string                                                                `json:"group-name"`
+	AsPathOptions  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupAsPathOptions  `json:"as-path-options,omitempty"`
+	ImportPolicy   *string                                                                `json:"import-policy,omitempty"`
+	Ipv4Unicast    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv4Unicast    `json:"ipv4-unicast,omitempty"`
+	RouteReflector *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupRouteReflector `json:"route-reflector,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState  *string                                                             `json:"admin-state,omitempty"`
+	Ipv6Unicast *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupIpv6Unicast `json:"ipv6-unicast,omitempty"`
+	LocalAs     []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupLocalAs   `json:"local-as,omitempty"`
+	// +kubebuilder:default:=false
+	NextHopSelf *bool `json:"next-hop-self,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastConvergence struct
@@ -370,6 +370,8 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastConvergence st
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastMultipath struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastMultipath struct {
+	// +kubebuilder:default:=true
+	AllowMultipleAs *bool `json:"allow-multiple-as,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
@@ -378,21 +380,19 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastMultipath stru
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxPathsLevel2 *uint32 `json:"max-paths-level-2,omitempty"`
-	// +kubebuilder:default:=true
-	AllowMultipleAs *bool `json:"allow-multiple-as,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4Unicast struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4Unicast struct {
+	Convergence *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastConvergence `json:"convergence,omitempty"`
+	Multipath   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastMultipath   `json:"multipath,omitempty"`
+	// +kubebuilder:default:=false
+	ReceiveIpv6NextHops *bool `json:"receive-ipv6-next-hops,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:default:=false
-	AdvertiseIpv6NextHops *bool                                                                     `json:"advertise-ipv6-next-hops,omitempty"`
-	Convergence           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastConvergence `json:"convergence,omitempty"`
-	Multipath             *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4UnicastMultipath   `json:"multipath,omitempty"`
-	// +kubebuilder:default:=false
-	ReceiveIpv6NextHops *bool `json:"receive-ipv6-next-hops,omitempty"`
+	AdvertiseIpv6NextHops *bool `json:"advertise-ipv6-next-hops,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6UnicastConvergence struct
@@ -405,16 +405,16 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6UnicastConvergence st
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6UnicastMultipath struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6UnicastMultipath struct {
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +kubebuilder:default:=1
+	MaxPathsLevel2 *uint32 `json:"max-paths-level-2,omitempty"`
 	// +kubebuilder:default:=true
 	AllowMultipleAs *bool `json:"allow-multiple-as,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxPathsLevel1 *uint32 `json:"max-paths-level-1,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=64
-	// +kubebuilder:default:=1
-	MaxPathsLevel2 *uint32 `json:"max-paths-level-2,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6Unicast struct
@@ -438,11 +438,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptionsRemo
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptions struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptions struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	AllowOwnAs      *uint8                                                                                  `json:"allow-own-as,omitempty"`
 	RemovePrivateAs *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptionsRemovePrivateAs `json:"remove-private-as,omitempty"`
 	ReplacePeerAs   *bool                                                                                   `json:"replace-peer-as,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	AllowOwnAs *uint8 `json:"allow-own-as,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAuthentication struct
@@ -482,12 +482,12 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestartWa
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestart struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestart struct {
+	WarmRestart *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestartWarmRestart `json:"warm-restart,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
-	StaleRoutesTime *uint16                                                                               `json:"stale-routes-time,omitempty"`
-	WarmRestart     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestartWarmRestart `json:"warm-restart,omitempty"`
+	StaleRoutesTime *uint16 `json:"stale-routes-time,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4UnicastPrefixLimit struct
@@ -502,21 +502,21 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4UnicastPrefix
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4Unicast struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4Unicast struct {
-	PrefixLimit         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4UnicastPrefixLimit `json:"prefix-limit,omitempty"`
-	ReceiveIpv6NextHops *bool                                                                             `json:"receive-ipv6-next-hops,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	AdminState            *string `json:"admin-state,omitempty"`
-	AdvertiseIpv6NextHops *bool   `json:"advertise-ipv6-next-hops,omitempty"`
+	AdminState            *string                                                                           `json:"admin-state,omitempty"`
+	AdvertiseIpv6NextHops *bool                                                                             `json:"advertise-ipv6-next-hops,omitempty"`
+	PrefixLimit           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4UnicastPrefixLimit `json:"prefix-limit,omitempty"`
+	ReceiveIpv6NextHops   *bool                                                                             `json:"receive-ipv6-next-hops,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv6UnicastPrefixLimit struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv6UnicastPrefixLimit struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=100
-	WarningThresholdPct *uint8 `json:"warning-threshold-pct,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	MaxReceivedRoutes *uint32 `json:"max-received-routes,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	WarningThresholdPct *uint8 `json:"warning-threshold-pct,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv6Unicast struct
@@ -551,13 +551,16 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendCommunity str
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendDefaultRoute struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendDefaultRoute struct {
-	Ipv6Unicast  *bool   `json:"ipv6-unicast,omitempty"`
 	ExportPolicy *string `json:"export-policy,omitempty"`
 	Ipv4Unicast  *bool   `json:"ipv4-unicast,omitempty"`
+	Ipv6Unicast  *bool   `json:"ipv6-unicast,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTimers struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTimers struct {
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	ConnectRetry *uint16 `json:"connect-retry,omitempty"`
@@ -567,17 +570,14 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTimers struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=21845
 	KeepaliveInterval *uint16 `json:"keepalive-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=255
-	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTraceOptionsFlag struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTraceOptionsFlag struct {
-	// +kubebuilder:validation:Enum=`detail`;`receive`;`send`
-	Modifier *string `json:"modifier,omitempty"`
 	// +kubebuilder:validation:Enum=`events`;`graceful-restart`;`keepalive`;`notification`;`open`;`packets`;`route`;`socket`;`timers`;`update`
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`detail`;`receive`;`send`
+	Modifier *string `json:"modifier,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTraceOptions struct
@@ -599,44 +599,44 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTransport struct 
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighbor struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighbor struct {
-	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborFailureDetection `json:"failure-detection,omitempty"`
-	NextHopSelf      *bool                                                                       `json:"next-hop-self,omitempty"`
-	RouteReflector   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborRouteReflector   `json:"route-reflector,omitempty"`
-	SendDefaultRoute *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendDefaultRoute `json:"send-default-route,omitempty"`
+	Ipv6Unicast *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv6Unicast `json:"ipv6-unicast,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	LocalPreference *uint32 `json:"local-preference,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	PeerAs *uint32 `json:"peer-as,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%!+(MISSING))?`
 	// +kubebuilder:validation:Pattern=`(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%!+(MISSING))?`
 	// +kubebuilder:validation:Pattern=`([^%!](MISSING)+)(%!((MISSING)mgmt0\.0|system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3})))?`
-	PeerAddress    *string                                                                   `json:"peer-address"`
-	AsPathOptions  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptions  `json:"as-path-options,omitempty"`
-	ExportPolicy   *string                                                                   `json:"export-policy,omitempty"`
-	LocalAs        []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborLocalAs      `json:"local-as,omitempty"`
-	TraceOptions   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTraceOptions   `json:"trace-options,omitempty"`
-	Transport      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTransport      `json:"transport,omitempty"`
-	Authentication *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAuthentication `json:"authentication,omitempty"`
-	Ipv6Unicast    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv6Unicast    `json:"ipv6-unicast,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	LocalPreference *uint32                                                                    `json:"local-preference,omitempty"`
-	GracefulRestart *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestart `json:"graceful-restart,omitempty"`
-	ImportPolicy    *string                                                                    `json:"import-policy,omitempty"`
-	Ipv4Unicast     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4Unicast     `json:"ipv4-unicast,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	PeerAs    *uint32 `json:"peer-as,omitempty"`
-	PeerGroup *string `json:"peer-group"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
+	PeerAddress   *string                                                                  `json:"peer-address"`
+	AsPathOptions *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptions `json:"as-path-options,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Description   *string                                                                  `json:"description,omitempty"`
-	Evpn          *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborEvpn          `json:"evpn,omitempty"`
-	SendCommunity *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendCommunity `json:"send-community,omitempty"`
-	Timers        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTimers        `json:"timers,omitempty"`
+	Description      *string                                                                     `json:"description,omitempty"`
+	SendDefaultRoute *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendDefaultRoute `json:"send-default-route,omitempty"`
+	Authentication   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAuthentication   `json:"authentication,omitempty"`
+	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborFailureDetection `json:"failure-detection,omitempty"`
+	SendCommunity    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendCommunity    `json:"send-community,omitempty"`
+	NextHopSelf      *bool                                                                       `json:"next-hop-self,omitempty"`
+	Timers           *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTimers           `json:"timers,omitempty"`
+	TraceOptions     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTraceOptions     `json:"trace-options,omitempty"`
+	Transport        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTransport        `json:"transport,omitempty"`
+	ExportPolicy     *string                                                                     `json:"export-policy,omitempty"`
+	ImportPolicy     *string                                                                     `json:"import-policy,omitempty"`
+	LocalAs          []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborLocalAs        `json:"local-as,omitempty"`
+	Ipv4Unicast      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborIpv4Unicast      `json:"ipv4-unicast,omitempty"`
+	PeerGroup        *string                                                                     `json:"peer-group"`
+	RouteReflector   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborRouteReflector   `json:"route-reflector,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState      *string                                                                    `json:"admin-state,omitempty"`
+	Evpn            *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborEvpn            `json:"evpn,omitempty"`
+	GracefulRestart *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborGracefulRestart `json:"graceful-restart,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpPreference struct
@@ -661,11 +661,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteAdvertisement struct
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteReflector struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteReflector struct {
+	// +kubebuilder:default:=false
+	Client *bool `json:"client,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	ClusterId *string `json:"cluster-id,omitempty"`
-	// +kubebuilder:default:=false
-	Client *bool `json:"client,omitempty"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpSendCommunity struct
@@ -699,40 +699,40 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpTransport struct {
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp struct {
-	ExportPolicy      *string                                                              `json:"export-policy,omitempty"`
-	FailureDetection  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpFailureDetection  `json:"failure-detection,omitempty"`
-	Group             []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroup           `json:"group,omitempty"`
-	ImportPolicy      *string                                                              `json:"import-policy,omitempty"`
-	AsPathOptions     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpAsPathOptions     `json:"as-path-options,omitempty"`
-	Authentication    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpAuthentication    `json:"authentication,omitempty"`
-	DynamicNeighbors  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighbors  `json:"dynamic-neighbors,omitempty"`
-	EbgpDefaultPolicy *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEbgpDefaultPolicy `json:"ebgp-default-policy,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	AutonomousSystem *uint32                                                             `json:"autonomous-system"`
+	Convergence      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpConvergence      `json:"convergence,omitempty"`
+	ImportPolicy     *string                                                             `json:"import-policy,omitempty"`
+	RouteReflector   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteReflector   `json:"route-reflector,omitempty"`
+	Transport        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpTransport        `json:"transport,omitempty"`
+	DynamicNeighbors *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpDynamicNeighbors `json:"dynamic-neighbors,omitempty"`
+	Evpn             *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEvpn             `json:"evpn,omitempty"`
+	FailureDetection *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpFailureDetection `json:"failure-detection,omitempty"`
+	GracefulRestart  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGracefulRestart  `json:"graceful-restart,omitempty"`
+	Group            []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroup          `json:"group,omitempty"`
+	Ipv6Unicast      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6Unicast      `json:"ipv6-unicast,omitempty"`
+	Preference       *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpPreference       `json:"preference,omitempty"`
+	TraceOptions     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpTraceOptions     `json:"trace-options,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState         *string                                                               `json:"admin-state,omitempty"`
+	Authentication     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpAuthentication     `json:"authentication,omitempty"`
+	EbgpDefaultPolicy  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEbgpDefaultPolicy  `json:"ebgp-default-policy,omitempty"`
+	ExportPolicy       *string                                                               `json:"export-policy,omitempty"`
+	Ipv4Unicast        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4Unicast        `json:"ipv4-unicast,omitempty"`
+	RouteAdvertisement *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteAdvertisement `json:"route-advertisement,omitempty"`
+	SendCommunity      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpSendCommunity      `json:"send-community,omitempty"`
+	AsPathOptions      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpAsPathOptions      `json:"as-path-options,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	// +kubebuilder:default:=100
-	LocalPreference *uint32                                                          `json:"local-preference,omitempty"`
-	SendCommunity   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpSendCommunity `json:"send-community,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AutonomousSystem *uint32                                                         `json:"autonomous-system"`
-	Convergence      *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpConvergence  `json:"convergence,omitempty"`
-	Evpn             *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpEvpn         `json:"evpn,omitempty"`
-	TraceOptions     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpTraceOptions `json:"trace-options,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState  *string                                                        `json:"admin-state,omitempty"`
-	Ipv4Unicast *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv4Unicast `json:"ipv4-unicast,omitempty"`
-	Neighbor    []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighbor  `json:"neighbor,omitempty"`
+	LocalPreference *uint32                                                       `json:"local-preference,omitempty"`
+	Neighbor        []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighbor `json:"neighbor,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	RouterId           *string                                                               `json:"router-id"`
-	RouteReflector     *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteReflector     `json:"route-reflector,omitempty"`
-	Transport          *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpTransport          `json:"transport,omitempty"`
-	GracefulRestart    *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGracefulRestart    `json:"graceful-restart,omitempty"`
-	Ipv6Unicast        *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpIpv6Unicast        `json:"ipv6-unicast,omitempty"`
-	Preference         *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpPreference         `json:"preference,omitempty"`
-	RouteAdvertisement *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpRouteAdvertisement `json:"route-advertisement,omitempty"`
+	RouterId *string `json:"router-id"`
 }
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpSpec struct
