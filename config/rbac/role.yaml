@@ -17,6 +17,32 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
+  - k8ssrlnokiabfdbfds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiabfdbfds/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiabfdbfds/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
   - k8ssrlnokiainterfacesinterfaces
   verbs:
   - create
@@ -329,6 +355,32 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
+  - k8ssrlnokiaroutingpolicyroutingpolicys
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiaroutingpolicyroutingpolicys/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiaroutingpolicyroutingpolicys/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
   - k8ssrlnokiasystemsystemmtus
   verbs:
   - create
@@ -452,6 +504,32 @@ rules:
   - srlinux.henderiw.be
   resources:
   - k8ssrlnokiatunnelinterfacestunnelinterfaces/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces/status
   verbs:
   - get
   - patch

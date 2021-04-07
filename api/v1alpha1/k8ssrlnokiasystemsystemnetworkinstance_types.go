@@ -38,11 +38,11 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget st
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstance struct {
-	RouteTarget *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Id                 *uint8                                                                           `json:"id"`
 	RouteDistinguisher *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
+	RouteTarget        *SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsBgpVpn struct
@@ -118,6 +118,9 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegment struct {
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState *string                                                                                               `json:"admin-state,omitempty"`
 	DfElection *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstanceEthernetSegmentDfElection `json:"df-election,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
@@ -132,9 +135,6 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance struct
@@ -157,8 +157,8 @@ type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers stru
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegments struct
 type SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegments struct {
-	Timers      *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers        `json:"timers,omitempty"`
 	BgpInstance []*SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsBgpInstance `json:"bgp-instance,omitempty"`
+	Timers      *SrlNokiaSystemSystemNetworkInstanceProtocolsEvpnEthernetSegmentsTimers        `json:"timers,omitempty"`
 }
 
 // SrlNokiaSystemSystemNetworkInstanceProtocolsEvpn struct

@@ -30,8 +30,8 @@ const (
 
 // SrlNokiaInterfacesInterfaceEthernetFlowControl struct
 type SrlNokiaInterfacesInterfaceEthernetFlowControl struct {
-	Transmit *bool `json:"transmit,omitempty"`
 	Receive  *bool `json:"receive,omitempty"`
+	Transmit *bool `json:"transmit,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceEthernet struct
@@ -50,9 +50,6 @@ type SrlNokiaInterfacesInterfaceEthernet struct {
 
 // SrlNokiaInterfacesInterfaceLagLacp struct
 type SrlNokiaInterfacesInterfaceLagLacp struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}`
-	SystemIdMac *string `json:"system-id-mac,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	SystemPriority *uint16 `json:"system-priority,omitempty"`
@@ -65,17 +62,13 @@ type SrlNokiaInterfacesInterfaceLagLacp struct {
 	// +kubebuilder:validation:Enum=`ACTIVE`;`PASSIVE`
 	// +kubebuilder:default:=ACTIVE
 	LacpMode *string `json:"lacp-mode,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}`
+	SystemIdMac *string `json:"system-id-mac,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceLag struct
 type SrlNokiaInterfacesInterfaceLag struct {
-	// +kubebuilder:validation:Enum=`100G`;`100M`;`10G`;`10M`;`1G`;`25G`;`400G`;`40G`
-	MemberSpeed *string `json:"member-speed,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=64
-	// +kubebuilder:default:=1
-	MinLinks *uint16                             `json:"min-links,omitempty"`
-	Lacp     *SrlNokiaInterfacesInterfaceLagLacp `json:"lacp,omitempty"`
 	// +kubebuilder:validation:Enum=`static`
 	LacpFallbackMode *string `json:"lacp-fallback-mode,omitempty"`
 	// +kubebuilder:validation:Minimum=4
@@ -84,6 +77,13 @@ type SrlNokiaInterfacesInterfaceLag struct {
 	// +kubebuilder:validation:Enum=`lacp`;`static`
 	// +kubebuilder:default:=static
 	LagType *string `json:"lag-type,omitempty"`
+	// +kubebuilder:validation:Enum=`100G`;`100M`;`10G`;`10M`;`1G`;`25G`;`400G`;`40G`
+	MemberSpeed *string `json:"member-speed,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +kubebuilder:default:=1
+	MinLinks *uint16                             `json:"min-links,omitempty"`
+	Lacp     *SrlNokiaInterfacesInterfaceLagLacp `json:"lacp,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceQosOutputMulticastQueueScheduling struct
@@ -105,14 +105,14 @@ type SrlNokiaInterfacesInterfaceQosOutputMulticastQueue struct {
 
 // SrlNokiaInterfacesInterfaceQosOutputSchedulerTierNode struct
 type SrlNokiaInterfacesInterfaceQosOutputSchedulerTierNode struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=11
-	NodeNumber     *uint8 `json:"node-number"`
-	StrictPriority *bool  `json:"strict-priority,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=127
 	// +kubebuilder:default:=1
 	Weight *uint8 `json:"weight,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=11
+	NodeNumber     *uint8 `json:"node-number"`
+	StrictPriority *bool  `json:"strict-priority,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceQosOutputSchedulerTier struct
@@ -144,12 +144,12 @@ type SrlNokiaInterfacesInterfaceQosOutputUnicastQueueScheduling struct {
 
 // SrlNokiaInterfacesInterfaceQosOutputUnicastQueue struct
 type SrlNokiaInterfacesInterfaceQosOutputUnicastQueue struct {
-	Template    *string `json:"template,omitempty"`
-	VoqTemplate *string `json:"voq-template,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=7
-	QueueId    *uint8                                                      `json:"queue-id"`
-	Scheduling *SrlNokiaInterfacesInterfaceQosOutputUnicastQueueScheduling `json:"scheduling,omitempty"`
+	QueueId     *uint8                                                      `json:"queue-id"`
+	Scheduling  *SrlNokiaInterfacesInterfaceQosOutputUnicastQueueScheduling `json:"scheduling,omitempty"`
+	Template    *string                                                     `json:"template,omitempty"`
+	VoqTemplate *string                                                     `json:"voq-template,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceQosOutput struct
@@ -181,21 +181,9 @@ type SrlNokiaInterfacesInterfaceTransceiver struct {
 
 // SrlNokiaInterfacesInterface struct
 type SrlNokiaInterfacesInterface struct {
-	// +kubebuilder:validation:Minimum=1500
-	// +kubebuilder:validation:Maximum=9500
-	Mtu         *uint16                                 `json:"mtu,omitempty"`
-	Sflow       *SrlNokiaInterfacesInterfaceSflow       `json:"sflow,omitempty"`
+	Lag         *SrlNokiaInterfacesInterfaceLag         `json:"lag,omitempty"`
+	Qos         *SrlNokiaInterfacesInterfaceQos         `json:"qos,omitempty"`
 	Transceiver *SrlNokiaInterfacesInterfaceTransceiver `json:"transceiver,omitempty"`
-	VlanTagging *bool                                   `json:"vlan-tagging,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
-	Description  *string                              `json:"description,omitempty"`
-	Lag          *SrlNokiaInterfacesInterfaceLag      `json:"lag,omitempty"`
-	Ethernet     *SrlNokiaInterfacesInterfaceEthernet `json:"ethernet,omitempty"`
-	LoopbackMode *bool                                `json:"loopback-mode,omitempty"`
-	Qos          *SrlNokiaInterfacesInterfaceQos      `json:"qos,omitempty"`
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=20
 	// +kubebuilder:validation:Required
@@ -204,6 +192,18 @@ type SrlNokiaInterfacesInterface struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+	Description  *string                              `json:"description,omitempty"`
+	Sflow        *SrlNokiaInterfacesInterfaceSflow    `json:"sflow,omitempty"`
+	VlanTagging  *bool                                `json:"vlan-tagging,omitempty"`
+	Ethernet     *SrlNokiaInterfacesInterfaceEthernet `json:"ethernet,omitempty"`
+	LoopbackMode *bool                                `json:"loopback-mode,omitempty"`
+	// +kubebuilder:validation:Minimum=1500
+	// +kubebuilder:validation:Maximum=9500
+	Mtu *uint16 `json:"mtu,omitempty"`
 }
 
 // SrlNokiaInterfacesInterfaceSpec struct

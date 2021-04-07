@@ -1,0 +1,39 @@
+apiVersion: v1
+data:
+  subscriptions:
+    /acl
+    /bfd
+    /interface
+    /network-instance
+    /platform
+    /qos
+    /routing-policy
+    /tunnel
+    /tunnel-interface
+    /system/snmp
+    /system/sflow
+    /system/ntp
+    /system/network-instance
+    /system/name
+    /system/mtu
+    /system/maintenance
+    /system/lldp
+    /system/lacp
+    /system/authentication
+    /system/banner
+    /system/bridge-table
+    /system/ftp-server
+    /system/ip-load-balancing
+    /system/json-rpc-server
+  excption-paths:
+    interface[name=mgmt0]
+    network-instance[name=mgmt]
+    system/gnmi-server
+    system/tls
+    system/ssh-server
+    system/aaa
+    acl/cpm-filter
+kind: ConfigMap
+metadata:
+  name: srl-k8s-subscription-config
+  namespace: nddriver-system

@@ -8,13 +8,13 @@ spec:
   network-instance-name: ipVrf105
   bgp:
     admin-state: enable
-    autonomous-system: 110010
+    autonomous-system: 65000
     router-id: 10.254.25.253
     ebgp-default-policy:
-      import-reject-all: true
-      export-reject-all: true
+      import-reject-all: false
+      export-reject-all: false
     group: 
-      - group-name: upf
+      - group-name: evpn
         admin-state: enable
         peer-as: 1000
         ipv4-unicast:

@@ -114,6 +114,16 @@ func main() {
 
 func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 
+	if err := (&controllers.K8sSrlNokiaBfdBfdReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaBfdBfd}"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaBfdBfd")
+		os.Exit(1)
+	}
+
 	if err := (&controllers.K8sSrlNokiaInterfacesInterfaceReconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaInterfacesInterface}"),
@@ -234,6 +244,16 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 		os.Exit(1)
 	}
 
+	if err := (&controllers.K8sSrlNokiaRoutingPolicyRoutingPolicyReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaRoutingPolicyRoutingPolicy}"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaRoutingPolicyRoutingPolicy")
+		os.Exit(1)
+	}
+
 	if err := (&controllers.K8sSrlNokiaSystemSystemMtuReconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemMtu}"),
@@ -281,6 +301,16 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaTunnelInterfacesTunnelInterface")
+		os.Exit(1)
+	}
+
+	if err := (&controllers.K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface}"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface")
 		os.Exit(1)
 	}
 

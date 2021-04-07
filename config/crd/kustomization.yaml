@@ -2,6 +2,7 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
+- bases/srlinux.henderiw.be_k8ssrlnokiabfdbfds.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokiainterfacesinterfaces.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokiainterfacesinterfacesubinterfaces.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemntps.yaml
@@ -19,7 +20,8 @@ resources:
 - bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemnetworkinstances.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgpevpns.yaml
 - bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgpvpns.yaml
-
+- bases/srlinux.henderiw.be_k8ssrlnokiaroutingpolicyroutingpolicies.yaml
+- bases/srlinux.henderiw.be_k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:

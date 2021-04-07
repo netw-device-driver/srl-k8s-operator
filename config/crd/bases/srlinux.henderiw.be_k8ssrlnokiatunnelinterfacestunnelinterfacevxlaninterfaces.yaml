@@ -1,0 +1,324 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface
+    listKind: K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceList
+    plural: k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces
+    singular: k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterface
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface is the
+          Schema for the K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaces
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceSpec
+              struct
+            properties:
+              tunnel-interface-name:
+                type: string
+              vxlan-interface:
+                items:
+                  description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface
+                    struct
+                  properties:
+                    bridge-table:
+                      description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceBridgeTable
+                        struct
+                      type: object
+                    egress:
+                      description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress
+                        struct
+                      properties:
+                        destination-groups:
+                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups
+                            struct
+                          properties:
+                            group:
+                              items:
+                                description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup
+                                  struct
+                                properties:
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  destination:
+                                    items:
+                                      description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination
+                                        struct
+                                      properties:
+                                        admin-state:
+                                          default: enable
+                                          enum:
+                                          - disable
+                                          - enable
+                                          type: string
+                                        index:
+                                          maximum: 65535
+                                          minimum: 0
+                                          type: integer
+                                        inner-ethernet-header:
+                                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader
+                                            struct
+                                          properties:
+                                            destination-mac:
+                                              pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                              type: string
+                                          type: object
+                                        vni:
+                                          format: int32
+                                          maximum: 16777215
+                                          minimum: 1
+                                          type: integer
+                                      required:
+                                      - index
+                                      type: object
+                                    type: array
+                                  esi:
+                                    pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}'
+                                    type: string
+                                  name:
+                                    maxLength: 255
+                                    minLength: 1
+                                    pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                                    type: string
+                                required:
+                                - name
+                                type: object
+                              type: array
+                          type: object
+                        inner-ethernet-header:
+                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressInnerEthernetHeader
+                            struct
+                          properties:
+                            source-mac:
+                              default: use-system-mac
+                              type: string
+                          type: object
+                        source-ip:
+                          default: use-system-ipv4-address
+                          type: string
+                      type: object
+                    index:
+                      format: int32
+                      maximum: 99999999
+                      minimum: 0
+                      type: integer
+                    ingress:
+                      description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress
+                        struct
+                      properties:
+                        vni:
+                          format: int32
+                          maximum: 16777215
+                          minimum: 1
+                          type: integer
+                      required:
+                      - vni
+                      type: object
+                    type:
+                      type: string
+                  required:
+                  - index
+                  - type
+                  type: object
+                type: array
+            required:
+            - tunnel-interface-name
+            - vxlan-interface
+            type: object
+          status:
+            description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceStatus
+              struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  tunnel-interface-name:
+                    type: string
+                  vxlan-interface:
+                    items:
+                      description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface
+                        struct
+                      properties:
+                        bridge-table:
+                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceBridgeTable
+                            struct
+                          type: object
+                        egress:
+                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgress
+                            struct
+                          properties:
+                            destination-groups:
+                              description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroups
+                                struct
+                              properties:
+                                group:
+                                  items:
+                                    description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroup
+                                      struct
+                                    properties:
+                                      admin-state:
+                                        default: enable
+                                        enum:
+                                        - disable
+                                        - enable
+                                        type: string
+                                      destination:
+                                        items:
+                                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestination
+                                            struct
+                                          properties:
+                                            admin-state:
+                                              default: enable
+                                              enum:
+                                              - disable
+                                              - enable
+                                              type: string
+                                            index:
+                                              maximum: 65535
+                                              minimum: 0
+                                              type: integer
+                                            inner-ethernet-header:
+                                              description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader
+                                                struct
+                                              properties:
+                                                destination-mac:
+                                                  pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                                  type: string
+                                              type: object
+                                            vni:
+                                              format: int32
+                                              maximum: 16777215
+                                              minimum: 1
+                                              type: integer
+                                          required:
+                                          - index
+                                          type: object
+                                        type: array
+                                      esi:
+                                        pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}'
+                                        type: string
+                                      name:
+                                        maxLength: 255
+                                        minLength: 1
+                                        pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                                        type: string
+                                    required:
+                                    - name
+                                    type: object
+                                  type: array
+                              type: object
+                            inner-ethernet-header:
+                              description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceEgressInnerEthernetHeader
+                                struct
+                              properties:
+                                source-mac:
+                                  default: use-system-mac
+                                  type: string
+                              type: object
+                            source-ip:
+                              default: use-system-ipv4-address
+                              type: string
+                          type: object
+                        index:
+                          format: int32
+                          maximum: 99999999
+                          minimum: 0
+                          type: integer
+                        ingress:
+                          description: SrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceIngress
+                            struct
+                          properties:
+                            vni:
+                              format: int32
+                              maximum: 16777215
+                              minimum: 1
+                              type: integer
+                          required:
+                          - vni
+                          type: object
+                        type:
+                          type: string
+                      required:
+                      - index
+                      - type
+                      type: object
+                    type: array
+                required:
+                - tunnel-interface-name
+                - vxlan-interface
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
