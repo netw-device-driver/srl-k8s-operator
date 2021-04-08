@@ -32,8 +32,6 @@ const (
 type SrlNokiaRoutingPolicyRoutingPolicyAsPathSet struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=65535
@@ -44,8 +42,6 @@ type SrlNokiaRoutingPolicyRoutingPolicyAsPathSet struct {
 type SrlNokiaRoutingPolicyRoutingPolicyCommunitySet struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
@@ -269,8 +265,6 @@ type SrlNokiaRoutingPolicyRoutingPolicyPolicyStatement struct {
 type SrlNokiaRoutingPolicyRoutingPolicyPolicy struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name          *string                                                `json:"name"`
 	DefaultAction *SrlNokiaRoutingPolicyRoutingPolicyPolicyDefaultAction `json:"default-action,omitempty"`
 	Statement     []*SrlNokiaRoutingPolicyRoutingPolicyPolicyStatement   `json:"statement,omitempty"`
@@ -293,8 +287,6 @@ type SrlNokiaRoutingPolicyRoutingPolicyPrefixSet struct {
 	Prefix []*SrlNokiaRoutingPolicyRoutingPolicyPrefixSetPrefix `json:"prefix,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
 }
 
