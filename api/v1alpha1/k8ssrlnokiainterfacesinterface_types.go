@@ -187,7 +187,6 @@ type SrlNokiaInterfacesInterface struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Description *string                           `json:"description,omitempty"`
 	Sflow       *SrlNokiaInterfacesInterfaceSflow `json:"sflow,omitempty"`
 	VlanTagging *bool                             `json:"vlan-tagging,omitempty"`

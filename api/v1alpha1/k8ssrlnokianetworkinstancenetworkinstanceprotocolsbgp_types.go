@@ -332,7 +332,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroup struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Description *string `json:"description,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
@@ -345,7 +344,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroup struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	GroupName      *string                                                                `json:"group-name"`
 	AsPathOptions  *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpGroupAsPathOptions  `json:"as-path-options,omitempty"`
 	ImportPolicy   *string                                                                `json:"import-policy,omitempty"`
@@ -608,15 +606,11 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighbor struct {
 	PeerAs *uint32 `json:"peer-as,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%!+(MISSING))?`
-	// +kubebuilder:validation:Pattern=`(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%!+(MISSING))?`
-	// +kubebuilder:validation:Pattern=`([^%!](MISSING)+)(%!((MISSING)mgmt0\.0|system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3})))?`
 	PeerAddress   *string                                                                  `json:"peer-address"`
 	AsPathOptions *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAsPathOptions `json:"as-path-options,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Description      *string                                                                     `json:"description,omitempty"`
 	SendDefaultRoute *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborSendDefaultRoute `json:"send-default-route,omitempty"`
 	Authentication   *SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborAuthentication   `json:"authentication,omitempty"`
@@ -730,8 +724,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp struct {
 	LocalPreference *uint32                                                       `json:"local-preference,omitempty"`
 	Neighbor        []*SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighbor `json:"neighbor,omitempty"`
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	RouterId *string `json:"router-id"`
 }
 

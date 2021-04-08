@@ -595,8 +595,6 @@ type SrlNokiaInterfacesInterfaceSubinterface struct {
 	L2Mtu *uint16 `json:"l2-mtu,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Description *string `json:"description,omitempty"`
 	// +kubebuilder:validation:Minimum=1280
 	// +kubebuilder:validation:Maximum=9486

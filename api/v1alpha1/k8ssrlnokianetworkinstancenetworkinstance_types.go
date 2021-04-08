@@ -174,8 +174,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceMtu struct {
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringAdminGroupsGroup struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=31
@@ -221,8 +219,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroup
 type SrlNokiaNetworkInstanceNetworkInstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
@@ -267,8 +263,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceVxlanInterface struct {
 type SrlNokiaNetworkInstanceNetworkInstance struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Description    *string                                                 `json:"description,omitempty"`
 	Interface      []*SrlNokiaNetworkInstanceNetworkInstanceInterface      `json:"interface,omitempty"`
 	IpForwarding   *SrlNokiaNetworkInstanceNetworkInstanceIpForwarding     `json:"ip-forwarding,omitempty"`
@@ -287,8 +281,6 @@ type SrlNokiaNetworkInstanceNetworkInstance struct {
 	Type *string `json:"type,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
 	Name            *string                                                `json:"name"`
 	IpLoadBalancing *SrlNokiaNetworkInstanceNetworkInstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
 }
