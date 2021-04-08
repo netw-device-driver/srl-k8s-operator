@@ -582,9 +582,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTraceOptions stru
 
 // SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTransport struct
 type SrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpNeighborTransport struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address,omitempty"`
 	PassiveMode  *bool   `json:"passive-mode,omitempty"`
 	// +kubebuilder:validation:Minimum=536
