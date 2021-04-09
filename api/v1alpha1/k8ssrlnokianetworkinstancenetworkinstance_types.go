@@ -97,7 +97,6 @@ type SrlNokiaNetworkInstanceNetworkInstanceBridgeTable struct {
 	MacDuplication *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
 	MacLearning    *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
 	MacLimit       *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableMacLimit       `json:"mac-limit,omitempty"`
-	// +kubebuilder:default:=false
 	ProtectAnycastGwMac *bool                                                       `json:"protect-anycast-gw-mac,omitempty"`
 	StaticMac           *SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac `json:"static-mac,omitempty"`
 	// +kubebuilder:default:=false

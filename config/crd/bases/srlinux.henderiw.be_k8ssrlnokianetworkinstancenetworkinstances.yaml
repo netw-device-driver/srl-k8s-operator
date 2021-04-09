@@ -134,7 +134,6 @@ spec:
                               type: integer
                           type: object
                         protect-anycast-gw-mac:
-                          default: false
                           type: boolean
                         static-mac:
                           description: SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac
@@ -533,7 +532,6 @@ spec:
                                   type: integer
                               type: object
                             protect-anycast-gw-mac:
-                              default: false
                               type: boolean
                             static-mac:
                               description: SrlNokiaNetworkInstanceNetworkInstanceBridgeTableStaticMac
