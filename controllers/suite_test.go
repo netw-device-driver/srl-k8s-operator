@@ -17,20 +17,11 @@ limitations under the License.
 package controllers
 
 import (
-	"path/filepath"
-	"testing"
-
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"k8s.io/client-go/kubernetes/scheme"
+	//. "github.com/onsi/ginkgo"
+	//. "github.com/onsi/gomega"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
-	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
-	logf "sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	srlinuxv1alpha1 "github.com/srl-wim/srl-k8s-operator/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -41,6 +32,7 @@ var cfg *rest.Config
 var k8sClient client.Client
 var testEnv *envtest.Environment
 
+/*
 func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
 
@@ -77,3 +69,5 @@ var _ = AfterSuite(func() {
 	err := testEnv.Stop()
 	Expect(err).NotTo(HaveOccurred())
 })
+
+*/
