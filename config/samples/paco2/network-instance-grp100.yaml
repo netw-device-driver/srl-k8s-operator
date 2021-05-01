@@ -1,0 +1,12 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: SrlnokiaNetworkinstance
+metadata:
+  name: network-instance-group-100
+  labels:
+    target: leaf1
+spec:
+  network-instance:
+  - name: ipVrf105
+    type: ip-vrf
+    admin-state: enable
+    description: "k8s-ipVrf105"
