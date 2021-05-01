@@ -30,11 +30,7 @@ const (
 
 // BfdMicroBfdSessionsLagInterface struct
 type BfdMicroBfdSessionsLagInterface struct {
-	// +kubebuilder:validation:Minimum=10000
-	// +kubebuilder:validation:Maximum=100000000
-	// +kubebuilder:default:=1000000
-	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
-	Name                   *string `json:"name"`
+	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -52,6 +48,10 @@ type BfdMicroBfdSessionsLagInterface struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	RemoteAddress *string `json:"remote-address,omitempty"`
+	// +kubebuilder:validation:Minimum=10000
+	// +kubebuilder:validation:Maximum=100000000
+	// +kubebuilder:default:=1000000
+	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
 }
 
 // BfdMicroBfdSessions struct

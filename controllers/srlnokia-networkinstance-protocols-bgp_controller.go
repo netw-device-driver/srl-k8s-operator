@@ -240,7 +240,7 @@ func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) Reconcile(ctx context.Co
 	}
 	o.DeepCopy()
 
-	r.Log.WithValues("Object", o).Info("Object Info")
+	//r.Log.WithValues("Object", o).Info("Object Info")
 
 	// Add a finalizer to newly created objects.
 	if o.DeletionTimestamp.IsZero() && !SrlnokiaNetworkinstanceProtocolsBgphasFinalizer(o) {
