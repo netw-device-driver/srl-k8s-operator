@@ -1,27 +1,31 @@
+
 # This kustomization.yaml is not intended to be run by itself,
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-- bases/srlinux.henderiw.be_k8ssrlnokiabfdbfds.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiainterfacesinterfaces.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiainterfacesinterfacesubinterfaces.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemntps.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemnames.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemmtus.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceaggregateroutes.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstancenexthopgroups.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgps.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsises.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolslinuxes.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsospfs.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstances.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstancestaticroutes.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiatunnelinterfacestunnelinterfaces.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiasystemsystemnetworkinstances.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgpevpns.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgpvpns.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiaroutingpolicyroutingpolicies.yaml
-- bases/srlinux.henderiw.be_k8ssrlnokiatunnelinterfacestunnelinterfacevxlaninterfaces.yaml
+- bases/srlinux.henderiw.be_srlnokiabfds.yaml
+- bases/srlinux.henderiw.be_srlnokiainterfaces.yaml
+- bases/srlinux.henderiw.be_srlnokiainterfacesubinterfaces.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstances.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceaggregateroutes.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstancenexthopgroups.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceprotocolsbgps.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceprotocolsbgpevpns.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceprotocolsbgpvpns.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceprotocolsises.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceprotocolslinuxes.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstanceprotocolsospfs.yaml
+- bases/srlinux.henderiw.be_srlnokianetworkinstancestaticroutes.yaml
+- bases/srlinux.henderiw.be_srlnokiaroutingpolicyaspathsets.yaml
+- bases/srlinux.henderiw.be_srlnokiaroutingpolicycommunitysets.yaml
+- bases/srlinux.henderiw.be_srlnokiaroutingpolicypolicies.yaml
+- bases/srlinux.henderiw.be_srlnokiaroutingpolicyprefixsets.yaml
+- bases/srlinux.henderiw.be_srlnokiasystemmtus.yaml
+- bases/srlinux.henderiw.be_srlnokiasystemnames.yaml
+- bases/srlinux.henderiw.be_srlnokiasystemnetworkinstanceprotocolsbgpvpns.yaml
+- bases/srlinux.henderiw.be_srlnokiasystemntps.yaml
+- bases/srlinux.henderiw.be_srlnokiatunnelinterfaces.yaml
+- bases/srlinux.henderiw.be_srlnokiatunnelinterfacevxlaninterfaces.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:

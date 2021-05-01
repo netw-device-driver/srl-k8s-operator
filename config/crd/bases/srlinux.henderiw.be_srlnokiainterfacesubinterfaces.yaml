@@ -1,0 +1,1648 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlnokiainterfacesubinterfaces.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: SrlnokiaInterfaceSubinterface
+    listKind: SrlnokiaInterfaceSubinterfaceList
+    plural: srlnokiainterfacesubinterfaces
+    singular: srlnokiainterfacesubinterface
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SrlnokiaInterfaceSubinterface is the Schema for the SrlnokiaInterfaceSubinterfaces
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlnokiaInterfaceSubinterfaceSpec struct
+            properties:
+              interface-name:
+                type: string
+              subinterface:
+                items:
+                  description: InterfaceSubinterface struct
+                  properties:
+                    acl:
+                      description: InterfaceSubinterfaceAcl struct
+                      properties:
+                        input:
+                          description: InterfaceSubinterfaceAclInput struct
+                          properties:
+                            ipv4-filter:
+                              type: string
+                            ipv6-filter:
+                              type: string
+                          type: object
+                        output:
+                          description: InterfaceSubinterfaceAclOutput struct
+                          properties:
+                            ipv4-filter:
+                              type: string
+                            ipv6-filter:
+                              type: string
+                          type: object
+                      type: object
+                    admin-state:
+                      default: enable
+                      enum:
+                      - disable
+                      - enable
+                      type: string
+                    anycast-gw:
+                      description: InterfaceSubinterfaceAnycastGw struct
+                      properties:
+                        anycast-gw-mac:
+                          pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                          type: string
+                        virtual-router-id:
+                          default: 1
+                          maximum: 255
+                          minimum: 1
+                          type: integer
+                      type: object
+                    bridge-table:
+                      description: InterfaceSubinterfaceBridgeTable struct
+                      properties:
+                        discard-unknown-src-mac:
+                          default: false
+                          type: boolean
+                        mac-duplication:
+                          description: InterfaceSubinterfaceBridgeTableMacDuplication
+                            struct
+                          properties:
+                            action:
+                              default: use-net-instance-action
+                              enum:
+                              - blackhole
+                              - oper-down
+                              - stop-learning
+                              - use-net-instance-action
+                              type: string
+                          type: object
+                        mac-learning:
+                          description: InterfaceSubinterfaceBridgeTableMacLearning
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            aging:
+                              description: InterfaceSubinterfaceBridgeTableMacLearningAging
+                                struct
+                              properties:
+                                admin-state:
+                                  default: enable
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                              type: object
+                          type: object
+                        mac-limit:
+                          description: InterfaceSubinterfaceBridgeTableMacLimit struct
+                          properties:
+                            maximum-entries:
+                              default: 250
+                              format: int32
+                              maximum: 8192
+                              minimum: 1
+                              type: integer
+                            warning-threshold-pct:
+                              default: 95
+                              format: int32
+                              maximum: 100
+                              minimum: 6
+                              type: integer
+                          type: object
+                      type: object
+                    description:
+                      maxLength: 255
+                      minLength: 1
+                      pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                      type: string
+                    index:
+                      format: int32
+                      maximum: 9999
+                      minimum: 0
+                      type: integer
+                    ip-mtu:
+                      maximum: 9486
+                      minimum: 1280
+                      type: integer
+                    ipv4:
+                      description: InterfaceSubinterfaceIpv4 struct
+                      properties:
+                        address:
+                          items:
+                            description: InterfaceSubinterfaceIpv4Address struct
+                            properties:
+                              anycast-gw:
+                                type: boolean
+                              ip-prefix:
+                                pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))
+                                type: string
+                              primary:
+                                type: string
+                            required:
+                            - ip-prefix
+                            type: object
+                          type: array
+                        allow-directed-broadcast:
+                          default: false
+                          type: boolean
+                        arp:
+                          description: InterfaceSubinterfaceIpv4Arp struct
+                          properties:
+                            debug:
+                              enum:
+                              - messages
+                              type: string
+                            duplicate-address-detection:
+                              default: true
+                              type: boolean
+                            evpn:
+                              description: InterfaceSubinterfaceIpv4ArpEvpn struct
+                              properties:
+                                advertise:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv4ArpEvpnAdvertise
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        default: 0
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - static
+                                        type: string
+                                    required:
+                                    - route-type
+                                    type: object
+                                  type: array
+                              type: object
+                            host-route:
+                              description: InterfaceSubinterfaceIpv4ArpHostRoute struct
+                              properties:
+                                populate:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv4ArpHostRoutePopulate
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 1
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - evpn
+                                        - static
+                                        type: string
+                                    required:
+                                    - route-type
+                                    type: object
+                                  type: array
+                              type: object
+                            learn-unsolicited:
+                              default: false
+                              type: boolean
+                            neighbor:
+                              items:
+                                description: InterfaceSubinterfaceIpv4ArpNeighbor
+                                  struct
+                                properties:
+                                  ipv4-address:
+                                    pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                    type: string
+                                  link-layer-address:
+                                    pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                    type: string
+                                required:
+                                - ipv4-address
+                                - link-layer-address
+                                type: object
+                              type: array
+                            timeout:
+                              default: 14400
+                              maximum: 65535
+                              minimum: 60
+                              type: integer
+                          type: object
+                        dhcp-client:
+                          description: InterfaceSubinterfaceIpv4DhcpClient struct
+                          properties:
+                            trace-options:
+                              description: InterfaceSubinterfaceIpv4DhcpClientTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                          type: object
+                        dhcp-relay:
+                          description: InterfaceSubinterfaceIpv4DhcpRelay struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            gi-address:
+                              pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                              type: string
+                            option:
+                              enum:
+                              - circuit-id
+                              - remote-id
+                              type: string
+                            server:
+                              pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                              type: string
+                            trace-options:
+                              description: InterfaceSubinterfaceIpv4DhcpRelayTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                            use-gi-addr-as-src-ip-addr:
+                              default: false
+                              type: boolean
+                          type: object
+                        vrrp:
+                          description: InterfaceSubinterfaceIpv4Vrrp struct
+                          properties:
+                            vrrp-group:
+                              items:
+                                description: InterfaceSubinterfaceIpv4VrrpVrrpGroup
+                                  struct
+                                properties:
+                                  accept-mode:
+                                    type: boolean
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  advertise-interval:
+                                    default: 1000
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  authentication:
+                                    description: InterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication
+                                      struct
+                                    properties:
+                                      keychain:
+                                        type: string
+                                    type: object
+                                  init-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  interface-tracking:
+                                    description: InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking
+                                      struct
+                                    properties:
+                                      track-interface:
+                                        items:
+                                          description: InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTrackingTrackInterface
+                                            struct
+                                          properties:
+                                            interface:
+                                              type: string
+                                            priority-decrement:
+                                              maximum: 255
+                                              minimum: 0
+                                              type: integer
+                                          required:
+                                          - interface
+                                          type: object
+                                        type: array
+                                    type: object
+                                  master-inherit-interval:
+                                    default: false
+                                    type: boolean
+                                  oper-interval:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  preempt:
+                                    type: boolean
+                                  preempt-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  priority:
+                                    default: 100
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  statistics:
+                                    description: InterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics
+                                      struct
+                                    type: object
+                                  version:
+                                    default: 2
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  virtual-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  virtual-router-id:
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - virtual-router-id
+                                type: object
+                              type: array
+                          type: object
+                      type: object
+                    ipv6:
+                      description: InterfaceSubinterfaceIpv6 struct
+                      properties:
+                        address:
+                          items:
+                            description: InterfaceSubinterfaceIpv6Address struct
+                            properties:
+                              anycast-gw:
+                                type: boolean
+                              ip-prefix:
+                                pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                type: string
+                              primary:
+                                type: string
+                            required:
+                            - ip-prefix
+                            type: object
+                          type: array
+                        dhcp-client:
+                          description: InterfaceSubinterfaceIpv6DhcpClient struct
+                          properties:
+                            trace-options:
+                              description: InterfaceSubinterfaceIpv6DhcpClientTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                          type: object
+                        dhcp-relay:
+                          description: InterfaceSubinterfaceIpv6DhcpRelay struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            option:
+                              enum:
+                              - interface-id
+                              - remote-id
+                              type: string
+                            server:
+                              pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                              type: string
+                            source-address:
+                              pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                              type: string
+                            trace-options:
+                              description: InterfaceSubinterfaceIpv6DhcpRelayTraceOptions
+                                struct
+                              properties:
+                                trace:
+                                  enum:
+                                  - messages
+                                  type: string
+                              type: object
+                          type: object
+                        neighbor-discovery:
+                          description: InterfaceSubinterfaceIpv6NeighborDiscovery
+                            struct
+                          properties:
+                            debug:
+                              enum:
+                              - messages
+                              type: string
+                            duplicate-address-detection:
+                              default: true
+                              type: boolean
+                            evpn:
+                              description: InterfaceSubinterfaceIpv6NeighborDiscoveryEvpn
+                                struct
+                              properties:
+                                advertise:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv6NeighborDiscoveryEvpnAdvertise
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        default: 0
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - static
+                                        type: string
+                                    required:
+                                    - route-type
+                                    type: object
+                                  type: array
+                              type: object
+                            host-route:
+                              description: InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute
+                                struct
+                              properties:
+                                populate:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoutePopulate
+                                      struct
+                                    properties:
+                                      admin-tag:
+                                        format: int32
+                                        maximum: 255
+                                        minimum: 1
+                                        type: integer
+                                      route-type:
+                                        enum:
+                                        - dynamic
+                                        - evpn
+                                        - static
+                                        type: string
+                                    required:
+                                    - route-type
+                                    type: object
+                                  type: array
+                              type: object
+                            learn-unsolicited:
+                              default: none
+                              enum:
+                              - both
+                              - global
+                              - link-local
+                              - none
+                              type: string
+                            neighbor:
+                              items:
+                                description: InterfaceSubinterfaceIpv6NeighborDiscoveryNeighbor
+                                  struct
+                                properties:
+                                  ipv6-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  link-layer-address:
+                                    pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                    type: string
+                                required:
+                                - ipv6-address
+                                - link-layer-address
+                                type: object
+                              type: array
+                            reachable-time:
+                              default: 30
+                              format: int32
+                              maximum: 3600
+                              minimum: 30
+                              type: integer
+                            stale-time:
+                              default: 14400
+                              format: int32
+                              maximum: 65535
+                              minimum: 60
+                              type: integer
+                          type: object
+                        router-advertisement:
+                          description: InterfaceSubinterfaceIpv6RouterAdvertisement
+                            struct
+                          properties:
+                            debug:
+                              enum:
+                              - messages
+                              type: string
+                            router-role:
+                              description: InterfaceSubinterfaceIpv6RouterAdvertisementRouterRole
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                current-hop-limit:
+                                  default: 64
+                                  maximum: 255
+                                  minimum: 0
+                                  type: integer
+                                ip-mtu:
+                                  maximum: 9486
+                                  minimum: 1280
+                                  type: integer
+                                managed-configuration-flag:
+                                  default: false
+                                  type: boolean
+                                max-advertisement-interval:
+                                  default: 600
+                                  maximum: 1800
+                                  minimum: 4
+                                  type: integer
+                                min-advertisement-interval:
+                                  default: 200
+                                  maximum: 1350
+                                  minimum: 3
+                                  type: integer
+                                other-configuration-flag:
+                                  default: false
+                                  type: boolean
+                                prefix:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix
+                                      struct
+                                    properties:
+                                      autonomous-flag:
+                                        default: false
+                                        type: boolean
+                                      ipv6-prefix:
+                                        pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                        type: string
+                                      on-link-flag:
+                                        default: false
+                                        type: boolean
+                                      preferred-lifetime:
+                                        default: 604800
+                                        format: int32
+                                        type: integer
+                                      valid-lifetime:
+                                        default: 2592000
+                                        format: int32
+                                        type: integer
+                                    required:
+                                    - ipv6-prefix
+                                    type: object
+                                  type: array
+                                reachable-time:
+                                  default: 0
+                                  format: int32
+                                  maximum: 3600000
+                                  minimum: 0
+                                  type: integer
+                                retransmit-time:
+                                  default: 0
+                                  format: int32
+                                  maximum: 1800000
+                                  minimum: 0
+                                  type: integer
+                                router-lifetime:
+                                  default: 1800
+                                  maximum: 9000
+                                  minimum: 0
+                                  type: integer
+                              type: object
+                          type: object
+                        vrrp:
+                          description: InterfaceSubinterfaceIpv6Vrrp struct
+                          properties:
+                            vrrp-group:
+                              items:
+                                description: InterfaceSubinterfaceIpv6VrrpVrrpGroup
+                                  struct
+                                properties:
+                                  accept-mode:
+                                    type: boolean
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  advertise-interval:
+                                    default: 1000
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  authentication:
+                                    description: InterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication
+                                      struct
+                                    properties:
+                                      keychain:
+                                        type: string
+                                    type: object
+                                  init-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  interface-tracking:
+                                    description: InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking
+                                      struct
+                                    properties:
+                                      track-interface:
+                                        items:
+                                          description: InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface
+                                            struct
+                                          properties:
+                                            interface:
+                                              type: string
+                                            priority-decrement:
+                                              maximum: 255
+                                              minimum: 0
+                                              type: integer
+                                          required:
+                                          - interface
+                                          type: object
+                                        type: array
+                                    type: object
+                                  master-inherit-interval:
+                                    default: false
+                                    type: boolean
+                                  oper-interval:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  preempt:
+                                    type: boolean
+                                  preempt-delay:
+                                    maximum: 65535
+                                    minimum: 0
+                                    type: integer
+                                  priority:
+                                    default: 100
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  statistics:
+                                    description: InterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics
+                                      struct
+                                    type: object
+                                  version:
+                                    default: 3
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                  virtual-address:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                    type: string
+                                  virtual-router-id:
+                                    maximum: 255
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - virtual-router-id
+                                type: object
+                              type: array
+                          type: object
+                      type: object
+                    l2-mtu:
+                      maximum: 9500
+                      minimum: 1500
+                      type: integer
+                    local-mirror-destination:
+                      description: InterfaceSubinterfaceLocalMirrorDestination struct
+                      properties:
+                        admin-state:
+                          default: enable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                      type: object
+                    qos:
+                      description: InterfaceSubinterfaceQos struct
+                      properties:
+                        input:
+                          description: InterfaceSubinterfaceQosInput struct
+                          properties:
+                            classifiers:
+                              description: InterfaceSubinterfaceQosInputClassifiers
+                                struct
+                              properties:
+                                dscp:
+                                  type: string
+                                ipv4-dscp:
+                                  type: string
+                                ipv6-dscp:
+                                  type: string
+                                mpls-traffic-class:
+                                  type: string
+                              type: object
+                          type: object
+                        output:
+                          description: InterfaceSubinterfaceQosOutput struct
+                          properties:
+                            rewrite-rules:
+                              description: InterfaceSubinterfaceQosOutputRewriteRules
+                                struct
+                              properties:
+                                dscp:
+                                  type: string
+                                ipv4-dscp:
+                                  type: string
+                                ipv6-dscp:
+                                  type: string
+                                mpls-traffic-class:
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type:
+                      type: string
+                    vlan:
+                      description: InterfaceSubinterfaceVlan struct
+                      properties:
+                        encap:
+                          description: InterfaceSubinterfaceVlanEncap struct
+                          properties:
+                            single-tagged:
+                              description: InterfaceSubinterfaceVlanEncapSingleTagged
+                                struct
+                              properties:
+                                vlan-id:
+                                  type: string
+                              type: object
+                            untagged:
+                              description: InterfaceSubinterfaceVlanEncapUntagged
+                                struct
+                              type: object
+                          type: object
+                      type: object
+                  required:
+                  - index
+                  type: object
+                type: array
+            required:
+            - interface-name
+            - subinterface
+            type: object
+          status:
+            description: SrlnokiaInterfaceSubinterfaceStatus struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  interface-name:
+                    type: string
+                  subinterface:
+                    items:
+                      description: InterfaceSubinterface struct
+                      properties:
+                        acl:
+                          description: InterfaceSubinterfaceAcl struct
+                          properties:
+                            input:
+                              description: InterfaceSubinterfaceAclInput struct
+                              properties:
+                                ipv4-filter:
+                                  type: string
+                                ipv6-filter:
+                                  type: string
+                              type: object
+                            output:
+                              description: InterfaceSubinterfaceAclOutput struct
+                              properties:
+                                ipv4-filter:
+                                  type: string
+                                ipv6-filter:
+                                  type: string
+                              type: object
+                          type: object
+                        admin-state:
+                          default: enable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                        anycast-gw:
+                          description: InterfaceSubinterfaceAnycastGw struct
+                          properties:
+                            anycast-gw-mac:
+                              pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                              type: string
+                            virtual-router-id:
+                              default: 1
+                              maximum: 255
+                              minimum: 1
+                              type: integer
+                          type: object
+                        bridge-table:
+                          description: InterfaceSubinterfaceBridgeTable struct
+                          properties:
+                            discard-unknown-src-mac:
+                              default: false
+                              type: boolean
+                            mac-duplication:
+                              description: InterfaceSubinterfaceBridgeTableMacDuplication
+                                struct
+                              properties:
+                                action:
+                                  default: use-net-instance-action
+                                  enum:
+                                  - blackhole
+                                  - oper-down
+                                  - stop-learning
+                                  - use-net-instance-action
+                                  type: string
+                              type: object
+                            mac-learning:
+                              description: InterfaceSubinterfaceBridgeTableMacLearning
+                                struct
+                              properties:
+                                admin-state:
+                                  default: enable
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                aging:
+                                  description: InterfaceSubinterfaceBridgeTableMacLearningAging
+                                    struct
+                                  properties:
+                                    admin-state:
+                                      default: enable
+                                      enum:
+                                      - disable
+                                      - enable
+                                      type: string
+                                  type: object
+                              type: object
+                            mac-limit:
+                              description: InterfaceSubinterfaceBridgeTableMacLimit
+                                struct
+                              properties:
+                                maximum-entries:
+                                  default: 250
+                                  format: int32
+                                  maximum: 8192
+                                  minimum: 1
+                                  type: integer
+                                warning-threshold-pct:
+                                  default: 95
+                                  format: int32
+                                  maximum: 100
+                                  minimum: 6
+                                  type: integer
+                              type: object
+                          type: object
+                        description:
+                          maxLength: 255
+                          minLength: 1
+                          pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                          type: string
+                        index:
+                          format: int32
+                          maximum: 9999
+                          minimum: 0
+                          type: integer
+                        ip-mtu:
+                          maximum: 9486
+                          minimum: 1280
+                          type: integer
+                        ipv4:
+                          description: InterfaceSubinterfaceIpv4 struct
+                          properties:
+                            address:
+                              items:
+                                description: InterfaceSubinterfaceIpv4Address struct
+                                properties:
+                                  anycast-gw:
+                                    type: boolean
+                                  ip-prefix:
+                                    pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))
+                                    type: string
+                                  primary:
+                                    type: string
+                                required:
+                                - ip-prefix
+                                type: object
+                              type: array
+                            allow-directed-broadcast:
+                              default: false
+                              type: boolean
+                            arp:
+                              description: InterfaceSubinterfaceIpv4Arp struct
+                              properties:
+                                debug:
+                                  enum:
+                                  - messages
+                                  type: string
+                                duplicate-address-detection:
+                                  default: true
+                                  type: boolean
+                                evpn:
+                                  description: InterfaceSubinterfaceIpv4ArpEvpn struct
+                                  properties:
+                                    advertise:
+                                      items:
+                                        description: InterfaceSubinterfaceIpv4ArpEvpnAdvertise
+                                          struct
+                                        properties:
+                                          admin-tag:
+                                            default: 0
+                                            format: int32
+                                            maximum: 255
+                                            minimum: 0
+                                            type: integer
+                                          route-type:
+                                            enum:
+                                            - dynamic
+                                            - static
+                                            type: string
+                                        required:
+                                        - route-type
+                                        type: object
+                                      type: array
+                                  type: object
+                                host-route:
+                                  description: InterfaceSubinterfaceIpv4ArpHostRoute
+                                    struct
+                                  properties:
+                                    populate:
+                                      items:
+                                        description: InterfaceSubinterfaceIpv4ArpHostRoutePopulate
+                                          struct
+                                        properties:
+                                          admin-tag:
+                                            format: int32
+                                            maximum: 255
+                                            minimum: 1
+                                            type: integer
+                                          route-type:
+                                            enum:
+                                            - dynamic
+                                            - evpn
+                                            - static
+                                            type: string
+                                        required:
+                                        - route-type
+                                        type: object
+                                      type: array
+                                  type: object
+                                learn-unsolicited:
+                                  default: false
+                                  type: boolean
+                                neighbor:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv4ArpNeighbor
+                                      struct
+                                    properties:
+                                      ipv4-address:
+                                        pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                        type: string
+                                      link-layer-address:
+                                        pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                        type: string
+                                    required:
+                                    - ipv4-address
+                                    - link-layer-address
+                                    type: object
+                                  type: array
+                                timeout:
+                                  default: 14400
+                                  maximum: 65535
+                                  minimum: 60
+                                  type: integer
+                              type: object
+                            dhcp-client:
+                              description: InterfaceSubinterfaceIpv4DhcpClient struct
+                              properties:
+                                trace-options:
+                                  description: InterfaceSubinterfaceIpv4DhcpClientTraceOptions
+                                    struct
+                                  properties:
+                                    trace:
+                                      enum:
+                                      - messages
+                                      type: string
+                                  type: object
+                              type: object
+                            dhcp-relay:
+                              description: InterfaceSubinterfaceIpv4DhcpRelay struct
+                              properties:
+                                admin-state:
+                                  default: enable
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                gi-address:
+                                  pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                  type: string
+                                option:
+                                  enum:
+                                  - circuit-id
+                                  - remote-id
+                                  type: string
+                                server:
+                                  pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                                  type: string
+                                trace-options:
+                                  description: InterfaceSubinterfaceIpv4DhcpRelayTraceOptions
+                                    struct
+                                  properties:
+                                    trace:
+                                      enum:
+                                      - messages
+                                      type: string
+                                  type: object
+                                use-gi-addr-as-src-ip-addr:
+                                  default: false
+                                  type: boolean
+                              type: object
+                            vrrp:
+                              description: InterfaceSubinterfaceIpv4Vrrp struct
+                              properties:
+                                vrrp-group:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv4VrrpVrrpGroup
+                                      struct
+                                    properties:
+                                      accept-mode:
+                                        type: boolean
+                                      admin-state:
+                                        default: enable
+                                        enum:
+                                        - disable
+                                        - enable
+                                        type: string
+                                      advertise-interval:
+                                        default: 1000
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      authentication:
+                                        description: InterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication
+                                          struct
+                                        properties:
+                                          keychain:
+                                            type: string
+                                        type: object
+                                      init-delay:
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      interface-tracking:
+                                        description: InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking
+                                          struct
+                                        properties:
+                                          track-interface:
+                                            items:
+                                              description: InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTrackingTrackInterface
+                                                struct
+                                              properties:
+                                                interface:
+                                                  type: string
+                                                priority-decrement:
+                                                  maximum: 255
+                                                  minimum: 0
+                                                  type: integer
+                                              required:
+                                              - interface
+                                              type: object
+                                            type: array
+                                        type: object
+                                      master-inherit-interval:
+                                        default: false
+                                        type: boolean
+                                      oper-interval:
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      preempt:
+                                        type: boolean
+                                      preempt-delay:
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      priority:
+                                        default: 100
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      statistics:
+                                        description: InterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics
+                                          struct
+                                        type: object
+                                      version:
+                                        default: 2
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      virtual-address:
+                                        pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                        type: string
+                                      virtual-router-id:
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                    required:
+                                    - virtual-router-id
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                        ipv6:
+                          description: InterfaceSubinterfaceIpv6 struct
+                          properties:
+                            address:
+                              items:
+                                description: InterfaceSubinterfaceIpv6Address struct
+                                properties:
+                                  anycast-gw:
+                                    type: boolean
+                                  ip-prefix:
+                                    pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                    type: string
+                                  primary:
+                                    type: string
+                                required:
+                                - ip-prefix
+                                type: object
+                              type: array
+                            dhcp-client:
+                              description: InterfaceSubinterfaceIpv6DhcpClient struct
+                              properties:
+                                trace-options:
+                                  description: InterfaceSubinterfaceIpv6DhcpClientTraceOptions
+                                    struct
+                                  properties:
+                                    trace:
+                                      enum:
+                                      - messages
+                                      type: string
+                                  type: object
+                              type: object
+                            dhcp-relay:
+                              description: InterfaceSubinterfaceIpv6DhcpRelay struct
+                              properties:
+                                admin-state:
+                                  default: enable
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                option:
+                                  enum:
+                                  - interface-id
+                                  - remote-id
+                                  type: string
+                                server:
+                                  pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+                                  type: string
+                                source-address:
+                                  pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                  type: string
+                                trace-options:
+                                  description: InterfaceSubinterfaceIpv6DhcpRelayTraceOptions
+                                    struct
+                                  properties:
+                                    trace:
+                                      enum:
+                                      - messages
+                                      type: string
+                                  type: object
+                              type: object
+                            neighbor-discovery:
+                              description: InterfaceSubinterfaceIpv6NeighborDiscovery
+                                struct
+                              properties:
+                                debug:
+                                  enum:
+                                  - messages
+                                  type: string
+                                duplicate-address-detection:
+                                  default: true
+                                  type: boolean
+                                evpn:
+                                  description: InterfaceSubinterfaceIpv6NeighborDiscoveryEvpn
+                                    struct
+                                  properties:
+                                    advertise:
+                                      items:
+                                        description: InterfaceSubinterfaceIpv6NeighborDiscoveryEvpnAdvertise
+                                          struct
+                                        properties:
+                                          admin-tag:
+                                            default: 0
+                                            format: int32
+                                            maximum: 255
+                                            minimum: 0
+                                            type: integer
+                                          route-type:
+                                            enum:
+                                            - dynamic
+                                            - static
+                                            type: string
+                                        required:
+                                        - route-type
+                                        type: object
+                                      type: array
+                                  type: object
+                                host-route:
+                                  description: InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute
+                                    struct
+                                  properties:
+                                    populate:
+                                      items:
+                                        description: InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoutePopulate
+                                          struct
+                                        properties:
+                                          admin-tag:
+                                            format: int32
+                                            maximum: 255
+                                            minimum: 1
+                                            type: integer
+                                          route-type:
+                                            enum:
+                                            - dynamic
+                                            - evpn
+                                            - static
+                                            type: string
+                                        required:
+                                        - route-type
+                                        type: object
+                                      type: array
+                                  type: object
+                                learn-unsolicited:
+                                  default: none
+                                  enum:
+                                  - both
+                                  - global
+                                  - link-local
+                                  - none
+                                  type: string
+                                neighbor:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv6NeighborDiscoveryNeighbor
+                                      struct
+                                    properties:
+                                      ipv6-address:
+                                        pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                        type: string
+                                      link-layer-address:
+                                        pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                        type: string
+                                    required:
+                                    - ipv6-address
+                                    - link-layer-address
+                                    type: object
+                                  type: array
+                                reachable-time:
+                                  default: 30
+                                  format: int32
+                                  maximum: 3600
+                                  minimum: 30
+                                  type: integer
+                                stale-time:
+                                  default: 14400
+                                  format: int32
+                                  maximum: 65535
+                                  minimum: 60
+                                  type: integer
+                              type: object
+                            router-advertisement:
+                              description: InterfaceSubinterfaceIpv6RouterAdvertisement
+                                struct
+                              properties:
+                                debug:
+                                  enum:
+                                  - messages
+                                  type: string
+                                router-role:
+                                  description: InterfaceSubinterfaceIpv6RouterAdvertisementRouterRole
+                                    struct
+                                  properties:
+                                    admin-state:
+                                      enum:
+                                      - disable
+                                      - enable
+                                      type: string
+                                    current-hop-limit:
+                                      default: 64
+                                      maximum: 255
+                                      minimum: 0
+                                      type: integer
+                                    ip-mtu:
+                                      maximum: 9486
+                                      minimum: 1280
+                                      type: integer
+                                    managed-configuration-flag:
+                                      default: false
+                                      type: boolean
+                                    max-advertisement-interval:
+                                      default: 600
+                                      maximum: 1800
+                                      minimum: 4
+                                      type: integer
+                                    min-advertisement-interval:
+                                      default: 200
+                                      maximum: 1350
+                                      minimum: 3
+                                      type: integer
+                                    other-configuration-flag:
+                                      default: false
+                                      type: boolean
+                                    prefix:
+                                      items:
+                                        description: InterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix
+                                          struct
+                                        properties:
+                                          autonomous-flag:
+                                            default: false
+                                            type: boolean
+                                          ipv6-prefix:
+                                            pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                            type: string
+                                          on-link-flag:
+                                            default: false
+                                            type: boolean
+                                          preferred-lifetime:
+                                            default: 604800
+                                            format: int32
+                                            type: integer
+                                          valid-lifetime:
+                                            default: 2592000
+                                            format: int32
+                                            type: integer
+                                        required:
+                                        - ipv6-prefix
+                                        type: object
+                                      type: array
+                                    reachable-time:
+                                      default: 0
+                                      format: int32
+                                      maximum: 3600000
+                                      minimum: 0
+                                      type: integer
+                                    retransmit-time:
+                                      default: 0
+                                      format: int32
+                                      maximum: 1800000
+                                      minimum: 0
+                                      type: integer
+                                    router-lifetime:
+                                      default: 1800
+                                      maximum: 9000
+                                      minimum: 0
+                                      type: integer
+                                  type: object
+                              type: object
+                            vrrp:
+                              description: InterfaceSubinterfaceIpv6Vrrp struct
+                              properties:
+                                vrrp-group:
+                                  items:
+                                    description: InterfaceSubinterfaceIpv6VrrpVrrpGroup
+                                      struct
+                                    properties:
+                                      accept-mode:
+                                        type: boolean
+                                      admin-state:
+                                        default: enable
+                                        enum:
+                                        - disable
+                                        - enable
+                                        type: string
+                                      advertise-interval:
+                                        default: 1000
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      authentication:
+                                        description: InterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication
+                                          struct
+                                        properties:
+                                          keychain:
+                                            type: string
+                                        type: object
+                                      init-delay:
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      interface-tracking:
+                                        description: InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking
+                                          struct
+                                        properties:
+                                          track-interface:
+                                            items:
+                                              description: InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface
+                                                struct
+                                              properties:
+                                                interface:
+                                                  type: string
+                                                priority-decrement:
+                                                  maximum: 255
+                                                  minimum: 0
+                                                  type: integer
+                                              required:
+                                              - interface
+                                              type: object
+                                            type: array
+                                        type: object
+                                      master-inherit-interval:
+                                        default: false
+                                        type: boolean
+                                      oper-interval:
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      preempt:
+                                        type: boolean
+                                      preempt-delay:
+                                        maximum: 65535
+                                        minimum: 0
+                                        type: integer
+                                      priority:
+                                        default: 100
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      statistics:
+                                        description: InterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics
+                                          struct
+                                        type: object
+                                      version:
+                                        default: 3
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                      virtual-address:
+                                        pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                        type: string
+                                      virtual-router-id:
+                                        maximum: 255
+                                        minimum: 0
+                                        type: integer
+                                    required:
+                                    - virtual-router-id
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                        l2-mtu:
+                          maximum: 9500
+                          minimum: 1500
+                          type: integer
+                        local-mirror-destination:
+                          description: InterfaceSubinterfaceLocalMirrorDestination
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                          type: object
+                        qos:
+                          description: InterfaceSubinterfaceQos struct
+                          properties:
+                            input:
+                              description: InterfaceSubinterfaceQosInput struct
+                              properties:
+                                classifiers:
+                                  description: InterfaceSubinterfaceQosInputClassifiers
+                                    struct
+                                  properties:
+                                    dscp:
+                                      type: string
+                                    ipv4-dscp:
+                                      type: string
+                                    ipv6-dscp:
+                                      type: string
+                                    mpls-traffic-class:
+                                      type: string
+                                  type: object
+                              type: object
+                            output:
+                              description: InterfaceSubinterfaceQosOutput struct
+                              properties:
+                                rewrite-rules:
+                                  description: InterfaceSubinterfaceQosOutputRewriteRules
+                                    struct
+                                  properties:
+                                    dscp:
+                                      type: string
+                                    ipv4-dscp:
+                                      type: string
+                                    ipv6-dscp:
+                                      type: string
+                                    mpls-traffic-class:
+                                      type: string
+                                  type: object
+                              type: object
+                          type: object
+                        type:
+                          type: string
+                        vlan:
+                          description: InterfaceSubinterfaceVlan struct
+                          properties:
+                            encap:
+                              description: InterfaceSubinterfaceVlanEncap struct
+                              properties:
+                                single-tagged:
+                                  description: InterfaceSubinterfaceVlanEncapSingleTagged
+                                    struct
+                                  properties:
+                                    vlan-id:
+                                      type: string
+                                  type: object
+                                untagged:
+                                  description: InterfaceSubinterfaceVlanEncapUntagged
+                                    struct
+                                  type: object
+                              type: object
+                          type: object
+                      required:
+                      - index
+                      type: object
+                    type: array
+                required:
+                - interface-name
+                - subinterface
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

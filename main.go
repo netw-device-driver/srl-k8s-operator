@@ -113,207 +113,213 @@ func main() {
 }
 
 func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
-
-	if err := (&controllers.K8sSrlNokiaBfdBfdReconciler{
+	if err := (&controllers.SrlnokiaBfdReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaBfdBfd}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaBfd"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaBfdBfd")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaBfd")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaInterfacesInterfaceReconciler{
+	if err := (&controllers.SrlnokiaInterfaceReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaInterfacesInterface}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaInterface"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaInterfacesInterface")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaInterface")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaInterfacesInterfaceSubinterfaceReconciler{
+	if err := (&controllers.SrlnokiaInterfaceSubinterfaceReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaInterfacesInterfaceSubinterface}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaInterfaceSubinterface"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaInterfacesInterfaceSubinterface")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaInterfaceSubinterface")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstance}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstance"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstance")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstance")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutesReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceAggregateroutesReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceAggregateroutes"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceAggregateRoutes")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceAggregateroutes")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroupsReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceNexthopgroupsReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroups}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceNexthopgroups"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceNextHopGroups")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceNexthopgroups")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceProtocolsBgpReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceProtocolsBgp"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceProtocolsBgp")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpnReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceProtocolsBgpevpnReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceProtocolsBgpevpn"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpevpn")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceProtocolsBgpevpn")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpnReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceProtocolsBgpvpnReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceProtocolsBgpvpn"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgpVpn")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceProtocolsBgpvpn")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsisReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceProtocolsIsisReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceProtocolsIsis"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsIsis")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceProtocolsIsis")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinuxReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceProtocolsLinuxReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceProtocolsLinux"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsLinux")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceProtocolsLinux")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsOspfReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceProtocolsOspfReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsOspf}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceProtocolsOspf"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsOspf")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceProtocolsOspf")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaNetworkInstanceNetworkInstanceStaticRoutesReconciler{
+	if err := (&controllers.SrlnokiaNetworkinstanceStaticroutesReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaNetworkInstanceNetworkInstanceStaticRoutes}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaNetworkinstanceStaticroutes"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaNetworkInstanceNetworkInstanceStaticRoutes")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaNetworkinstanceStaticroutes")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaRoutingPolicyRoutingPolicyReconciler{
+	if err := (&controllers.SrlnokiaRoutingpolicyAspathsetReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaRoutingPolicyRoutingPolicy}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaRoutingpolicyAspathset"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaRoutingPolicyRoutingPolicy")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaRoutingpolicyAspathset")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaSystemSystemMtuReconciler{
+	if err := (&controllers.SrlnokiaRoutingpolicyCommunitysetReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemMtu}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaRoutingpolicyCommunityset"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaSystemSystemMtu")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaRoutingpolicyCommunityset")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaSystemSystemNameReconciler{
+	if err := (&controllers.SrlnokiaRoutingpolicyPolicyReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemName}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaRoutingpolicyPolicy"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaSystemSystemName")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaRoutingpolicyPolicy")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaSystemSystemNetworkInstanceReconciler{
+	if err := (&controllers.SrlnokiaRoutingpolicyPrefixsetReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemNetworkInstance}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaRoutingpolicyPrefixset"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaSystemSystemNetworkInstance")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaRoutingpolicyPrefixset")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaSystemSystemNtpReconciler{
+	if err := (&controllers.SrlnokiaSystemMtuReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaSystemSystemNtp}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaSystemMtu"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaSystemSystemNtp")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaSystemMtu")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaTunnelInterfacesTunnelInterfaceReconciler{
+	if err := (&controllers.SrlnokiaSystemNameReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaTunnelInterfacesTunnelInterface}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaSystemName"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaTunnelInterfacesTunnelInterface")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaSystemName")
 		os.Exit(1)
 	}
-
-	if err := (&controllers.K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterfaceReconciler{
+	if err := (&controllers.SrlnokiaSystemNetworkinstanceProtocolsBgpvpnReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("Controller").WithName("{K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface}"),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaSystemNetworkinstanceProtocolsBgpvpn"),
 		Scheme: mgr.GetScheme(),
 		Ctx:    ctx,
 	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "K8sSrlNokiaTunnelInterfacesTunnelInterfaceVxlanInterface")
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaSystemNetworkinstanceProtocolsBgpvpn")
 		os.Exit(1)
 	}
-
+	if err := (&controllers.SrlnokiaSystemNtpReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaSystemNtp"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaSystemNtp")
+		os.Exit(1)
+	}
+	if err := (&controllers.SrlnokiaTunnelinterfaceReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaTunnelinterface"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaTunnelinterface")
+		os.Exit(1)
+	}
+	if err := (&controllers.SrlnokiaTunnelinterfaceVxlaninterfaceReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlnokiaTunnelinterfaceVxlaninterface"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "SrlnokiaTunnelinterfaceVxlaninterface")
+		os.Exit(1)
+	}
 }
 
 func concurrency(c int) controller.Options {

@@ -1,0 +1,282 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlnokianetworkinstanceprotocolsbgpevpns.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: SrlnokiaNetworkinstanceProtocolsBgpevpn
+    listKind: SrlnokiaNetworkinstanceProtocolsBgpevpnList
+    plural: srlnokianetworkinstanceprotocolsbgpevpns
+    singular: srlnokianetworkinstanceprotocolsbgpevpn
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SrlnokiaNetworkinstanceProtocolsBgpevpn is the Schema for the
+          SrlnokiaNetworkinstanceProtocolsBgpevpns API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlnokiaNetworkinstanceProtocolsBgpevpnSpec struct
+            properties:
+              bgp-evpn:
+                description: NetworkinstanceProtocolsBgpevpn struct
+                properties:
+                  bgp-instance:
+                    items:
+                      description: NetworkinstanceProtocolsBgpevpnBgpInstance struct
+                      properties:
+                        admin-state:
+                          default: enable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                        default-admin-tag:
+                          default: 0
+                          format: int32
+                          maximum: 4294967295
+                          minimum: 0
+                          type: integer
+                        ecmp:
+                          default: 1
+                          maximum: 8
+                          minimum: 1
+                          type: integer
+                        encapsulation-type:
+                          default: vxlan
+                          enum:
+                          - vxlan
+                          type: string
+                        evi:
+                          format: int32
+                          maximum: 65535
+                          minimum: 1
+                          type: integer
+                        id:
+                          type: string
+                        routes:
+                          description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes
+                            struct
+                          properties:
+                            bridge-table:
+                              description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable
+                                struct
+                              properties:
+                                inclusive-mcast:
+                                  description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast
+                                    struct
+                                  properties:
+                                    advertise:
+                                      default: true
+                                      type: boolean
+                                    originating-ip:
+                                      pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                      type: string
+                                  type: object
+                                mac-ip:
+                                  description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp
+                                    struct
+                                  properties:
+                                    advertise:
+                                      default: true
+                                      type: boolean
+                                  type: object
+                                next-hop:
+                                  default: use-system-ipv4-address
+                                  type: string
+                              type: object
+                            route-table:
+                              description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable
+                                struct
+                              properties:
+                                mac-ip:
+                                  description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp
+                                    struct
+                                  properties:
+                                    advertise-gateway-mac:
+                                      default: false
+                                      type: boolean
+                                  type: object
+                              type: object
+                          type: object
+                        vxlan-interface:
+                          type: string
+                      required:
+                      - evi
+                      - id
+                      type: object
+                    type: array
+                type: object
+              network-instance-name:
+                type: string
+            required:
+            - bgp-evpn
+            - network-instance-name
+            type: object
+          status:
+            description: SrlnokiaNetworkinstanceProtocolsBgpevpnStatus struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  bgp-evpn:
+                    description: NetworkinstanceProtocolsBgpevpn struct
+                    properties:
+                      bgp-instance:
+                        items:
+                          description: NetworkinstanceProtocolsBgpevpnBgpInstance
+                            struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            default-admin-tag:
+                              default: 0
+                              format: int32
+                              maximum: 4294967295
+                              minimum: 0
+                              type: integer
+                            ecmp:
+                              default: 1
+                              maximum: 8
+                              minimum: 1
+                              type: integer
+                            encapsulation-type:
+                              default: vxlan
+                              enum:
+                              - vxlan
+                              type: string
+                            evi:
+                              format: int32
+                              maximum: 65535
+                              minimum: 1
+                              type: integer
+                            id:
+                              type: string
+                            routes:
+                              description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes
+                                struct
+                              properties:
+                                bridge-table:
+                                  description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable
+                                    struct
+                                  properties:
+                                    inclusive-mcast:
+                                      description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast
+                                        struct
+                                      properties:
+                                        advertise:
+                                          default: true
+                                          type: boolean
+                                        originating-ip:
+                                          pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                          type: string
+                                      type: object
+                                    mac-ip:
+                                      description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp
+                                        struct
+                                      properties:
+                                        advertise:
+                                          default: true
+                                          type: boolean
+                                      type: object
+                                    next-hop:
+                                      default: use-system-ipv4-address
+                                      type: string
+                                  type: object
+                                route-table:
+                                  description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable
+                                    struct
+                                  properties:
+                                    mac-ip:
+                                      description: NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp
+                                        struct
+                                      properties:
+                                        advertise-gateway-mac:
+                                          default: false
+                                          type: boolean
+                                      type: object
+                                  type: object
+                              type: object
+                            vxlan-interface:
+                              type: string
+                          required:
+                          - evi
+                          - id
+                          type: object
+                        type: array
+                    type: object
+                  network-instance-name:
+                    type: string
+                required:
+                - bgp-evpn
+                - network-instance-name
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
