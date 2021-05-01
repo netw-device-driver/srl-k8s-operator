@@ -1,3 +1,4 @@
+
 /*
 Copyright 2020 Wim Henderickx.
 
@@ -17,8 +18,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
 )
 
 const (
@@ -27,65 +28,57 @@ const (
 	// deprovisioned.
 	SrlnokiaNetworkinstanceAggregateroutesFinalizer string = "NetworkinstanceAggregateroutes.srlinux.henderiw.be"
 )
-
 // NetworkinstanceAggregateroutesRouteAggregator struct
 type NetworkinstanceAggregateroutesRouteAggregator struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	Address *string `json:"address,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AsNumber *uint32 `json:"as-number,omitempty"`
+  // +kubebuilder:validation:Minimum=1
+  // +kubebuilder:validation:Maximum=4294967295
+  AsNumber *uint32 `json:"as-number,omitempty"`
+  // +kubebuilder:validation:Required
+  // +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
+  Address *string `json:"address,omitempty"`
 }
-
 // NetworkinstanceAggregateroutesRouteCommunities struct
 type NetworkinstanceAggregateroutesRouteCommunities struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])`
-	// +kubebuilder:validation:Pattern=`.*:.*`
-	// +kubebuilder:validation:Pattern=`([1-9][0-9]{0,9}):([1-9][0-9]{0,9}):([1-9][0-9]{0,9})`
-	// +kubebuilder:validation:Pattern=`.*:.*:.*`
-	Add *string `json:"add,omitempty"`
+  // +kubebuilder:validation:Optional
+  // +kubebuilder:validation:Pattern=`(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])|.*:.*|([1-9][0-9]{0,9}):([1-9][0-9]{0,9}):([1-9][0-9]{0,9})|.*:.*:.*`
+  Add *string `json:"add,omitempty"`
 }
-
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState   *string                                         `json:"admin-state,omitempty"`
-	Aggregator   *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
-	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
-	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
-	// +kubebuilder:default:=false
-	SummaryOnly *bool `json:"summary-only,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))`
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
-	Prefix *string `json:"prefix"`
+  Communities *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
+  GenerateIcmp *bool `json:"generate-icmp,omitempty"`
+  // +kubebuilder:default:=false
+  SummaryOnly *bool `json:"summary-only,omitempty"`
+  // +kubebuilder:validation:Optional
+  // +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
+  Prefix *string `json:"prefix"`
+  // +kubebuilder:validation:Enum=`disable`;`enable`
+  // +kubebuilder:default:=enable
+  AdminState *string `json:"admin-state,omitempty"`
+  Aggregator *NetworkinstanceAggregateroutesRouteAggregator `json:"aggregator,omitempty"`
 }
-
 // NetworkinstanceAggregateroutes struct
 type NetworkinstanceAggregateroutes struct {
-	Route []*NetworkinstanceAggregateroutesRoute `json:"route,omitempty"`
+  Route []*NetworkinstanceAggregateroutesRoute `json:"route,omitempty"`
 }
 
 // SrlnokiaNetworkinstanceAggregateroutesSpec struct
-type SrlnokiaNetworkinstanceAggregateroutesSpec struct {
-	SrlNokiaNetworkInstanceName            *string                         `json:"network-instance-name"`
-	SrlnokiaNetworkinstanceAggregateroutes *NetworkinstanceAggregateroutes `json:"aggregate-routes"`
+type SrlnokiaNetworkinstanceAggregateroutesSpec struct{
+  SrlNokiaNetworkInstanceName       *string `json:"network-instance-name"`
+  SrlnokiaNetworkinstanceAggregateroutes       *NetworkinstanceAggregateroutes `json:"aggregate-routes"`
 }
 
 // SrlnokiaNetworkinstanceAggregateroutesStatus struct
-type SrlnokiaNetworkinstanceAggregateroutesStatus struct {
-	// Target provides the status of the configuration on the device
-	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
+type SrlnokiaNetworkinstanceAggregateroutesStatus struct{
+  // Target provides the status of the configuration on the device
+  Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
 
-	// UsedSpec provides the spec used for the configuration
-	UsedSpec *SrlnokiaNetworkinstanceAggregateroutesSpec `json:"usedSpec,omitempty"`
+  // UsedSpec provides the spec used for the configuration
+  UsedSpec *SrlnokiaNetworkinstanceAggregateroutesSpec `json:"usedSpec,omitempty"`
 
-	// LastUpdated identifies when this status was last observed.
-	// +optional
-	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
+  // LastUpdated identifies when this status was last observed.
+  // +optional
+  LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -93,55 +86,55 @@ type SrlnokiaNetworkinstanceAggregateroutesStatus struct {
 
 // SrlnokiaNetworkinstanceAggregateroutes is the Schema for the SrlnokiaNetworkinstanceAggregateroutess API
 type SrlnokiaNetworkinstanceAggregateroutes struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+  metav1.TypeMeta   `json:",inline"`
+  metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   SrlnokiaNetworkinstanceAggregateroutesSpec   `json:"spec,omitempty"`
-	Status SrlnokiaNetworkinstanceAggregateroutesStatus `json:"status,omitempty"`
+  Spec   SrlnokiaNetworkinstanceAggregateroutesSpec   `json:"spec,omitempty"`
+  Status SrlnokiaNetworkinstanceAggregateroutesStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
 // SrlnokiaNetworkinstanceAggregateroutesList contains a list of SrlnokiaNetworkinstanceAggregateroutess
 type SrlnokiaNetworkinstanceAggregateroutesList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []SrlnokiaNetworkinstanceAggregateroutes `json:"items"`
+  metav1.TypeMeta   `json:",inline"`
+  metav1.ListMeta `json:"metadata,omitempty"`
+  Items           []SrlnokiaNetworkinstanceAggregateroutes `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&SrlnokiaNetworkinstanceAggregateroutes{}, &SrlnokiaNetworkinstanceAggregateroutesList{})
+  SchemeBuilder.Register(&SrlnokiaNetworkinstanceAggregateroutes{}, &SrlnokiaNetworkinstanceAggregateroutesList{})
 }
 
 // NewEvent creates a new event associated with the object and ready
 // to be published to the kubernetes API.
 func (o *SrlnokiaNetworkinstanceAggregateroutes) NewEvent(reason, message string) corev1.Event {
-	t := metav1.Now()
-	return corev1.Event{
-		ObjectMeta: metav1.ObjectMeta{
-			GenerateName: reason + "-",
-			Namespace:    o.ObjectMeta.Namespace,
-		},
-		InvolvedObject: corev1.ObjectReference{
-			Kind:       "SrlnokiaNetworkinstanceAggregateroutes",
-			Namespace:  o.Namespace,
-			Name:       o.Name,
-			UID:        o.UID,
-			APIVersion: GroupVersion.String(),
-		},
-		Reason:  reason,
-		Message: message,
-		Source: corev1.EventSource{
-			Component: "srl-controller",
-		},
-		FirstTimestamp:      t,
-		LastTimestamp:       t,
-		Count:               1,
-		Type:                corev1.EventTypeNormal,
-		ReportingController: "srlinux.henderiw.be/srl-controller",
-	}
+  t := metav1.Now()
+  return corev1.Event{
+    ObjectMeta: metav1.ObjectMeta{
+      GenerateName: reason + "-",
+      Namespace:    o.ObjectMeta.Namespace,
+    },
+    InvolvedObject: corev1.ObjectReference{
+      Kind:       "SrlnokiaNetworkinstanceAggregateroutes",
+      Namespace:  o.Namespace,
+      Name:       o.Name,
+      UID:        o.UID,
+      APIVersion: GroupVersion.String(),
+    },
+    Reason:  reason,
+    Message: message,
+    Source: corev1.EventSource{
+      Component: "srl-controller",
+    },
+    FirstTimestamp:      t,
+    LastTimestamp:       t,
+    Count:               1,
+    Type:                corev1.EventTypeNormal,
+    ReportingController: "srlinux.henderiw.be/srl-controller",
+  }
 }
 
 func (o *SrlnokiaNetworkinstanceAggregateroutes) SetConfigStatus(t *string, c *ConfigStatus) {
-	o.Status.Target[*t].ConfigStatus = c
+  o.Status.Target[*t].ConfigStatus = c
 }
