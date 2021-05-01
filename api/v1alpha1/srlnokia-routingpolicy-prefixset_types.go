@@ -30,20 +30,20 @@ const (
 )
 // RoutingpolicyPrefixsetPrefix struct
 type RoutingpolicyPrefixsetPrefix struct {
+  // +kubebuilder:validation:Required
+  // +kubebuilder:validation:Pattern=`([0-9]+\.\.[0-9]+)|exact`
+  MaskLengthRange *string `json:"mask-length-range,omitempty"`
   IpPrefixMaskLengthRange *string `json:"ip-prefix-mask-length-range,omitempty"`
   // +kubebuilder:validation:Optional
   // +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
   IpPrefix *string `json:"ip-prefix,omitempty"`
-  // +kubebuilder:validation:Required
-  // +kubebuilder:validation:Pattern=`([0-9]+\.\.[0-9]+)|exact`
-  MaskLengthRange *string `json:"mask-length-range,omitempty"`
 }
 // RoutingpolicyPrefixset struct
 type RoutingpolicyPrefixset struct {
   // +kubebuilder:validation:MinLength=1
   // +kubebuilder:validation:MaxLength=255
   // +kubebuilder:validation:Required
-  // +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+  // +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
   Name *string `json:"name"`
   Prefix []*RoutingpolicyPrefixsetPrefix `json:"prefix,omitempty"`
 }

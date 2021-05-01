@@ -59,6 +59,11 @@ type BfdMicroBfdSessions struct {
 }
 // BfdSubinterface struct
 type BfdSubinterface struct {
+  // +kubebuilder:validation:MinLength=5
+  // +kubebuilder:validation:MaxLength=25
+  // +kubebuilder:validation:Required
+  // +kubebuilder:validation:Pattern=`(system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3}))`
+  Id *string `json:"id"`
   // +kubebuilder:validation:Enum=`disable`;`enable`
   // +kubebuilder:default:=disable
   AdminState *string `json:"admin-state,omitempty"`
@@ -78,11 +83,6 @@ type BfdSubinterface struct {
   // +kubebuilder:validation:Maximum=100000000
   // +kubebuilder:default:=1000000
   RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
-  // +kubebuilder:validation:MinLength=5
-  // +kubebuilder:validation:MaxLength=25
-  // +kubebuilder:validation:Required
-  // +kubebuilder:validation:Pattern=`(system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3}))`
-  Id *string `json:"id"`
 }
 // Bfd struct
 type Bfd struct {

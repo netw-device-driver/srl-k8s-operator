@@ -410,7 +410,7 @@ spec:
                         name:
                           maxLength: 255
                           minLength: 1
-                          pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                          pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                           type: string
                         net:
                           pattern: '[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}'
@@ -1010,7 +1010,7 @@ spec:
                             name:
                               maxLength: 255
                               minLength: 1
-                              pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                              pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                               type: string
                             net:
                               pattern: '[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}'

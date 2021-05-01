@@ -142,7 +142,7 @@ spec:
                     description:
                       maxLength: 255
                       minLength: 1
-                      pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                      pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                       type: string
                     index:
                       format: int32
@@ -960,7 +960,7 @@ spec:
                         description:
                           maxLength: 255
                           minLength: 1
-                          pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                          pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                           type: string
                         index:
                           format: int32

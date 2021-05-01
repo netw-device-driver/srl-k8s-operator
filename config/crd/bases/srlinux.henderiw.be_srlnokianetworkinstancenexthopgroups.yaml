@@ -63,7 +63,7 @@ spec:
                         name:
                           maxLength: 255
                           minLength: 1
-                          pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                          pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                           type: string
                         nexthop:
                           items:
@@ -190,7 +190,7 @@ spec:
                             name:
                               maxLength: 255
                               minLength: 1
-                              pattern: '[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,''/_:;?-]*'
+                              pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                               type: string
                             nexthop:
                               items:

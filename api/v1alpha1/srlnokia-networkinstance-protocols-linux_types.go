@@ -30,12 +30,12 @@ const (
 )
 // NetworkinstanceProtocolsLinux struct
 type NetworkinstanceProtocolsLinux struct {
-  // +kubebuilder:default:=true
-  ExportNeighbors *bool `json:"export-neighbors,omitempty"`
   // +kubebuilder:default:=false
   ExportRoutes *bool `json:"export-routes,omitempty"`
   // +kubebuilder:default:=false
   ImportRoutes *bool `json:"import-routes,omitempty"`
+  // +kubebuilder:default:=true
+  ExportNeighbors *bool `json:"export-neighbors,omitempty"`
 }
 
 // SrlnokiaNetworkinstanceProtocolsLinuxSpec struct

@@ -33,7 +33,7 @@ type RoutingpolicyAspathset struct {
   // +kubebuilder:validation:MinLength=1
   // +kubebuilder:validation:MaxLength=255
   // +kubebuilder:validation:Required
-  // +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+  // +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
   Name *string `json:"name"`
   // +kubebuilder:validation:MinLength=1
   // +kubebuilder:validation:MaxLength=65535

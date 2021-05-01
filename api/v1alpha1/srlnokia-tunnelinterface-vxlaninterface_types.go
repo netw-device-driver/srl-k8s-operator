@@ -39,6 +39,9 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEt
 }
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct {
+  // +kubebuilder:validation:Minimum=1
+  // +kubebuilder:validation:Maximum=16777215
+  Vni *uint32 `json:"vni,omitempty"`
   // +kubebuilder:validation:Minimum=0
   // +kubebuilder:validation:Maximum=65535
   Index *uint16 `json:"index"`
@@ -46,12 +49,12 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
   // +kubebuilder:default:=enable
   AdminState *string `json:"admin-state,omitempty"`
   InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
-  // +kubebuilder:validation:Minimum=1
-  // +kubebuilder:validation:Maximum=16777215
-  Vni *uint32 `json:"vni,omitempty"`
 }
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
+  // +kubebuilder:validation:Enum=`disable`;`enable`
+  // +kubebuilder:default:=enable
+  AdminState *string `json:"admin-state,omitempty"`
   Destination []*TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
   // +kubebuilder:validation:Required
   // +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
@@ -59,11 +62,8 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
   // +kubebuilder:validation:MinLength=1
   // +kubebuilder:validation:MaxLength=255
   // +kubebuilder:validation:Required
-  // +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$%!^(MISSING)&()|+=`~.,'/_:;?-]*"
+  // +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
   Name *string `json:"name"`
-  // +kubebuilder:validation:Enum=`disable`;`enable`
-  // +kubebuilder:default:=enable
-  AdminState *string `json:"admin-state,omitempty"`
 }
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct {

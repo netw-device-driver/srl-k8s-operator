@@ -30,12 +30,12 @@ const (
 )
 // NetworkinstanceAggregateroutesRouteAggregator struct
 type NetworkinstanceAggregateroutesRouteAggregator struct {
-  // +kubebuilder:validation:Minimum=1
-  // +kubebuilder:validation:Maximum=4294967295
-  AsNumber *uint32 `json:"as-number,omitempty"`
   // +kubebuilder:validation:Required
   // +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
   Address *string `json:"address,omitempty"`
+  // +kubebuilder:validation:Minimum=1
+  // +kubebuilder:validation:Maximum=4294967295
+  AsNumber *uint32 `json:"as-number,omitempty"`
 }
 // NetworkinstanceAggregateroutesRouteCommunities struct
 type NetworkinstanceAggregateroutesRouteCommunities struct {
@@ -45,6 +45,7 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 }
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
+  Aggregator *NetworkinstanceAggregateroutesRouteAggregator `json:"aggregator,omitempty"`
   Communities *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
   GenerateIcmp *bool `json:"generate-icmp,omitempty"`
   // +kubebuilder:default:=false
@@ -55,7 +56,6 @@ type NetworkinstanceAggregateroutesRoute struct {
   // +kubebuilder:validation:Enum=`disable`;`enable`
   // +kubebuilder:default:=enable
   AdminState *string `json:"admin-state,omitempty"`
-  Aggregator *NetworkinstanceAggregateroutesRouteAggregator `json:"aggregator,omitempty"`
 }
 // NetworkinstanceAggregateroutes struct
 type NetworkinstanceAggregateroutes struct {

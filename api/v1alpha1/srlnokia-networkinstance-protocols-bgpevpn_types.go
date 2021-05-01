@@ -64,6 +64,15 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
 }
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
+  VxlanInterface *string `json:"vxlan-interface,omitempty"`
+  Id *string `json:"id"`
+  // +kubebuilder:validation:Enum=`disable`;`enable`
+  // +kubebuilder:default:=enable
+  AdminState *string `json:"admin-state,omitempty"`
+  // +kubebuilder:validation:Minimum=0
+  // +kubebuilder:validation:Maximum=4294967295
+  // +kubebuilder:default:=0
+  DefaultAdminTag *uint32 `json:"default-admin-tag,omitempty"`
   // +kubebuilder:validation:Minimum=1
   // +kubebuilder:validation:Maximum=8
   // +kubebuilder:default:=1
@@ -75,15 +84,6 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
   // +kubebuilder:validation:Maximum=65535
   Evi *uint32 `json:"evi"`
   Routes *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
-  VxlanInterface *string `json:"vxlan-interface,omitempty"`
-  Id *string `json:"id"`
-  // +kubebuilder:validation:Enum=`disable`;`enable`
-  // +kubebuilder:default:=enable
-  AdminState *string `json:"admin-state,omitempty"`
-  // +kubebuilder:validation:Minimum=0
-  // +kubebuilder:validation:Maximum=4294967295
-  // +kubebuilder:default:=0
-  DefaultAdminTag *uint32 `json:"default-admin-tag,omitempty"`
 }
 // NetworkinstanceProtocolsBgpevpn struct
 type NetworkinstanceProtocolsBgpevpn struct {
