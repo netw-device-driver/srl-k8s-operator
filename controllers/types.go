@@ -16,9 +16,14 @@
 
 package controllers
 
-type LeafRef struct {
-	AbsoluteLeafRefPath string
-	RelativeLeafRefPath string
-	ElementName         string
-	KeyName             string
+type ElementWithLeafRef struct {
+	RelativePath2ObjectWithLeafRef string
+	AbsolutePath2LeafRef           string
+	RelativePath2LeafRef           string
+	ElementName                    string
+	KeyName                        string
+	Values                         []string
+	Exists                         bool
+	DependencyCheckSuccess         bool
+	LeafRefValues                  []string
 }

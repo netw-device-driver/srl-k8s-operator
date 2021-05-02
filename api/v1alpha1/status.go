@@ -16,6 +16,32 @@ limitations under the License.
 
 package v1alpha1
 
+// ValidationStatus defines the validation status of the resource object
+type ValidationStatus string
+
+const (
+	// ValidationStatusSuccess means the validation was successfull
+	ValidationStatusSuccess ValidationStatus = "Success"
+
+	// ValidationStatusSuccess means the validation was successfull
+	ValidationStatusFailed ValidationStatus = "Failed"
+)
+
+func ValidationStatusPtr(v ValidationStatus) *ValidationStatus { return &v }
+
+// ValidationDetails provides the status of the configuration applied on this particular device
+type ValidationDetails struct {
+	// Values identifies the object value that should match the leafref value
+	// if empty it means the object does not exist.
+	Values *[]string `json:"values,omitempty"`
+
+	// LeafRefPath points to the leafref object value
+	LeafRefPath *string `json:"leafRefParh,omitempty"`
+
+	// LeafRefValues identifies the values assigned in the leaf ref
+	LeafRefValues *[]string `json:"leafRefValues,omitempty"`
+}
+
 // ConfigStatus defines the states the resource object is reporting
 type ConfigStatus string
 

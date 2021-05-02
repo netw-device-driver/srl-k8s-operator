@@ -20,7 +20,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/metal3-io/baremetal-operator/pkg/utils"
@@ -45,9 +47,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var TunnelinterfaceIntraResourceleafRef = map[string]*LeafRef{}
+var TunnelinterfaceIntraResourceleafRef = map[string]*ElementWithLeafRef{}
 
-var TunnelinterfaceInterResourceleafRef = map[string]*LeafRef{}
+var TunnelinterfaceInterResourceleafRef = map[string]*ElementWithLeafRef{}
 
 // SrlnokiaTunnelinterfaceReconciler reconciles a SrlnokiaTunnelinterface object
 type SrlnokiaTunnelinterfaceReconciler struct {
@@ -136,15 +138,206 @@ func (r *SrlnokiaTunnelinterfaceReconciler) NetworkDeviceMapFunc(o client.Object
 	return result
 }
 
+// last -> used to indicate in the validateObject the last element in the leafref. it is provided in the
+// validateObject function since you can have a list to walk through. As such we can supply the value direct
+// e -> element in the tree
+// x1 -> the data object
+// elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
+func (r *SrlnokiaTunnelinterfaceReconciler) validateIfElementWithLeafRefExists(last bool, e string, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+	xType := reflect.TypeOf(o)
+	xValue := reflect.ValueOf(o)
+	r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
+	switch x := o.(type) {
+	case map[string]interface{}:
+		r.Log.Info("validateObject map[string]interface{}")
+		if v, ok := x[e]; ok {
+			r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateObject found")
+			if last {
+				switch val := v.(type) {
+				case string:
+					found := false
+					for _, leafrefValues := range elementWithleafref.Values {
+						if string(val) == leafrefValues {
+							found = true
+						}
+					}
+					if !found {
+						elementWithleafref.Exists = true
+						elementWithleafref.Values = append(elementWithleafref.Values, string(val))
+					}
+				}
+			}
+			return v, true
+		} else {
+			r.Log.WithValues("Element", e).Info("validateObject not found")
+			return nil, false
+		}
+	case []interface{}:
+		r.Log.Info("validateObject []interface{}")
+		for _, v1 := range x {
+			switch x := v1.(type) {
+			case map[string]interface{}:
+				if v, ok := x[e]; ok {
+					r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateObject found")
+					if last {
+						switch val := v.(type) {
+						case string:
+							found := false
+							for _, leafrefValues := range elementWithleafref.Values {
+								if string(val) == leafrefValues {
+									found = true
+								}
+							}
+							if !found {
+								elementWithleafref.Exists = true
+								elementWithleafref.Values = append(elementWithleafref.Values, string(val))
+							}
+						}
+					}
+					return v, true
+				} else {
+					r.Log.WithValues("Element", e).Info("validateObject not found")
+					return nil, false
+				}
+			}
+		}
+		return nil, false
+	}
+	r.Log.Info("validateObject not map[string]interface{} or []interface{}")
+	return nil, false
+}
+
+func (r *SrlnokiaTunnelinterfaceReconciler) validateLeafRefExists(last bool, e string, o interface{}, leafrefValue string) (interface{}, bool) {
+	xType := reflect.TypeOf(o)
+	xValue := reflect.ValueOf(o)
+	r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
+	switch x := o.(type) {
+	case map[string]interface{}:
+		r.Log.Info("validateLeafRefExists map[string]interface{}")
+		if v, ok := x[e]; ok {
+			r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateLeafRefExists found")
+			if last {
+				switch val := v.(type) {
+				case string:
+					if leafrefValue == val {
+						return val, true
+					} else {
+						return val, false
+					}
+				}
+			}
+			return v, true
+		} else {
+			r.Log.WithValues("Element", e).Info("validateLeafRefExists not found")
+			return nil, false
+		}
+	case []interface{}:
+		r.Log.Info("validateLeafRefExists []interface{}")
+		for _, v1 := range x {
+			switch x := v1.(type) {
+			case map[string]interface{}:
+				if v, ok := x[e]; ok {
+					r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateLeafRefExists found")
+					if last {
+						switch val := v.(type) {
+						case string:
+							if leafrefValue == val {
+								return val, true
+							} else {
+								return val, false
+							}
+						}
+					}
+					return v, true
+				} else {
+					r.Log.WithValues("Element", e).Info("validateLeafRefExists not found")
+					return nil, false
+				}
+			}
+		}
+		return nil, false
+	}
+	r.Log.Info("validateLeafRefExists not map[string]interface{} or []interface{}")
+	return nil, false
+}
+
+func (r *SrlnokiaTunnelinterfaceReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.Tunnelinterface) (err error) {
+	// marshal data to json
+	dd := struct {
+		TunnelInterface *srlinuxv1alpha1.Tunnelinterface `json:"tunnel-interface"`
+	}{
+		TunnelInterface: o,
+	}
+	d, err := json.Marshal(dd)
+	if err != nil {
+		return err
+	}
+	// unmarshal data to json
+	var x interface{}
+	err = json.Unmarshal(d, &x)
+	if err != nil {
+		return err
+	}
+
+	for _, elementWithleafref := range TunnelinterfaceInterResourceleafRef {
+		// validate if the element with leafref exist
+		elements := strings.Split(elementWithleafref.RelativePath2ObjectWithLeafRef, "/")
+		x1 := x
+		r.Log.WithValues("X1", x1).Info("Data Input")
+		for i, e := range elements {
+			// the first element could be an empty string which we fill in with the first element of the resource
+			if i == 0 {
+				e = "tunnel-interface"
+			}
+			r.Log.WithValues("Element", e).Info("validateLocalLeafRefs")
+			// last -> used to indicate in the validateObject the last element in the leafref. it is provided in the
+			// validateObject function since you can have a list to walk through. As such we can supply the value direct
+			// e -> element in the tree
+			// x1 -> the data object
+			// leafref -> the leafreaf object on which the values are supplied that match the leafref element
+			found := false
+			last := false
+			if i == (len(elements) - 1) {
+				last = true
+			}
+			x1, found = r.validateIfElementWithLeafRefExists(last, e, x1, elementWithleafref)
+			if !found {
+				elementWithleafref.Exists = false
+				break
+			}
+		}
+		r.Log.WithValues("leafref values", elementWithleafref.Values).Info("LeafRef Values")
+		for _, leafReafValue := range elementWithleafref.Values {
+			elements := strings.Split(elementWithleafref.RelativePath2LeafRef, "/")
+			x1 := x
+			for i, e := range elements {
+				// the first element could be an empty string which we fill in with the first element of the resource
+				if i == 0 {
+					e = "tunnel-interface"
+				}
+				found := false
+				last := false
+				if i == (len(elements) - 1) {
+					last = true
+				}
+				x1, found = r.validateLeafRefExists(last, e, x1, leafReafValue)
+				if !found {
+					elementWithleafref.DependencyCheckSuccess = false
+					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
+					break
+				}
+				if last && found {
+					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
+					elementWithleafref.DependencyCheckSuccess = true
+				}
+			}
+		}
+	}
+	return nil
+}
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the SrlnokiaTunnelinterface object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.7.0/pkg/reconcile
 func (r *SrlnokiaTunnelinterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = r.Log.WithValues("SrlnokiaTunnelinterface", req.NamespacedName)
 
@@ -161,6 +354,14 @@ func (r *SrlnokiaTunnelinterfaceReconciler) Reconcile(ctx context.Context, req c
 	o.DeepCopy()
 
 	//r.Log.WithValues("Object", o).Info("Object Info")
+
+	// validate local leaf refs
+	for _, vo := range *o.Spec.SrlnokiaTunnelinterface {
+		err := r.validateLocalLeafRefs(&vo)
+		if err != nil {
+			return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
+		}
+	}
 
 	// Add a finalizer to newly created objects.
 	if o.DeletionTimestamp.IsZero() && !SrlnokiaTunnelinterfacehasFinalizer(o) {

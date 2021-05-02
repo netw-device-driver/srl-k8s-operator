@@ -54,6 +54,13 @@ type SrlnokiaSystemNtpSpec struct {
 
 // SrlnokiaSystemNtpStatus struct
 type SrlnokiaSystemNtpStatus struct {
+	// ValidationStatus defines the validation status of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+
+	// ValidationDetails defines the validation details of the resource object
+	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
 

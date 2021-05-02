@@ -36,15 +36,15 @@ type NetworkinstanceNexthopgroupsGroupBlackhole struct {
 
 // NetworkinstanceNexthopgroupsGroupNexthopFailureDetectionEnableBfd struct
 type NetworkinstanceNexthopgroupsGroupNexthopFailureDetectionEnableBfd struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16384
-	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16384
 	LocalDiscriminator *uint32 `json:"local-discriminator,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16384
+	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct
@@ -54,6 +54,8 @@ type NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct {
 
 // NetworkinstanceNexthopgroupsGroupNexthop struct
 type NetworkinstanceNexthopgroupsGroupNexthop struct {
+	// +kubebuilder:default:=true
+	Resolve *bool `json:"resolve,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	Index *uint16 `json:"index"`
@@ -65,12 +67,12 @@ type NetworkinstanceNexthopgroupsGroupNexthop struct {
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	IpAddress            *string `json:"ip-address,omitempty"`
 	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
-	// +kubebuilder:default:=true
-	Resolve *bool `json:"resolve,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroup struct
 type NetworkinstanceNexthopgroupsGroup struct {
+	Blackhole *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
+	Nexthop   []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -78,9 +80,7 @@ type NetworkinstanceNexthopgroupsGroup struct {
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string                                     `json:"admin-state,omitempty"`
-	Blackhole  *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
-	Nexthop    []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceNexthopgroups struct
@@ -96,6 +96,13 @@ type SrlnokiaNetworkinstanceNexthopgroupsSpec struct {
 
 // SrlnokiaNetworkinstanceNexthopgroupsStatus struct
 type SrlnokiaNetworkinstanceNexthopgroupsStatus struct {
+	// ValidationStatus defines the validation status of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+
+	// ValidationDetails defines the validation details of the resource object
+	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
 

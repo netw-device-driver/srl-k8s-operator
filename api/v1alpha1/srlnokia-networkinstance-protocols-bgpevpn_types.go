@@ -64,15 +64,12 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
-	BridgeTable *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
 	RouteTable  *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
+	BridgeTable *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	Evi            *uint32                                           `json:"evi"`
 	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
 	Id             *string                                           `json:"id"`
@@ -90,6 +87,9 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	// +kubebuilder:validation:Enum=`vxlan`
 	// +kubebuilder:default:=vxlan
 	EncapsulationType *string `json:"encapsulation-type,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Evi *uint32 `json:"evi"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct
@@ -105,6 +105,13 @@ type SrlnokiaNetworkinstanceProtocolsBgpevpnSpec struct {
 
 // SrlnokiaNetworkinstanceProtocolsBgpevpnStatus struct
 type SrlnokiaNetworkinstanceProtocolsBgpevpnStatus struct {
+	// ValidationStatus defines the validation status of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+
+	// ValidationDetails defines the validation details of the resource object
+	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
 

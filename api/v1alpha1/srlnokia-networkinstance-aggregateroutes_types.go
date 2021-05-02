@@ -47,8 +47,6 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
-	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
-	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
 	// +kubebuilder:default:=false
 	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
@@ -56,8 +54,10 @@ type NetworkinstanceAggregateroutesRoute struct {
 	Prefix *string `json:"prefix"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string                                        `json:"admin-state,omitempty"`
-	Aggregator *NetworkinstanceAggregateroutesRouteAggregator `json:"aggregator,omitempty"`
+	AdminState   *string                                         `json:"admin-state,omitempty"`
+	Aggregator   *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
+	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
+	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
 }
 
 // NetworkinstanceAggregateroutes struct
@@ -73,6 +73,13 @@ type SrlnokiaNetworkinstanceAggregateroutesSpec struct {
 
 // SrlnokiaNetworkinstanceAggregateroutesStatus struct
 type SrlnokiaNetworkinstanceAggregateroutesStatus struct {
+	// ValidationStatus defines the validation status of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+
+	// ValidationDetails defines the validation details of the resource object
+	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
 

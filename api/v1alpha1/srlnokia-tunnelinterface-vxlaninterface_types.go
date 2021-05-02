@@ -55,11 +55,6 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                 `json:"admin-state,omitempty"`
@@ -67,6 +62,11 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
 	Esi *string `json:"esi,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
+	Name *string `json:"name"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
@@ -82,10 +82,10 @@ type TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader struct {
 
 // TunnelinterfaceVxlaninterfaceEgress struct
 type TunnelinterfaceVxlaninterfaceEgress struct {
+	DestinationGroups   *TunnelinterfaceVxlaninterfaceEgressDestinationGroups   `json:"destination-groups,omitempty"`
 	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
 	// +kubebuilder:default:=use-system-ipv4-address
-	SourceIp          *string                                               `json:"source-ip,omitempty"`
-	DestinationGroups *TunnelinterfaceVxlaninterfaceEgressDestinationGroups `json:"destination-groups,omitempty"`
+	SourceIp *string `json:"source-ip,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceIngress struct
@@ -114,6 +114,13 @@ type SrlnokiaTunnelinterfaceVxlaninterfaceSpec struct {
 
 // SrlnokiaTunnelinterfaceVxlaninterfaceStatus struct
 type SrlnokiaTunnelinterfaceVxlaninterfaceStatus struct {
+	// ValidationStatus defines the validation status of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+
+	// ValidationDetails defines the validation details of the resource object
+	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
 

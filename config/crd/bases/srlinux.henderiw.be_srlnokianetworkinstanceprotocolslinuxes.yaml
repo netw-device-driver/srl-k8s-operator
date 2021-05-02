@@ -115,6 +115,38 @@ spec:
                 - linux
                 - network-instance-name
                 type: object
+              validationDetails:
+                additionalProperties:
+                  description: ValidationDetails provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    leafRefParh:
+                      description: LeafRefPath points to the leafref object value
+                      type: string
+                    leafRefValues:
+                      description: LeafRefValues identifies the values assigned in
+                        the leaf ref
+                      items:
+                        type: string
+                      type: array
+                    values:
+                      description: Values identifies the object value that should
+                        match the leafref value if empty it means the object does
+                        not exist.
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                description: ValidationDetails defines the validation details of the
+                  resource object
+                type: object
+              validationStatus:
+                description: ValidationStatus defines the validation status of the
+                  resource object
+                enum:
+                - Success
+                - Failed
+                type: string
             type: object
         type: object
     served: true
