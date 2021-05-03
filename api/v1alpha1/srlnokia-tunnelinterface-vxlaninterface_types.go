@@ -55,11 +55,6 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                 `json:"admin-state,omitempty"`
@@ -67,6 +62,11 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
 	Esi *string `json:"esi,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
+	Name *string `json:"name"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
@@ -97,13 +97,13 @@ type TunnelinterfaceVxlaninterfaceIngress struct {
 
 // TunnelinterfaceVxlaninterface struct
 type TunnelinterfaceVxlaninterface struct {
+	Type *string `json:"type"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=99999999
+	Index       *uint32                                   `json:"index"`
 	BridgeTable *TunnelinterfaceVxlaninterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *TunnelinterfaceVxlaninterfaceEgress      `json:"egress,omitempty"`
 	Ingress     *TunnelinterfaceVxlaninterfaceIngress     `json:"ingress,omitempty"`
-	Type        *string                                   `json:"type"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=99999999
-	Index *uint32 `json:"index"`
 }
 
 // SrlnokiaTunnelinterfaceVxlaninterfaceSpec struct
@@ -188,4 +188,7 @@ func (o *SrlnokiaTunnelinterfaceVxlaninterface) NewEvent(reason, message string)
 
 func (o *SrlnokiaTunnelinterfaceVxlaninterface) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
+}
+func (o *SrlnokiaTunnelinterfaceVxlaninterface) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
 }

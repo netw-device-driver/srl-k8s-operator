@@ -172,24 +172,24 @@ type NetworkinstanceProtocolsIsisInstanceInterfaceTraceOptions struct {
 
 // NetworkinstanceProtocolsIsisInstanceInterface struct
 type NetworkinstanceProtocolsIsisInstanceInterface struct {
-	Timers *NetworkinstanceProtocolsIsisInstanceInterfaceTimers `json:"timers,omitempty"`
+	Level []*NetworkinstanceProtocolsIsisInstanceInterfaceLevel `json:"level,omitempty"`
+	// +kubebuilder:default:=false
+	Passive       *bool                                                `json:"passive,omitempty"`
+	Timers        *NetworkinstanceProtocolsIsisInstanceInterfaceTimers `json:"timers,omitempty"`
+	InterfaceName *string                                              `json:"interface-name"`
+	// +kubebuilder:validation:Enum=`broadcast`;`point-to-point`
+	CircuitType        *string                                                          `json:"circuit-type,omitempty"`
+	Ipv4Unicast        *NetworkinstanceProtocolsIsisInstanceInterfaceIpv4Unicast        `json:"ipv4-unicast,omitempty"`
+	Ipv6Unicast        *NetworkinstanceProtocolsIsisInstanceInterfaceIpv6Unicast        `json:"ipv6-unicast,omitempty"`
+	LdpSynchronization *NetworkinstanceProtocolsIsisInstanceInterfaceLdpSynchronization `json:"ldp-synchronization,omitempty"`
+	TraceOptions       *NetworkinstanceProtocolsIsisInstanceInterfaceTraceOptions       `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState     *string                                                      `json:"admin-state,omitempty"`
 	Authentication *NetworkinstanceProtocolsIsisInstanceInterfaceAuthentication `json:"authentication,omitempty"`
-	// +kubebuilder:validation:Enum=`broadcast`;`point-to-point`
-	CircuitType *string `json:"circuit-type,omitempty"`
 	// +kubebuilder:validation:Enum=`adaptive`;`disable`;`loose`;`strict`
 	// +kubebuilder:default:=disable
-	HelloPadding       *string                                                          `json:"hello-padding,omitempty"`
-	Ipv4Unicast        *NetworkinstanceProtocolsIsisInstanceInterfaceIpv4Unicast        `json:"ipv4-unicast,omitempty"`
-	Ipv6Unicast        *NetworkinstanceProtocolsIsisInstanceInterfaceIpv6Unicast        `json:"ipv6-unicast,omitempty"`
-	LdpSynchronization *NetworkinstanceProtocolsIsisInstanceInterfaceLdpSynchronization `json:"ldp-synchronization,omitempty"`
-	InterfaceName      *string                                                          `json:"interface-name"`
-	Level              []*NetworkinstanceProtocolsIsisInstanceInterfaceLevel            `json:"level,omitempty"`
-	// +kubebuilder:default:=false
-	Passive      *bool                                                      `json:"passive,omitempty"`
-	TraceOptions *NetworkinstanceProtocolsIsisInstanceInterfaceTraceOptions `json:"trace-options,omitempty"`
+	HelloPadding *string `json:"hello-padding,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsisInstanceIpv4Unicast struct
@@ -210,20 +210,20 @@ type NetworkinstanceProtocolsIsisInstanceIpv6Unicast struct {
 
 // NetworkinstanceProtocolsIsisInstanceLdpSynchronization struct
 type NetworkinstanceProtocolsIsisInstanceLdpSynchronization struct {
-	// +kubebuilder:default:=false
-	EndOfLib *bool `json:"end-of-lib,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	// +kubebuilder:default:=60
 	HoldDownTimer *uint16 `json:"hold-down-timer,omitempty"`
+	// +kubebuilder:default:=false
+	EndOfLib *bool `json:"end-of-lib,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsisInstanceLevelAuthentication struct
 type NetworkinstanceProtocolsIsisInstanceLevelAuthentication struct {
-	CsnpAuthentication  *bool   `json:"csnp-authentication,omitempty"`
-	HelloAuthentication *bool   `json:"hello-authentication,omitempty"`
 	Keychain            *string `json:"keychain,omitempty"`
 	PsnpAuthentication  *bool   `json:"psnp-authentication,omitempty"`
+	CsnpAuthentication  *bool   `json:"csnp-authentication,omitempty"`
+	HelloAuthentication *bool   `json:"hello-authentication,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsisInstanceLevelRoutePreference struct
@@ -244,17 +244,17 @@ type NetworkinstanceProtocolsIsisInstanceLevelTraceOptions struct {
 
 // NetworkinstanceProtocolsIsisInstanceLevel struct
 type NetworkinstanceProtocolsIsisInstanceLevel struct {
-	// +kubebuilder:validation:Enum=`narrow`;`wide`
-	// +kubebuilder:default:=wide
-	MetricStyle     *string                                                   `json:"metric-style,omitempty"`
-	RoutePreference *NetworkinstanceProtocolsIsisInstanceLevelRoutePreference `json:"route-preference,omitempty"`
-	TraceOptions    *NetworkinstanceProtocolsIsisInstanceLevelTraceOptions    `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	LevelNumber    *uint8                                                   `json:"level-number"`
 	Authentication *NetworkinstanceProtocolsIsisInstanceLevelAuthentication `json:"authentication,omitempty"`
 	// +kubebuilder:default:=false
 	BgpLsExclude *bool `json:"bgp-ls-exclude,omitempty"`
+	// +kubebuilder:validation:Enum=`narrow`;`wide`
+	// +kubebuilder:default:=wide
+	MetricStyle     *string                                                   `json:"metric-style,omitempty"`
+	RoutePreference *NetworkinstanceProtocolsIsisInstanceLevelRoutePreference `json:"route-preference,omitempty"`
+	TraceOptions    *NetworkinstanceProtocolsIsisInstanceLevelTraceOptions    `json:"trace-options,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsisInstanceOverloadImmediate struct
@@ -267,11 +267,11 @@ type NetworkinstanceProtocolsIsisInstanceOverloadImmediate struct {
 
 // NetworkinstanceProtocolsIsisInstanceOverloadOnBoot struct
 type NetworkinstanceProtocolsIsisInstanceOverloadOnBoot struct {
-	SetBit *bool `json:"set-bit,omitempty"`
+	MaxMetric *bool `json:"max-metric,omitempty"`
+	SetBit    *bool `json:"set-bit,omitempty"`
 	// +kubebuilder:validation:Minimum=60
 	// +kubebuilder:validation:Maximum=1800
-	Timeout   *uint16 `json:"timeout,omitempty"`
-	MaxMetric *bool   `json:"max-metric,omitempty"`
+	Timeout *uint16 `json:"timeout,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsisInstanceOverload struct
@@ -328,6 +328,10 @@ type NetworkinstanceProtocolsIsisInstanceTimersLspRefresh struct {
 // NetworkinstanceProtocolsIsisInstanceTimersSpf struct
 type NetworkinstanceProtocolsIsisInstanceTimersSpf struct {
 	// +kubebuilder:validation:Minimum=10
+	// +kubebuilder:validation:Maximum=100000
+	// +kubebuilder:default:=1000
+	InitialWait *uint64 `json:"initial-wait,omitempty"`
+	// +kubebuilder:validation:Minimum=10
 	// +kubebuilder:validation:Maximum=120000
 	// +kubebuilder:default:=10000
 	MaxWait *uint64 `json:"max-wait,omitempty"`
@@ -335,10 +339,6 @@ type NetworkinstanceProtocolsIsisInstanceTimersSpf struct {
 	// +kubebuilder:validation:Maximum=100000
 	// +kubebuilder:default:=1000
 	SecondWait *uint64 `json:"second-wait,omitempty"`
-	// +kubebuilder:validation:Minimum=10
-	// +kubebuilder:validation:Maximum=100000
-	// +kubebuilder:default:=1000
-	InitialWait *uint64 `json:"initial-wait,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsisInstanceTimers struct
@@ -376,43 +376,43 @@ type NetworkinstanceProtocolsIsisInstanceTransport struct {
 
 // NetworkinstanceProtocolsIsisInstance struct
 type NetworkinstanceProtocolsIsisInstance struct {
-	ExportPolicy                  *string                                                            `json:"export-policy,omitempty"`
-	LdpSynchronization            *NetworkinstanceProtocolsIsisInstanceLdpSynchronization            `json:"ldp-synchronization,omitempty"`
-	Level                         []*NetworkinstanceProtocolsIsisInstanceLevel                       `json:"level,omitempty"`
-	TeDatabaseInstall             *NetworkinstanceProtocolsIsisInstanceTeDatabaseInstall             `json:"te-database-install,omitempty"`
-	AttachedBit                   *NetworkinstanceProtocolsIsisInstanceAttachedBit                   `json:"attached-bit,omitempty"`
-	AutoCost                      *NetworkinstanceProtocolsIsisInstanceAutoCost                      `json:"auto-cost,omitempty"`
-	InterLevelPropagationPolicies *NetworkinstanceProtocolsIsisInstanceInterLevelPropagationPolicies `json:"inter-level-propagation-policies,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}`
-	Net          *string                                           `json:"net,omitempty"`
-	TraceOptions *NetworkinstanceProtocolsIsisInstanceTraceOptions `json:"trace-options,omitempty"`
+	AutoCost           *NetworkinstanceProtocolsIsisInstanceAutoCost           `json:"auto-cost,omitempty"`
+	GracefulRestart    *NetworkinstanceProtocolsIsisInstanceGracefulRestart    `json:"graceful-restart,omitempty"`
+	TraceOptions       *NetworkinstanceProtocolsIsisInstanceTraceOptions       `json:"trace-options,omitempty"`
+	TrafficEngineering *NetworkinstanceProtocolsIsisInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState  *string                                          `json:"admin-state,omitempty"`
-	Interface   []*NetworkinstanceProtocolsIsisInstanceInterface `json:"interface,omitempty"`
-	Ipv6Unicast *NetworkinstanceProtocolsIsisInstanceIpv6Unicast `json:"ipv6-unicast,omitempty"`
+	Name               *string                                                 `json:"name"`
+	ExportPolicy       *string                                                 `json:"export-policy,omitempty"`
+	Interface          []*NetworkinstanceProtocolsIsisInstanceInterface        `json:"interface,omitempty"`
+	LdpSynchronization *NetworkinstanceProtocolsIsisInstanceLdpSynchronization `json:"ldp-synchronization,omitempty"`
 	// +kubebuilder:validation:Enum=`L1`;`L1L2`;`L2`
 	// +kubebuilder:default:=L2
 	LevelCapability *string `json:"level-capability,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[a-fA-F0-9]{2}(\.[a-fA-F0-9]{4}){3,9}\.[0]{2}`
+	Net *string `json:"net,omitempty"`
+	// +kubebuilder:default:=false
+	PoiTlv            *bool                                                  `json:"poi-tlv,omitempty"`
+	TeDatabaseInstall *NetworkinstanceProtocolsIsisInstanceTeDatabaseInstall `json:"te-database-install,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState                    *string                                                            `json:"admin-state,omitempty"`
+	AttachedBit                   *NetworkinstanceProtocolsIsisInstanceAttachedBit                   `json:"attached-bit,omitempty"`
+	Ipv4Unicast                   *NetworkinstanceProtocolsIsisInstanceIpv4Unicast                   `json:"ipv4-unicast,omitempty"`
+	Level                         []*NetworkinstanceProtocolsIsisInstanceLevel                       `json:"level,omitempty"`
+	Timers                        *NetworkinstanceProtocolsIsisInstanceTimers                        `json:"timers,omitempty"`
+	Overload                      *NetworkinstanceProtocolsIsisInstanceOverload                      `json:"overload,omitempty"`
+	Transport                     *NetworkinstanceProtocolsIsisInstanceTransport                     `json:"transport,omitempty"`
+	Authentication                *NetworkinstanceProtocolsIsisInstanceAuthentication                `json:"authentication,omitempty"`
+	InterLevelPropagationPolicies *NetworkinstanceProtocolsIsisInstanceInterLevelPropagationPolicies `json:"inter-level-propagation-policies,omitempty"`
+	Ipv6Unicast                   *NetworkinstanceProtocolsIsisInstanceIpv6Unicast                   `json:"ipv6-unicast,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
-	MaxEcmpPaths       *uint8                                                  `json:"max-ecmp-paths,omitempty"`
-	TrafficEngineering *NetworkinstanceProtocolsIsisInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
-	Transport          *NetworkinstanceProtocolsIsisInstanceTransport          `json:"transport,omitempty"`
-	Authentication     *NetworkinstanceProtocolsIsisInstanceAuthentication     `json:"authentication,omitempty"`
-	GracefulRestart    *NetworkinstanceProtocolsIsisInstanceGracefulRestart    `json:"graceful-restart,omitempty"`
-	Ipv4Unicast        *NetworkinstanceProtocolsIsisInstanceIpv4Unicast        `json:"ipv4-unicast,omitempty"`
-	Overload           *NetworkinstanceProtocolsIsisInstanceOverload           `json:"overload,omitempty"`
-	// +kubebuilder:default:=false
-	PoiTlv *bool                                       `json:"poi-tlv,omitempty"`
-	Timers *NetworkinstanceProtocolsIsisInstanceTimers `json:"timers,omitempty"`
+	MaxEcmpPaths *uint8 `json:"max-ecmp-paths,omitempty"`
 }
 
 // NetworkinstanceProtocolsIsis struct
@@ -502,4 +502,7 @@ func (o *SrlnokiaNetworkinstanceProtocolsIsis) NewEvent(reason, message string) 
 
 func (o *SrlnokiaNetworkinstanceProtocolsIsis) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
+}
+func (o *SrlnokiaNetworkinstanceProtocolsIsis) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
 }

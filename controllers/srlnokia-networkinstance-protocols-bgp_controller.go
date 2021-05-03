@@ -734,11 +734,13 @@ func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) FindSpecDelta(ctx contex
 
 	deletepaths := make([]string, 0)
 
-	if o.Status.UsedSpec != nil {
-		if *o.Spec.SrlNokiaNetworkInstanceName != *o.Status.UsedSpec.SrlNokiaNetworkInstanceName {
-			deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/bgp", *o.Status.UsedSpec.SrlNokiaNetworkInstanceName))
+	/*
+		if o.Status.UsedSpec != nil {
+			if *o.Spec.SrlNokiaNetworkInstanceName != *o.Status.UsedSpec.SrlNokiaNetworkInstanceName {
+				deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/bgp", *o.Status.UsedSpec.SrlNokiaNetworkInstanceName))
+			}
 		}
-	}
+	*/
 
 	return &deletepaths, nil
 }
@@ -1022,6 +1024,7 @@ func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleNone(info *Srlno
 		// update action
 		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
+		o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(cr.Status.String()))
 	}
 	return actionUpdate{delay: 10 * time.Second}
 }
@@ -1054,7 +1057,6 @@ func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleConfiguring(info
 		// update action
 		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
-		o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(cr.Status.String()))
 	}
 	return actionUpdate{delay: 10 * time.Second}
 }

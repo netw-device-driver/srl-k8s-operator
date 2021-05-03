@@ -30,11 +30,11 @@ const (
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast struct {
+	// +kubebuilder:default:=true
+	Advertise *bool `json:"advertise,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	OriginatingIp *string `json:"originating-ip,omitempty"`
-	// +kubebuilder:default:=true
-	Advertise *bool `json:"advertise,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct
@@ -70,10 +70,6 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	// +kubebuilder:default:=0
-	DefaultAdminTag *uint32 `json:"default-admin-tag,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=8
 	// +kubebuilder:default:=1
@@ -90,6 +86,10 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	// +kubebuilder:default:=0
+	DefaultAdminTag *uint32 `json:"default-admin-tag,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct
@@ -179,4 +179,7 @@ func (o *SrlnokiaNetworkinstanceProtocolsBgpevpn) NewEvent(reason, message strin
 
 func (o *SrlnokiaNetworkinstanceProtocolsBgpevpn) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
+}
+func (o *SrlnokiaNetworkinstanceProtocolsBgpevpn) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
 }

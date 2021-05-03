@@ -132,3 +132,6 @@ func (o *SrlnokiaSystemNetworkinstanceProtocolsBgpvpn) NewEvent(reason, message 
 func (o *SrlnokiaSystemNetworkinstanceProtocolsBgpvpn) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
 }
+func (o *SrlnokiaSystemNetworkinstanceProtocolsBgpvpn) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
+}

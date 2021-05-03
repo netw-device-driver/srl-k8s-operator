@@ -122,3 +122,6 @@ func (o *SrlnokiaRoutingpolicyAspathset) NewEvent(reason, message string) corev1
 func (o *SrlnokiaRoutingpolicyAspathset) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
 }
+func (o *SrlnokiaRoutingpolicyAspathset) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
+}

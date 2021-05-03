@@ -30,13 +30,13 @@ const (
 
 // NetworkinstanceProtocolsBgpAsPathOptionsRemovePrivateAs struct
 type NetworkinstanceProtocolsBgpAsPathOptionsRemovePrivateAs struct {
-	// +kubebuilder:validation:Enum=`delete`;`disabled`;`replace`
-	// +kubebuilder:default:=disabled
-	Mode *string `json:"mode,omitempty"`
 	// +kubebuilder:default:=false
 	IgnorePeerAs *bool `json:"ignore-peer-as,omitempty"`
 	// +kubebuilder:default:=false
 	LeadingOnly *bool `json:"leading-only,omitempty"`
+	// +kubebuilder:validation:Enum=`delete`;`disabled`;`replace`
+	// +kubebuilder:default:=disabled
+	Mode *string `json:"mode,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpAsPathOptions struct
@@ -110,15 +110,15 @@ type NetworkinstanceProtocolsBgpEvpnMultipath struct {
 
 // NetworkinstanceProtocolsBgpEvpn struct
 type NetworkinstanceProtocolsBgpEvpn struct {
-	Multipath *NetworkinstanceProtocolsBgpEvpnMultipath `json:"multipath,omitempty"`
 	// +kubebuilder:default:=false
 	RapidUpdate *bool `json:"rapid-update,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
 	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:default:=false
-	AdvertiseIpv6NextHops *bool `json:"advertise-ipv6-next-hops,omitempty"`
-	KeepAllRoutes         *bool `json:"keep-all-routes,omitempty"`
+	AdvertiseIpv6NextHops *bool                                     `json:"advertise-ipv6-next-hops,omitempty"`
+	KeepAllRoutes         *bool                                     `json:"keep-all-routes,omitempty"`
+	Multipath             *NetworkinstanceProtocolsBgpEvpnMultipath `json:"multipath,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpFailureDetection struct
@@ -142,12 +142,12 @@ type NetworkinstanceProtocolsBgpGracefulRestart struct {
 
 // NetworkinstanceProtocolsBgpGroupAsPathOptionsRemovePrivateAs struct
 type NetworkinstanceProtocolsBgpGroupAsPathOptionsRemovePrivateAs struct {
-	// +kubebuilder:validation:Enum=`delete`;`disabled`;`replace`
-	Mode *string `json:"mode"`
 	// +kubebuilder:default:=false
 	IgnorePeerAs *bool `json:"ignore-peer-as,omitempty"`
 	// +kubebuilder:default:=false
 	LeadingOnly *bool `json:"leading-only,omitempty"`
+	// +kubebuilder:validation:Enum=`delete`;`disabled`;`replace`
+	Mode *string `json:"mode"`
 }
 
 // NetworkinstanceProtocolsBgpGroupAsPathOptions struct
@@ -166,14 +166,14 @@ type NetworkinstanceProtocolsBgpGroupAuthentication struct {
 
 // NetworkinstanceProtocolsBgpGroupEvpnPrefixLimit struct
 type NetworkinstanceProtocolsBgpGroupEvpnPrefixLimit struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	// +kubebuilder:default:=4294967295
-	MaxReceivedRoutes *uint32 `json:"max-received-routes,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=90
 	WarningThresholdPct *uint8 `json:"warning-threshold-pct,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	// +kubebuilder:default:=4294967295
+	MaxReceivedRoutes *uint32 `json:"max-received-routes,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroupEvpn struct
@@ -241,40 +241,47 @@ type NetworkinstanceProtocolsBgpGroupIpv6Unicast struct {
 
 // NetworkinstanceProtocolsBgpGroupLocalAs struct
 type NetworkinstanceProtocolsBgpGroupLocalAs struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AsNumber *uint32 `json:"as-number"`
 	// +kubebuilder:default:=true
 	PrependGlobalAs *bool `json:"prepend-global-as,omitempty"`
 	// +kubebuilder:default:=true
 	PrependLocalAs *bool `json:"prepend-local-as,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	AsNumber *uint32 `json:"as-number"`
 }
 
 // NetworkinstanceProtocolsBgpGroupRouteReflector struct
 type NetworkinstanceProtocolsBgpGroupRouteReflector struct {
-	Client *bool `json:"client,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	ClusterId *string `json:"cluster-id,omitempty"`
+	Client    *bool   `json:"client,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroupSendCommunity struct
 type NetworkinstanceProtocolsBgpGroupSendCommunity struct {
-	Large    *bool `json:"large,omitempty"`
 	Standard *bool `json:"standard,omitempty"`
+	Large    *bool `json:"large,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroupSendDefaultRoute struct
 type NetworkinstanceProtocolsBgpGroupSendDefaultRoute struct {
-	ExportPolicy *string `json:"export-policy,omitempty"`
 	// +kubebuilder:default:=false
 	Ipv4Unicast *bool `json:"ipv4-unicast,omitempty"`
 	// +kubebuilder:default:=false
-	Ipv6Unicast *bool `json:"ipv6-unicast,omitempty"`
+	Ipv6Unicast  *bool   `json:"ipv6-unicast,omitempty"`
+	ExportPolicy *string `json:"export-policy,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroupTimers struct
 type NetworkinstanceProtocolsBgpGroupTimers struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=21845
+	KeepaliveInterval *uint16 `json:"keepalive-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=5
+	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=120
@@ -283,21 +290,14 @@ type NetworkinstanceProtocolsBgpGroupTimers struct {
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=90
 	HoldTime *uint16 `json:"hold-time,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=21845
-	KeepaliveInterval *uint16 `json:"keepalive-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=5
-	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroupTraceOptionsFlag struct
 type NetworkinstanceProtocolsBgpGroupTraceOptionsFlag struct {
-	// +kubebuilder:validation:Enum=`detail`;`receive`;`send`
-	Modifier *string `json:"modifier,omitempty"`
 	// +kubebuilder:validation:Enum=`events`;`graceful-restart`;`keepalive`;`notification`;`open`;`packets`;`route`;`socket`;`timers`;`update`
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`detail`;`receive`;`send`
+	Modifier *string `json:"modifier,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroupTraceOptions struct
@@ -307,55 +307,55 @@ type NetworkinstanceProtocolsBgpGroupTraceOptions struct {
 
 // NetworkinstanceProtocolsBgpGroupTransport struct
 type NetworkinstanceProtocolsBgpGroupTransport struct {
+	// +kubebuilder:validation:Minimum=536
+	// +kubebuilder:validation:Maximum=9446
+	TcpMss *uint16 `json:"tcp-mss,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address,omitempty"`
 	// +kubebuilder:default:=false
 	PassiveMode *bool `json:"passive-mode,omitempty"`
-	// +kubebuilder:validation:Minimum=536
-	// +kubebuilder:validation:Maximum=9446
-	TcpMss *uint16 `json:"tcp-mss,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpGroup struct
 type NetworkinstanceProtocolsBgpGroup struct {
-	Ipv6Unicast      *NetworkinstanceProtocolsBgpGroupIpv6Unicast      `json:"ipv6-unicast,omitempty"`
+	LocalAs []*NetworkinstanceProtocolsBgpGroupLocalAs `json:"local-as,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	PeerAs          *uint32                                          `json:"peer-as,omitempty"`
+	SendCommunity   *NetworkinstanceProtocolsBgpGroupSendCommunity   `json:"send-community,omitempty"`
+	AsPathOptions   *NetworkinstanceProtocolsBgpGroupAsPathOptions   `json:"as-path-options,omitempty"`
+	GracefulRestart *NetworkinstanceProtocolsBgpGroupGracefulRestart `json:"graceful-restart,omitempty"`
+	ImportPolicy    *string                                          `json:"import-policy,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	LocalPreference  *uint32                                           `json:"local-preference,omitempty"`
 	RouteReflector   *NetworkinstanceProtocolsBgpGroupRouteReflector   `json:"route-reflector,omitempty"`
-	SendCommunity    *NetworkinstanceProtocolsBgpGroupSendCommunity    `json:"send-community,omitempty"`
-	SendDefaultRoute *NetworkinstanceProtocolsBgpGroupSendDefaultRoute `json:"send-default-route,omitempty"`
 	Timers           *NetworkinstanceProtocolsBgpGroupTimers           `json:"timers,omitempty"`
-	TraceOptions     *NetworkinstanceProtocolsBgpGroupTraceOptions     `json:"trace-options,omitempty"`
+	Transport        *NetworkinstanceProtocolsBgpGroupTransport        `json:"transport,omitempty"`
+	Evpn             *NetworkinstanceProtocolsBgpGroupEvpn             `json:"evpn,omitempty"`
+	ExportPolicy     *string                                           `json:"export-policy,omitempty"`
+	Authentication   *NetworkinstanceProtocolsBgpGroupAuthentication   `json:"authentication,omitempty"`
+	FailureDetection *NetworkinstanceProtocolsBgpGroupFailureDetection `json:"failure-detection,omitempty"`
+	Ipv6Unicast      *NetworkinstanceProtocolsBgpGroupIpv6Unicast      `json:"ipv6-unicast,omitempty"`
+	// +kubebuilder:default:=false
+	NextHopSelf  *bool                                         `json:"next-hop-self,omitempty"`
+	TraceOptions *NetworkinstanceProtocolsBgpGroupTraceOptions `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	GroupName *string `json:"group-name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState       *string                                           `json:"admin-state,omitempty"`
+	SendDefaultRoute *NetworkinstanceProtocolsBgpGroupSendDefaultRoute `json:"send-default-route,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Description *string `json:"description,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	PeerAs      *uint32                                      `json:"peer-as,omitempty"`
-	Transport   *NetworkinstanceProtocolsBgpGroupTransport   `json:"transport,omitempty"`
-	Evpn        *NetworkinstanceProtocolsBgpGroupEvpn        `json:"evpn,omitempty"`
+	Description *string                                      `json:"description,omitempty"`
 	Ipv4Unicast *NetworkinstanceProtocolsBgpGroupIpv4Unicast `json:"ipv4-unicast,omitempty"`
-	// +kubebuilder:default:=false
-	NextHopSelf      *bool                                             `json:"next-hop-self,omitempty"`
-	Authentication   *NetworkinstanceProtocolsBgpGroupAuthentication   `json:"authentication,omitempty"`
-	ExportPolicy     *string                                           `json:"export-policy,omitempty"`
-	FailureDetection *NetworkinstanceProtocolsBgpGroupFailureDetection `json:"failure-detection,omitempty"`
-	GracefulRestart  *NetworkinstanceProtocolsBgpGroupGracefulRestart  `json:"graceful-restart,omitempty"`
-	ImportPolicy     *string                                           `json:"import-policy,omitempty"`
-	LocalAs          []*NetworkinstanceProtocolsBgpGroupLocalAs        `json:"local-as,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState    *string                                        `json:"admin-state,omitempty"`
-	AsPathOptions *NetworkinstanceProtocolsBgpGroupAsPathOptions `json:"as-path-options,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	LocalPreference *uint32 `json:"local-preference,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpIpv4UnicastConvergence struct
@@ -368,22 +368,20 @@ type NetworkinstanceProtocolsBgpIpv4UnicastConvergence struct {
 
 // NetworkinstanceProtocolsBgpIpv4UnicastMultipath struct
 type NetworkinstanceProtocolsBgpIpv4UnicastMultipath struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=64
-	// +kubebuilder:default:=1
-	MaxPathsLevel2 *uint32 `json:"max-paths-level-2,omitempty"`
 	// +kubebuilder:default:=true
 	AllowMultipleAs *bool `json:"allow-multiple-as,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxPathsLevel1 *uint32 `json:"max-paths-level-1,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +kubebuilder:default:=1
+	MaxPathsLevel2 *uint32 `json:"max-paths-level-2,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpIpv4Unicast struct
 type NetworkinstanceProtocolsBgpIpv4Unicast struct {
-	// +kubebuilder:default:=false
-	ReceiveIpv6NextHops *bool `json:"receive-ipv6-next-hops,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -391,6 +389,8 @@ type NetworkinstanceProtocolsBgpIpv4Unicast struct {
 	AdvertiseIpv6NextHops *bool                                              `json:"advertise-ipv6-next-hops,omitempty"`
 	Convergence           *NetworkinstanceProtocolsBgpIpv4UnicastConvergence `json:"convergence,omitempty"`
 	Multipath             *NetworkinstanceProtocolsBgpIpv4UnicastMultipath   `json:"multipath,omitempty"`
+	// +kubebuilder:default:=false
+	ReceiveIpv6NextHops *bool `json:"receive-ipv6-next-hops,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpIpv6UnicastConvergence struct
@@ -417,21 +417,21 @@ type NetworkinstanceProtocolsBgpIpv6UnicastMultipath struct {
 
 // NetworkinstanceProtocolsBgpIpv6Unicast struct
 type NetworkinstanceProtocolsBgpIpv6Unicast struct {
-	Convergence *NetworkinstanceProtocolsBgpIpv6UnicastConvergence `json:"convergence,omitempty"`
-	Multipath   *NetworkinstanceProtocolsBgpIpv6UnicastMultipath   `json:"multipath,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
-	AdminState *string `json:"admin-state,omitempty"`
+	AdminState  *string                                            `json:"admin-state,omitempty"`
+	Convergence *NetworkinstanceProtocolsBgpIpv6UnicastConvergence `json:"convergence,omitempty"`
+	Multipath   *NetworkinstanceProtocolsBgpIpv6UnicastMultipath   `json:"multipath,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpNeighborAsPathOptionsRemovePrivateAs struct
 type NetworkinstanceProtocolsBgpNeighborAsPathOptionsRemovePrivateAs struct {
-	// +kubebuilder:validation:Enum=`delete`;`disabled`;`replace`
-	Mode *string `json:"mode"`
 	// +kubebuilder:default:=false
 	IgnorePeerAs *bool `json:"ignore-peer-as,omitempty"`
 	// +kubebuilder:default:=false
 	LeadingOnly *bool `json:"leading-only,omitempty"`
+	// +kubebuilder:validation:Enum=`delete`;`disabled`;`replace`
+	Mode *string `json:"mode"`
 }
 
 // NetworkinstanceProtocolsBgpNeighborAsPathOptions struct
@@ -450,12 +450,12 @@ type NetworkinstanceProtocolsBgpNeighborAuthentication struct {
 
 // NetworkinstanceProtocolsBgpNeighborEvpnPrefixLimit struct
 type NetworkinstanceProtocolsBgpNeighborEvpnPrefixLimit struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	MaxReceivedRoutes *uint32 `json:"max-received-routes,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	WarningThresholdPct *uint8 `json:"warning-threshold-pct,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	MaxReceivedRoutes *uint32 `json:"max-received-routes,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpNeighborEvpn struct
@@ -500,11 +500,11 @@ type NetworkinstanceProtocolsBgpNeighborIpv4UnicastPrefixLimit struct {
 
 // NetworkinstanceProtocolsBgpNeighborIpv4Unicast struct
 type NetworkinstanceProtocolsBgpNeighborIpv4Unicast struct {
-	ReceiveIpv6NextHops *bool `json:"receive-ipv6-next-hops,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	AdminState            *string                                                    `json:"admin-state,omitempty"`
 	AdvertiseIpv6NextHops *bool                                                      `json:"advertise-ipv6-next-hops,omitempty"`
 	PrefixLimit           *NetworkinstanceProtocolsBgpNeighborIpv4UnicastPrefixLimit `json:"prefix-limit,omitempty"`
+	ReceiveIpv6NextHops   *bool                                                      `json:"receive-ipv6-next-hops,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpNeighborIpv6UnicastPrefixLimit struct
@@ -557,9 +557,6 @@ type NetworkinstanceProtocolsBgpNeighborSendDefaultRoute struct {
 // NetworkinstanceProtocolsBgpNeighborTimers struct
 type NetworkinstanceProtocolsBgpNeighborTimers struct {
 	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=255
-	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	ConnectRetry *uint16 `json:"connect-retry,omitempty"`
 	// +kubebuilder:validation:Minimum=0
@@ -568,6 +565,9 @@ type NetworkinstanceProtocolsBgpNeighborTimers struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=21845
 	KeepaliveInterval *uint16 `json:"keepalive-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	MinimumAdvertisementInterval *uint16 `json:"minimum-advertisement-interval,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpNeighborTraceOptionsFlag struct
@@ -585,52 +585,52 @@ type NetworkinstanceProtocolsBgpNeighborTraceOptions struct {
 
 // NetworkinstanceProtocolsBgpNeighborTransport struct
 type NetworkinstanceProtocolsBgpNeighborTransport struct {
+	// +kubebuilder:validation:Minimum=536
+	// +kubebuilder:validation:Maximum=9446
+	TcpMss *uint16 `json:"tcp-mss,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address,omitempty"`
 	PassiveMode  *bool   `json:"passive-mode,omitempty"`
-	// +kubebuilder:validation:Minimum=536
-	// +kubebuilder:validation:Maximum=9446
-	TcpMss *uint16 `json:"tcp-mss,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpNeighbor struct
 type NetworkinstanceProtocolsBgpNeighbor struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	PeerAs    *uint32                                       `json:"peer-as,omitempty"`
-	Transport *NetworkinstanceProtocolsBgpNeighborTransport `json:"transport,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState       *string                                              `json:"admin-state,omitempty"`
-	Evpn             *NetworkinstanceProtocolsBgpNeighborEvpn             `json:"evpn,omitempty"`
-	ImportPolicy     *string                                              `json:"import-policy,omitempty"`
-	Ipv6Unicast      *NetworkinstanceProtocolsBgpNeighborIpv6Unicast      `json:"ipv6-unicast,omitempty"`
-	NextHopSelf      *bool                                                `json:"next-hop-self,omitempty"`
-	RouteReflector   *NetworkinstanceProtocolsBgpNeighborRouteReflector   `json:"route-reflector,omitempty"`
-	SendDefaultRoute *NetworkinstanceProtocolsBgpNeighborSendDefaultRoute `json:"send-default-route,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	PeerAddress    *string                                            `json:"peer-address"`
-	Authentication *NetworkinstanceProtocolsBgpNeighborAuthentication `json:"authentication,omitempty"`
+	PeerGroup      *string                                            `json:"peer-group"`
+	RouteReflector *NetworkinstanceProtocolsBgpNeighborRouteReflector `json:"route-reflector,omitempty"`
+	Timers         *NetworkinstanceProtocolsBgpNeighborTimers         `json:"timers,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Description      *string                                              `json:"description,omitempty"`
+	ExportPolicy     *string                                              `json:"export-policy,omitempty"`
+	Ipv6Unicast      *NetworkinstanceProtocolsBgpNeighborIpv6Unicast      `json:"ipv6-unicast,omitempty"`
+	Transport        *NetworkinstanceProtocolsBgpNeighborTransport        `json:"transport,omitempty"`
+	Authentication   *NetworkinstanceProtocolsBgpNeighborAuthentication   `json:"authentication,omitempty"`
+	ImportPolicy     *string                                              `json:"import-policy,omitempty"`
+	SendDefaultRoute *NetworkinstanceProtocolsBgpNeighborSendDefaultRoute `json:"send-default-route,omitempty"`
 	FailureDetection *NetworkinstanceProtocolsBgpNeighborFailureDetection `json:"failure-detection,omitempty"`
+	GracefulRestart  *NetworkinstanceProtocolsBgpNeighborGracefulRestart  `json:"graceful-restart,omitempty"`
+	Ipv4Unicast      *NetworkinstanceProtocolsBgpNeighborIpv4Unicast      `json:"ipv4-unicast,omitempty"`
+	LocalAs          []*NetworkinstanceProtocolsBgpNeighborLocalAs        `json:"local-as,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
-	LocalPreference *uint32                                             `json:"local-preference,omitempty"`
-	ExportPolicy    *string                                             `json:"export-policy,omitempty"`
-	GracefulRestart *NetworkinstanceProtocolsBgpNeighborGracefulRestart `json:"graceful-restart,omitempty"`
-	Timers          *NetworkinstanceProtocolsBgpNeighborTimers          `json:"timers,omitempty"`
-	TraceOptions    *NetworkinstanceProtocolsBgpNeighborTraceOptions    `json:"trace-options,omitempty"`
-	AsPathOptions   *NetworkinstanceProtocolsBgpNeighborAsPathOptions   `json:"as-path-options,omitempty"`
-	Ipv4Unicast     *NetworkinstanceProtocolsBgpNeighborIpv4Unicast     `json:"ipv4-unicast,omitempty"`
-	LocalAs         []*NetworkinstanceProtocolsBgpNeighborLocalAs       `json:"local-as,omitempty"`
-	PeerGroup       *string                                             `json:"peer-group"`
-	SendCommunity   *NetworkinstanceProtocolsBgpNeighborSendCommunity   `json:"send-community,omitempty"`
+	LocalPreference *uint32 `json:"local-preference,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	PeerAddress *string `json:"peer-address"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string                                  `json:"admin-state,omitempty"`
+	Evpn       *NetworkinstanceProtocolsBgpNeighborEvpn `json:"evpn,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	PeerAs        *uint32                                           `json:"peer-as,omitempty"`
+	TraceOptions  *NetworkinstanceProtocolsBgpNeighborTraceOptions  `json:"trace-options,omitempty"`
+	AsPathOptions *NetworkinstanceProtocolsBgpNeighborAsPathOptions `json:"as-path-options,omitempty"`
+	NextHopSelf   *bool                                             `json:"next-hop-self,omitempty"`
+	SendCommunity *NetworkinstanceProtocolsBgpNeighborSendCommunity `json:"send-community,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpPreference struct
@@ -638,11 +638,11 @@ type NetworkinstanceProtocolsBgpPreference struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=170
-	Ebgp *uint8 `json:"ebgp,omitempty"`
+	Ibgp *uint8 `json:"ibgp,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=170
-	Ibgp *uint8 `json:"ibgp,omitempty"`
+	Ebgp *uint8 `json:"ebgp,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpRouteAdvertisement struct
@@ -693,39 +693,39 @@ type NetworkinstanceProtocolsBgpTransport struct {
 
 // NetworkinstanceProtocolsBgp struct
 type NetworkinstanceProtocolsBgp struct {
-	ExportPolicy       *string                                        `json:"export-policy,omitempty"`
-	FailureDetection   *NetworkinstanceProtocolsBgpFailureDetection   `json:"failure-detection,omitempty"`
-	Preference         *NetworkinstanceProtocolsBgpPreference         `json:"preference,omitempty"`
-	RouteAdvertisement *NetworkinstanceProtocolsBgpRouteAdvertisement `json:"route-advertisement,omitempty"`
-	Group              []*NetworkinstanceProtocolsBgpGroup            `json:"group,omitempty"`
-	Ipv6Unicast        *NetworkinstanceProtocolsBgpIpv6Unicast        `json:"ipv6-unicast,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	// +kubebuilder:default:=100
-	LocalPreference *uint32                                    `json:"local-preference,omitempty"`
-	Authentication  *NetworkinstanceProtocolsBgpAuthentication `json:"authentication,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AutonomousSystem  *uint32                                       `json:"autonomous-system"`
-	DynamicNeighbors  *NetworkinstanceProtocolsBgpDynamicNeighbors  `json:"dynamic-neighbors,omitempty"`
+	AsPathOptions     *NetworkinstanceProtocolsBgpAsPathOptions     `json:"as-path-options,omitempty"`
 	EbgpDefaultPolicy *NetworkinstanceProtocolsBgpEbgpDefaultPolicy `json:"ebgp-default-policy,omitempty"`
 	GracefulRestart   *NetworkinstanceProtocolsBgpGracefulRestart   `json:"graceful-restart,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	RouterId      *string                                   `json:"router-id"`
-	SendCommunity *NetworkinstanceProtocolsBgpSendCommunity `json:"send-community,omitempty"`
+	ImportPolicy      *string                                       `json:"import-policy,omitempty"`
+	RouteReflector    *NetworkinstanceProtocolsBgpRouteReflector    `json:"route-reflector,omitempty"`
+	TraceOptions      *NetworkinstanceProtocolsBgpTraceOptions      `json:"trace-options,omitempty"`
+	SendCommunity     *NetworkinstanceProtocolsBgpSendCommunity     `json:"send-community,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState     *string                                    `json:"admin-state,omitempty"`
-	Convergence    *NetworkinstanceProtocolsBgpConvergence    `json:"convergence,omitempty"`
-	Evpn           *NetworkinstanceProtocolsBgpEvpn           `json:"evpn,omitempty"`
-	Ipv4Unicast    *NetworkinstanceProtocolsBgpIpv4Unicast    `json:"ipv4-unicast,omitempty"`
-	Neighbor       []*NetworkinstanceProtocolsBgpNeighbor     `json:"neighbor,omitempty"`
-	AsPathOptions  *NetworkinstanceProtocolsBgpAsPathOptions  `json:"as-path-options,omitempty"`
-	ImportPolicy   *string                                    `json:"import-policy,omitempty"`
-	RouteReflector *NetworkinstanceProtocolsBgpRouteReflector `json:"route-reflector,omitempty"`
-	TraceOptions   *NetworkinstanceProtocolsBgpTraceOptions   `json:"trace-options,omitempty"`
-	Transport      *NetworkinstanceProtocolsBgpTransport      `json:"transport,omitempty"`
+	Authentication *NetworkinstanceProtocolsBgpAuthentication `json:"authentication,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	AutonomousSystem *uint32                                 `json:"autonomous-system"`
+	ExportPolicy     *string                                 `json:"export-policy,omitempty"`
+	Ipv4Unicast      *NetworkinstanceProtocolsBgpIpv4Unicast `json:"ipv4-unicast,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	// +kubebuilder:default:=100
+	LocalPreference    *uint32                                        `json:"local-preference,omitempty"`
+	Convergence        *NetworkinstanceProtocolsBgpConvergence        `json:"convergence,omitempty"`
+	DynamicNeighbors   *NetworkinstanceProtocolsBgpDynamicNeighbors   `json:"dynamic-neighbors,omitempty"`
+	Evpn               *NetworkinstanceProtocolsBgpEvpn               `json:"evpn,omitempty"`
+	Group              []*NetworkinstanceProtocolsBgpGroup            `json:"group,omitempty"`
+	Ipv6Unicast        *NetworkinstanceProtocolsBgpIpv6Unicast        `json:"ipv6-unicast,omitempty"`
+	Neighbor           []*NetworkinstanceProtocolsBgpNeighbor         `json:"neighbor,omitempty"`
+	FailureDetection   *NetworkinstanceProtocolsBgpFailureDetection   `json:"failure-detection,omitempty"`
+	Preference         *NetworkinstanceProtocolsBgpPreference         `json:"preference,omitempty"`
+	RouteAdvertisement *NetworkinstanceProtocolsBgpRouteAdvertisement `json:"route-advertisement,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	RouterId  *string                               `json:"router-id"`
+	Transport *NetworkinstanceProtocolsBgpTransport `json:"transport,omitempty"`
 }
 
 // SrlnokiaNetworkinstanceProtocolsBgpSpec struct
@@ -811,7 +811,6 @@ func (o *SrlnokiaNetworkinstanceProtocolsBgp) NewEvent(reason, message string) c
 func (o *SrlnokiaNetworkinstanceProtocolsBgp) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
 }
-
 func (o *SrlnokiaNetworkinstanceProtocolsBgp) SetConfigStatusDetails(t *string, c *string) {
 	o.Status.Target[*t].ConfigStatusDetails = c
 }

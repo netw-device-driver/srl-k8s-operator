@@ -47,6 +47,8 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
+	// +kubebuilder:default:=false
+	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
 	Prefix *string `json:"prefix"`
@@ -56,8 +58,6 @@ type NetworkinstanceAggregateroutesRoute struct {
 	Aggregator   *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
 	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
 	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
-	// +kubebuilder:default:=false
-	SummaryOnly *bool `json:"summary-only,omitempty"`
 }
 
 // NetworkinstanceAggregateroutes struct
@@ -147,4 +147,7 @@ func (o *SrlnokiaNetworkinstanceAggregateroutes) NewEvent(reason, message string
 
 func (o *SrlnokiaNetworkinstanceAggregateroutes) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
+}
+func (o *SrlnokiaNetworkinstanceAggregateroutes) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
 }

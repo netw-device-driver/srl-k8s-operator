@@ -30,10 +30,6 @@ const (
 
 // SystemMtu struct
 type SystemMtu struct {
-	// +kubebuilder:validation:Minimum=1280
-	// +kubebuilder:validation:Maximum=9486
-	// +kubebuilder:default:=1500
-	DefaultIpMtu *uint16 `json:"default-ip-mtu,omitempty"`
 	// +kubebuilder:validation:Minimum=1500
 	// +kubebuilder:validation:Maximum=9500
 	// +kubebuilder:default:=9232
@@ -46,6 +42,10 @@ type SystemMtu struct {
 	// +kubebuilder:validation:Maximum=9232
 	// +kubebuilder:default:=552
 	MinPathMtu *uint16 `json:"min-path-mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=1280
+	// +kubebuilder:validation:Maximum=9486
+	// +kubebuilder:default:=1500
+	DefaultIpMtu *uint16 `json:"default-ip-mtu,omitempty"`
 }
 
 // SrlnokiaSystemMtuSpec struct
@@ -129,4 +129,7 @@ func (o *SrlnokiaSystemMtu) NewEvent(reason, message string) corev1.Event {
 
 func (o *SrlnokiaSystemMtu) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
+}
+func (o *SrlnokiaSystemMtu) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
 }

@@ -124,3 +124,6 @@ func (o *SrlnokiaSystemName) NewEvent(reason, message string) corev1.Event {
 func (o *SrlnokiaSystemName) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
 }
+func (o *SrlnokiaSystemName) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
+}

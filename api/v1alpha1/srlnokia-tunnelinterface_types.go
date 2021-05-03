@@ -119,3 +119,6 @@ func (o *SrlnokiaTunnelinterface) NewEvent(reason, message string) corev1.Event 
 func (o *SrlnokiaTunnelinterface) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
 }
+func (o *SrlnokiaTunnelinterface) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
+}

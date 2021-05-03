@@ -121,3 +121,6 @@ func (o *SrlnokiaNetworkinstanceProtocolsLinux) NewEvent(reason, message string)
 func (o *SrlnokiaNetworkinstanceProtocolsLinux) SetConfigStatus(t *string, c *ConfigStatus) {
 	o.Status.Target[*t].ConfigStatus = c
 }
+func (o *SrlnokiaNetworkinstanceProtocolsLinux) SetConfigStatusDetails(t *string, c *string) {
+	o.Status.Target[*t].ConfigStatusDetails = c
+}

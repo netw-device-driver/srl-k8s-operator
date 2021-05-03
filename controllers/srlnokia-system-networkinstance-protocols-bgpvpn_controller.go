@@ -437,6 +437,15 @@ func (r *SrlnokiaSystemNetworkinstanceProtocolsBgpvpnReconciler) Reconcile(ctx c
 		return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
 	}
 
+	// find object delta
+	LastUsedSpec := o.Status.UsedSpec
+	if LastUsedSpec != nil {
+		r.Log.WithValues("LastUsedSpec", LastUsedSpec).Info("Last used Spec Info")
+	}
+	delta, err := r.FindSpecDelta(ctx, o)
+	r.Log.WithValues("Spec Detla", *delta).Info("Find Spec Delta")
+	o.Status.UsedSpec = &o.Spec
+
 	// Add a finalizer to newly created objects.
 	if o.DeletionTimestamp.IsZero() && !SrlnokiaSystemNetworkinstanceProtocolsBgpvpnhasFinalizer(o) {
 		r.Log.Info(
@@ -622,6 +631,23 @@ func (r *SrlnokiaSystemNetworkinstanceProtocolsBgpvpnReconciler) saveSrlnokiaSys
 		return err
 	}
 	return nil
+}
+
+// FindTarget finds the SRL target for Object
+func (r *SrlnokiaSystemNetworkinstanceProtocolsBgpvpnReconciler) FindSpecDelta(ctx context.Context, o *srlinuxv1alpha1.SrlnokiaSystemNetworkinstanceProtocolsBgpvpn) (*[]string, error) {
+	r.Log.Info("Find Spec Delta ...")
+
+	deletepaths := make([]string, 0)
+
+	/*
+		if o.Status.UsedSpec != nil {
+			if *o.Spec.SrlNokiaNetworkInstanceName != *o.Status.UsedSpec.SrlNokiaNetworkInstanceName {
+				deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/bgp", *o.Status.UsedSpec.SrlNokiaNetworkInstanceName))
+			}
+		}
+	*/
+
+	return &deletepaths, nil
 }
 
 // FindTarget finds the SRL target for Object
@@ -903,6 +929,7 @@ func (o *SrlnokiaSystemNetworkinstanceProtocolsBgpvpnStateMachine) handleNone(in
 		// update action
 		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
+		o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(cr.Status.String()))
 	}
 	return actionUpdate{delay: 10 * time.Second}
 }
