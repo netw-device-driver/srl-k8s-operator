@@ -159,7 +159,6 @@ spec:
                       type: integer
                   required:
                   - configStatus
-                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
