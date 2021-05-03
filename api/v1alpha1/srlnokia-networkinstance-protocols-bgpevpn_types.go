@@ -30,11 +30,11 @@ const (
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast struct {
-	// +kubebuilder:default:=true
-	Advertise *bool `json:"advertise,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	OriginatingIp *string `json:"originating-ip,omitempty"`
+	// +kubebuilder:default:=true
+	Advertise *bool `json:"advertise,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct
@@ -64,18 +64,12 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
-	RouteTable  *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
 	BridgeTable *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
+	RouteTable  *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
-	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
-	Id             *string                                           `json:"id"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	// +kubebuilder:default:=0
@@ -89,7 +83,13 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	EncapsulationType *string `json:"encapsulation-type,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
-	Evi *uint32 `json:"evi"`
+	Evi            *uint32                                           `json:"evi"`
+	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
+	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
+	Id             *string                                           `json:"id"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct

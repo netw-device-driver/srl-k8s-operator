@@ -20,7 +20,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -143,16 +142,17 @@ func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) NetworkDeviceMapFunc(
 // e -> element in the tree
 // x1 -> the data object
 // elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
-func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateIfElementWithLeafRefExists(last bool, e string, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
-	xType := reflect.TypeOf(o)
-	xValue := reflect.ValueOf(o)
-	r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
+func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+	//xType := reflect.TypeOf(o)
+	//xValue := reflect.ValueOf(o)
+	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
 	switch x := o.(type) {
 	case map[string]interface{}:
-		r.Log.Info("validateObject map[string]interface{}")
-		if v, ok := x[e]; ok {
-			r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateObject found")
-			if last {
+		r.Log.Info("validateIfElementWithLeafRefExists map[string]interface{}")
+		if v, ok := x[elements[i]]; ok {
+			r.Log.WithValues("Element", elements[i], "Object", v, "Last", i == (len(elements)-1)).Info("validateObject found")
+			// if last
+			if i == (len(elements) - 1) {
 				switch val := v.(type) {
 				case string:
 					found := false
@@ -166,20 +166,26 @@ func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateIfElementWith
 						elementWithleafref.Values = append(elementWithleafref.Values, string(val))
 					}
 				}
+				return v, true
 			}
-			return v, true
+			i++
+			_, found := r.validateIfElementWithLeafRefExists(elements, i, v, elementWithleafref)
+			if !found {
+				return nil, false
+			}
 		} else {
-			r.Log.WithValues("Element", e).Info("validateObject not found")
+			r.Log.WithValues("Element", elements[i]).Info("validateObject not found")
 			return nil, false
 		}
 	case []interface{}:
-		r.Log.Info("validateObject []interface{}")
+		r.Log.Info("validateIfElementWithLeafRefExists []interface{}")
 		for _, v1 := range x {
 			switch x := v1.(type) {
 			case map[string]interface{}:
-				if v, ok := x[e]; ok {
-					r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateObject found")
-					if last {
+				if v, ok := x[elements[i]]; ok {
+					r.Log.WithValues("Element", elements[i], "Object", v, "Last", i == (len(elements)-1)).Info("validateIfElementWithLeafRefExists found")
+					// if last
+					if i == (len(elements) - 1) {
 						switch val := v.(type) {
 						case string:
 							found := false
@@ -193,72 +199,130 @@ func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateIfElementWith
 								elementWithleafref.Values = append(elementWithleafref.Values, string(val))
 							}
 						}
+						//return v, true
+					} else {
+						_, found := r.validateIfElementWithLeafRefExists(elements, i, v, elementWithleafref)
+						if !found {
+							return nil, false
+						}
 					}
-					return v, true
 				} else {
-					r.Log.WithValues("Element", e).Info("validateObject not found")
+					r.Log.WithValues("Element", elements[i]).Info("validateObject not found")
 					return nil, false
 				}
 			}
+		}
+		if i == (len(elements) - 1) {
+			return nil, true
 		}
 		return nil, false
 	}
 	r.Log.Info("validateObject not map[string]interface{} or []interface{}")
-	return nil, false
+	return nil, true
 }
 
-func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateLeafRefExists(last bool, e string, o interface{}, leafrefValue string) (interface{}, bool) {
-	xType := reflect.TypeOf(o)
-	xValue := reflect.ValueOf(o)
-	r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
+func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+	//xType := reflect.TypeOf(o)
+	//xValue := reflect.ValueOf(o)
+	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
 	switch x := o.(type) {
 	case map[string]interface{}:
 		r.Log.Info("validateLeafRefExists map[string]interface{}")
-		if v, ok := x[e]; ok {
-			r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateLeafRefExists found")
-			if last {
+		if v, ok := x[elements[i]]; ok {
+			r.Log.WithValues("Element", elements[i], "LeafRefValue", leafrefValue, "Object", v, "Last", i == (len(elements)-1)).Info("validateLeafRefExists found")
+			if i == (len(elements) - 1) {
 				switch val := v.(type) {
 				case string:
 					if leafrefValue == val {
+						found := false
+						for _, leafrefValues := range elementWithleafref.LeafRefValues {
+							if string(val) == leafrefValues {
+								found = true
+							}
+						}
+						if !found {
+							elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+						}
 						return val, true
 					} else {
+						found := false
+						for _, leafrefValues := range elementWithleafref.LeafRefValues {
+							if string(val) == leafrefValues {
+								found = true
+							}
+						}
+						if !found {
+							elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+						}
 						return val, false
 					}
 				}
 			}
-			return v, true
+			i++
+			_, found := r.validateLeafRefExists(elements, i, v, leafrefValue, elementWithleafref)
+			if !found {
+				return nil, false
+			}
 		} else {
-			r.Log.WithValues("Element", e).Info("validateLeafRefExists not found")
+			r.Log.WithValues("Element", elements[i]).Info("validateLeafRefExists not found")
 			return nil, false
 		}
 	case []interface{}:
 		r.Log.Info("validateLeafRefExists []interface{}")
+		f := false
 		for _, v1 := range x {
 			switch x := v1.(type) {
 			case map[string]interface{}:
-				if v, ok := x[e]; ok {
-					r.Log.WithValues("Element", e, "Object", v, "Last", last).Info("validateLeafRefExists found")
-					if last {
+				if v, ok := x[elements[i]]; ok {
+					r.Log.WithValues("Element", elements[i], "LeafRefValue", leafrefValue, "Object", v, "Last", i == (len(elements)-1)).Info("validateLeafRefExists found")
+					if i == (len(elements) - 1) {
 						switch val := v.(type) {
 						case string:
 							if leafrefValue == val {
-								return val, true
+								found := false
+								for _, leafrefValues := range elementWithleafref.LeafRefValues {
+									if string(val) == leafrefValues {
+										found = true
+									}
+								}
+								if !found {
+									elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+								}
+								f = true
+								//return val, true
 							} else {
-								return val, false
+								found := false
+								for _, leafrefValues := range elementWithleafref.LeafRefValues {
+									if string(val) == leafrefValues {
+										found = true
+									}
+								}
+								if !found {
+									elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+								}
+								//return val, false
 							}
 						}
+					} else {
+						_, found := r.validateLeafRefExists(elements, i, v, leafrefValue, elementWithleafref)
+						if !found {
+							return nil, false
+						}
 					}
-					return v, true
+					//return v, true
 				} else {
-					r.Log.WithValues("Element", e).Info("validateLeafRefExists not found")
+					r.Log.WithValues("Element", elements[i]).Info("validateLeafRefExists not found")
 					return nil, false
 				}
 			}
 		}
+		if i == (len(elements)-1) && f {
+			return nil, true
+		}
 		return nil, false
 	}
 	r.Log.Info("validateLeafRefExists not map[string]interface{} or []interface{}")
-	return nil, false
+	return nil, true
 }
 
 func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.NetworkinstanceAggregateroutes) (err error) {
@@ -279,57 +343,36 @@ func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) validateLocalLeafRefs
 		return err
 	}
 
-	for _, elementWithleafref := range NetworkinstanceAggregateroutesInterResourceleafRef {
+	for _, elementWithleafref := range NetworkinstanceAggregateroutesIntraResourceleafRef {
+		elementWithleafref.Values = make([]string, 0)
+		elementWithleafref.LeafRefValues = make([]string, 0)
 		// validate if the element with leafref exist
 		elements := strings.Split(elementWithleafref.RelativePath2ObjectWithLeafRef, "/")
 		x1 := x
 		r.Log.WithValues("X1", x1).Info("Data Input")
-		for i, e := range elements {
-			// the first element could be an empty string which we fill in with the first element of the resource
-			if i == 0 {
-				e = "aggregate-routes"
-			}
-			r.Log.WithValues("Element", e).Info("validateLocalLeafRefs")
-			// last -> used to indicate in the validateObject the last element in the leafref. it is provided in the
-			// validateObject function since you can have a list to walk through. As such we can supply the value direct
-			// e -> element in the tree
-			// x1 -> the data object
-			// leafref -> the leafreaf object on which the values are supplied that match the leafref element
-			found := false
-			last := false
-			if i == (len(elements) - 1) {
-				last = true
-			}
-			x1, found = r.validateIfElementWithLeafRefExists(last, e, x1, elementWithleafref)
-			if !found {
-				elementWithleafref.Exists = false
-				break
-			}
+
+		// first element should be initialized with the first resource element
+		elements[0] = "bgp"
+		_, found := r.validateIfElementWithLeafRefExists(elements, 0, x1, elementWithleafref)
+		if !found {
+			elementWithleafref.Exists = false
 		}
+
 		r.Log.WithValues("leafref values", elementWithleafref.Values).Info("LeafRef Values")
+		elementWithleafref.DependencyCheckSuccess = true
 		for _, leafReafValue := range elementWithleafref.Values {
 			elements := strings.Split(elementWithleafref.RelativePath2LeafRef, "/")
 			x1 := x
-			for i, e := range elements {
-				// the first element could be an empty string which we fill in with the first element of the resource
-				if i == 0 {
-					e = "aggregate-routes"
-				}
-				found := false
-				last := false
-				if i == (len(elements) - 1) {
-					last = true
-				}
-				x1, found = r.validateLeafRefExists(last, e, x1, leafReafValue)
-				if !found {
-					elementWithleafref.DependencyCheckSuccess = false
-					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
-					break
-				}
-				if last && found {
-					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
-					elementWithleafref.DependencyCheckSuccess = true
-				}
+
+			// first element should be initialized with the first resource element
+			elements[0] = "bgp"
+
+			_, found = r.validateLeafRefExists(elements, 0, x1, leafReafValue, elementWithleafref)
+			if !found {
+				elementWithleafref.DependencyCheckSuccess = false
+				r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
+			} else {
+				r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
 			}
 		}
 	}
@@ -359,6 +402,39 @@ func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) Reconcile(ctx context
 	err := r.validateLocalLeafRefs(o.Spec.SrlnokiaNetworkinstanceAggregateroutes)
 	if err != nil {
 		return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
+	}
+	validationSuccess := true
+	o.Status.ValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+	for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
+		if elementWithLeafRef.Exists {
+			if !elementWithLeafRef.DependencyCheckSuccess {
+				validationSuccess = false
+			}
+			o.Status.ValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+				Values:        &elementWithLeafRef.Values,
+				LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
+				LeafRefValues: &elementWithLeafRef.LeafRefValues,
+			}
+		} else {
+			o.Status.ValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+				LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
+			}
+		}
+	}
+
+	if validationSuccess {
+		o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+	} else {
+		o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+	}
+
+	if err := r.saveSrlnokiaNetworkinstanceAggregateroutesStatus(ctx, o); err != nil {
+		return ctrl.Result{}, errors.Wrap(err,
+			fmt.Sprintf("failed to save status"))
+	}
+
+	if !validationSuccess {
+		return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
 	}
 
 	// Add a finalizer to newly created objects.
@@ -409,6 +485,7 @@ func (r *SrlnokiaNetworkinstanceAggregateroutesReconciler) Reconcile(ctx context
 	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 
 	dependencies := make([]string, 0)
+	dependencies = append(dependencies, fmt.Sprintf("/networkinstance[name=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
 	deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/aggregate-routes", hkey0))

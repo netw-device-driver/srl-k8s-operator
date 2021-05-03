@@ -46,20 +46,105 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var SystemNtpIntraResourceleafRef = map[string]*ElementWithLeafRef{}
+var NetworkinstanceProtocolsBgpIntraResourceleafRef = map[string]*ElementWithLeafRef{
+	"/network-instance/protocols/bgp/dynamic-neighbors/accept/match/peer-group": {
+		AbsolutePath2LeafRef:           "/network-instance/protocols/bgp",
+		RelativePath2LeafRef:           "/group/group-name",
+		RelativePath2ObjectWithLeafRef: "/dynamic-neighbors/accept/match/peer-group",
+		ElementName:                    "group",
+		KeyName:                        "group-name",
+	},
+	"/network-instance/protocols/bgp/neighbor/peer-group": {
+		AbsolutePath2LeafRef:           "/network-instance/protocols/bgp",
+		RelativePath2LeafRef:           "/group/group-name",
+		RelativePath2ObjectWithLeafRef: "/neighbor/peer-group",
+		ElementName:                    "group",
+		KeyName:                        "group-name",
+	},
+}
 
-var SystemNtpInterResourceleafRef = map[string]*ElementWithLeafRef{
-	"/system/ntp/network-instance": {
-		AbsolutePath2LeafRef:           "/",
+var NetworkinstanceProtocolsBgpInterResourceleafRef = map[string]*ElementWithLeafRef{
+	"/network-instance/protocols/bgp/authentication/keychain": {
+		AbsolutePath2LeafRef:           "/system/authentication",
 		RelativePath2LeafRef:           "",
 		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "network-instance",
+		ElementName:                    "keychain",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/export-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/group/authentication/keychain": {
+		AbsolutePath2LeafRef:           "/system/authentication",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "keychain",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/group/export-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/group/import-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/group/send-default-route/export-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/import-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/neighbor/authentication/keychain": {
+		AbsolutePath2LeafRef:           "/system/authentication",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "keychain",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/neighbor/export-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/neighbor/import-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
+		KeyName:                        "name",
+	},
+	"/network-instance/protocols/bgp/neighbor/send-default-route/export-policy": {
+		AbsolutePath2LeafRef:           "/routing-policy",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "policy",
 		KeyName:                        "name",
 	},
 }
 
-// SrlnokiaSystemNtpReconciler reconciles a SrlnokiaSystemNtp object
-type SrlnokiaSystemNtpReconciler struct {
+// SrlnokiaNetworkinstanceProtocolsBgpReconciler reconciles a SrlnokiaNetworkinstanceProtocolsBgp object
+type SrlnokiaNetworkinstanceProtocolsBgpReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
@@ -68,14 +153,14 @@ type SrlnokiaSystemNtpReconciler struct {
 
 // Instead of passing a zillion arguments to the action of a phase,
 // hold them in a context per device
-type SrlnokiaSystemNtpTargetReconcileInfo struct {
-	Target map[string]*SrlnokiaSystemNtpReconcileInfo
+type SrlnokiaNetworkinstanceProtocolsBgpTargetReconcileInfo struct {
+	Target map[string]*SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo
 }
 
-type SrlnokiaSystemNtpReconcileInfo struct {
+type SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo struct {
 	target            *string
 	resource          *string
-	o                 *srlinuxv1alpha1.SrlnokiaSystemNtp
+	o                 *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp
 	level             *int32
 	dependencies      *[]string
 	deletepaths       *[]string
@@ -88,14 +173,14 @@ type SrlnokiaSystemNtpReconcileInfo struct {
 }
 
 // +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networkdevices,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnokiasystemntps,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnokiasystemntps/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnokiasystemntps/finalizers,verbs=update
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnokianetworkinstanceprotocolsbgps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnokianetworkinstanceprotocolsbgps/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnokianetworkinstanceprotocolsbgps/finalizers,verbs=update
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *SrlnokiaSystemNtpReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
-		For(&srlinuxv1alpha1.SrlnokiaSystemNtp{}).
+		For(&srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp{}).
 		WithOptions(option).
 		Watches(
 			&source.Kind{Type: &nddv1.NetworkDevice{}},
@@ -111,8 +196,8 @@ func (r *SrlnokiaSystemNtpReconciler) SetupWithManager(ctx context.Context, mgr 
 }
 
 // NetworkDeviceMapFunc is a handler.ToRequestsFunc to be used to enqeue
-// request for reconciliation of SrlnokiaSystemNtp.
-func (r *SrlnokiaSystemNtpReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Request {
+// request for reconciliation of SrlnokiaNetworkinstanceProtocolsBgp.
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Request {
 	result := []ctrl.Request{}
 
 	nd, ok := o.(*nddv1.NetworkDevice)
@@ -125,7 +210,7 @@ func (r *SrlnokiaSystemNtpReconciler) NetworkDeviceMapFunc(o client.Object) []ct
 		client.InNamespace(nd.Namespace),
 		client.MatchingLabels{},
 	}
-	os := &srlinuxv1alpha1.SrlnokiaSystemNtpList{}
+	os := &srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgpList{}
 	if err := r.Client.List(context.TODO(), os, selectors...); err != nil {
 		return result
 	}
@@ -150,7 +235,7 @@ func (r *SrlnokiaSystemNtpReconciler) NetworkDeviceMapFunc(o client.Object) []ct
 // e -> element in the tree
 // x1 -> the data object
 // elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
-func (r *SrlnokiaSystemNtpReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
 	//xType := reflect.TypeOf(o)
 	//xValue := reflect.ValueOf(o)
 	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
@@ -229,7 +314,7 @@ func (r *SrlnokiaSystemNtpReconciler) validateIfElementWithLeafRefExists(element
 	return nil, true
 }
 
-func (r *SrlnokiaSystemNtpReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
 	//xType := reflect.TypeOf(o)
 	//xValue := reflect.ValueOf(o)
 	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
@@ -333,12 +418,12 @@ func (r *SrlnokiaSystemNtpReconciler) validateLeafRefExists(elements []string, i
 	return nil, true
 }
 
-func (r *SrlnokiaSystemNtpReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.SystemNtp) (err error) {
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.NetworkinstanceProtocolsBgp) (err error) {
 	// marshal data to json
 	dd := struct {
-		Ntp *srlinuxv1alpha1.SystemNtp `json:"ntp"`
+		Bgp *srlinuxv1alpha1.NetworkinstanceProtocolsBgp `json:"bgp"`
 	}{
-		Ntp: o,
+		Bgp: o,
 	}
 	d, err := json.Marshal(dd)
 	if err != nil {
@@ -351,7 +436,7 @@ func (r *SrlnokiaSystemNtpReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.S
 		return err
 	}
 
-	for _, elementWithleafref := range SystemNtpIntraResourceleafRef {
+	for _, elementWithleafref := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
 		elementWithleafref.Values = make([]string, 0)
 		elementWithleafref.LeafRefValues = make([]string, 0)
 		// validate if the element with leafref exist
@@ -389,17 +474,17 @@ func (r *SrlnokiaSystemNtpReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.S
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = r.Log.WithValues("SrlnokiaSystemNtp", req.NamespacedName)
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = r.Log.WithValues("SrlnokiaNetworkinstanceProtocolsBgp", req.NamespacedName)
 
-	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlnokiaSystemNtp")
+	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlnokiaNetworkinstanceProtocolsBgp")
 
-	o := &srlinuxv1alpha1.SrlnokiaSystemNtp{}
+	o := &srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp{}
 	if err := r.Client.Get(ctx, req.NamespacedName, o); err != nil {
 		if apierrors.IsNotFound(err) {
 			return ctrl.Result{}, nil
 		}
-		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlnokiaSystemNtp config")
+		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlnokiaNetworkinstanceProtocolsBgp config")
 		return ctrl.Result{}, err
 	}
 	o.DeepCopy()
@@ -407,7 +492,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	//r.Log.WithValues("Object", o).Info("Object Info")
 
 	// validate local leaf refs
-	err := r.validateLocalLeafRefs(o.Spec.SrlnokiaSystemNtp)
+	err := r.validateLocalLeafRefs(o.Spec.SrlnokiaNetworkinstanceProtocolsBgp)
 	if err != nil {
 		return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
 	}
@@ -436,7 +521,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 	}
 
-	if err := r.saveSrlnokiaSystemNtpStatus(ctx, o); err != nil {
+	if err := r.saveSrlnokiaNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 		return ctrl.Result{}, errors.Wrap(err,
 			fmt.Sprintf("failed to save status"))
 	}
@@ -445,15 +530,24 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
 	}
 
+	// find object delta
+	LastUsedSpec := o.Status.UsedSpec
+	if LastUsedSpec != nil {
+		r.Log.WithValues("LastUsedSpec", LastUsedSpec).Info("Last used Spec Info")
+	}
+	delta, err := r.FindSpecDelta(ctx, o)
+	r.Log.WithValues("Spec Detla", *delta).Info("Find Spec Delta")
+	o.Status.UsedSpec = &o.Spec
+
 	// Add a finalizer to newly created objects.
-	if o.DeletionTimestamp.IsZero() && !SrlnokiaSystemNtphasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && !SrlnokiaNetworkinstanceProtocolsBgphasFinalizer(o) {
 		r.Log.Info(
 			"adding finalizer",
 			"existingFinalizers", o.Finalizers,
-			"newValue", srlinuxv1alpha1.SrlnokiaSystemNtpFinalizer,
+			"newValue", srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgpFinalizer,
 		)
 		o.Finalizers = append(o.Finalizers,
-			srlinuxv1alpha1.SrlnokiaSystemNtpFinalizer)
+			srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgpFinalizer)
 		err := r.Update(context.TODO(), o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to add finalizer")
@@ -467,7 +561,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		case *TargetNotFoundError:
 			// save resource status since last target got deleted
 			if dirty {
-				if err = r.saveSrlnokiaSystemNtpStatus(ctx, o); err != nil {
+				if err = r.saveSrlnokiaNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 					return ctrl.Result{}, errors.Wrap(err,
 						fmt.Sprintf("failed to save status"))
 				}
@@ -480,7 +574,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	}
 	// save resource status since items got deleted
 	if dirty {
-		if err = r.saveSrlnokiaSystemNtpStatus(ctx, o); err != nil {
+		if err = r.saveSrlnokiaNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -488,18 +582,19 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	r.Log.WithValues("Targets", t).Info("Target Info")
 
 	// initialize the resource parameters
-	level := int32(2)
-	resource := "srlinux.henderiw.be" + "." + "SrlnokiaSystemNtp" + "." + strcase.UpperCamelCase(o.Name)
+	level := int32(3)
+	resource := "srlinux.henderiw.be" + "." + "SrlnokiaNetworkinstanceProtocolsBgp" + "." + strcase.UpperCamelCase(o.Name)
+	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 
 	dependencies := make([]string, 0)
 
 	deletepaths := make([]string, 0)
-	deletepaths = append(deletepaths, "/system/ntp")
+	deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/bgp", hkey0))
 
 	// path to be used for this object
-	path := "/system"
+	path := fmt.Sprintf("/network-instance[name=%s]/protocols", hkey0)
 
-	info := make(map[string]*SrlnokiaSystemNtpReconcileInfo)
+	info := make(map[string]*SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo)
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
@@ -520,7 +615,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		r.Log.Info("configuration status in reconcile",
 			"target", target.TargetName,
 			"status", initialState)
-		info[target.TargetName] = &SrlnokiaSystemNtpReconcileInfo{
+		info[target.TargetName] = &SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo{
 			ctx:          ctx,
 			target:       &target.Target,
 			log:          r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
@@ -547,7 +642,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		r.Log.Info("object status",
 			"target", target.TargetName,
 			"status", o.Status.Target[target.TargetName])
-		stateMachine := newSrlnokiaSystemNtpStateMachine(o, r, &target.TargetName, info[target.TargetName])
+		stateMachine := newSrlnokiaNetworkinstanceProtocolsBgpStateMachine(o, r, &target.TargetName, info[target.TargetName])
 		actResult[target.TargetName] = stateMachine.ReconcileState(info[target.TargetName])
 		result[target.TargetName], err = actResult[target.TargetName].Result()
 		if err != nil {
@@ -556,7 +651,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		}
 	}
 
-	if !o.DeletionTimestamp.IsZero() && SrlnokiaSystemNtphasFinalizer(o) {
+	if !o.DeletionTimestamp.IsZero() && SrlnokiaNetworkinstanceProtocolsBgphasFinalizer(o) {
 		deleted := true
 		for _, target := range t {
 			if result[target.TargetName].RequeueAfter != 0 {
@@ -566,7 +661,7 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		if deleted {
 			// delete complete
 			// remove our finalizer from the list and update it.
-			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlnokiaSystemNtpFinalizer)
+			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgpFinalizer)
 			if err := r.Update(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to remove finalizer"))
@@ -588,12 +683,12 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 			dirty = true
 		}
 		if dirty {
-			if err := r.saveSrlnokiaSystemNtpStatus(ctx, o); err != nil {
+			if err := r.saveSrlnokiaNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
 		}
-		SrlnokiaSystemNtplogResult(info[target.TargetName], result[target.TargetName])
+		SrlnokiaNetworkinstanceProtocolsBgplogResult(info[target.TargetName], result[target.TargetName])
 
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
@@ -604,36 +699,51 @@ func (r *SrlnokiaSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	return ctrl.Result{}, nil
 }
 
-func SrlnokiaSystemNtplogResult(info *SrlnokiaSystemNtpReconcileInfo, result ctrl.Result) {
+func SrlnokiaNetworkinstanceProtocolsBgplogResult(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo, result ctrl.Result) {
 	if result.Requeue || result.RequeueAfter != 0 ||
 		!utils.StringInList(info.o.Finalizers,
-			srlinuxv1alpha1.SrlnokiaSystemNtpFinalizer) {
+			srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgpFinalizer) {
 		info.log.Info("done",
 			"requeue", result.Requeue,
 			"after", result.RequeueAfter)
 	} else {
-		info.log.Info("stopping on SrlnokiaSystemNtp",
+		info.log.Info("stopping on SrlnokiaNetworkinstanceProtocolsBgp",
 			"message", info.o.Status)
 	}
 }
 
-func (r *SrlnokiaSystemNtpReconciler) saveSrlnokiaSystemNtpStatus(ctx context.Context, o *srlinuxv1alpha1.SrlnokiaSystemNtp) error {
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) saveSrlnokiaNetworkinstanceProtocolsBgpStatus(ctx context.Context, o *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp) error {
 	t := metav1.Now()
 	o.Status.DeepCopy()
 	o.Status.LastUpdated = &t
 
-	r.Log.Info("SrlnokiaSystemNtp",
+	r.Log.Info("SrlnokiaNetworkinstanceProtocolsBgp",
 		"status", o.Status)
 
 	if err := r.Client.Status().Update(ctx, o); err != nil {
-		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlnokiaSystemNtp ")
+		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlnokiaNetworkinstanceProtocolsBgp ")
 		return err
 	}
 	return nil
 }
 
 // FindTarget finds the SRL target for Object
-func (r *SrlnokiaSystemNtpReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlnokiaSystemNtp) ([]*Target, bool, error) {
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) FindSpecDelta(ctx context.Context, o *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp) (*[]string, error) {
+	r.Log.Info("Find Spec Delta ...")
+
+	deletepaths := make([]string, 0)
+
+	if o.Status.UsedSpec != nil {
+		if *o.Spec.SrlNokiaNetworkInstanceName != *o.Status.UsedSpec.SrlNokiaNetworkInstanceName {
+			deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/bgp", *o.Status.UsedSpec.SrlNokiaNetworkInstanceName))
+		}
+	}
+
+	return &deletepaths, nil
+}
+
+// FindTarget finds the SRL target for Object
+func (r *SrlnokiaNetworkinstanceProtocolsBgpReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp) ([]*Target, bool, error) {
 	r.Log.Info("Find target ...")
 
 	// get the target name the resource should get applied to
@@ -728,13 +838,13 @@ func (r *SrlnokiaSystemNtpReconciler) FindTarget(ctx context.Context, o *srlinux
 	return targets, dirty, nil
 }
 
-// SrlnokiaSystemNtphasFinalizer checks if object has finalizer
-func SrlnokiaSystemNtphasFinalizer(o *srlinuxv1alpha1.SrlnokiaSystemNtp) bool {
-	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlnokiaSystemNtpFinalizer)
+// SrlnokiaNetworkinstanceProtocolsBgphasFinalizer checks if object has finalizer
+func SrlnokiaNetworkinstanceProtocolsBgphasFinalizer(o *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp) bool {
+	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgpFinalizer)
 }
 
-func (info *SrlnokiaSystemNtpReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
-	if !info.o.DeletionTimestamp.IsZero() && SrlnokiaSystemNtphasFinalizer(info.o) {
+func (info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
+	if !info.o.DeletionTimestamp.IsZero() && SrlnokiaNetworkinstanceProtocolsBgphasFinalizer(info.o) {
 
 		// prepare the grpc data
 		req := &netwdevpb.CacheUpdateRequest{
@@ -756,14 +866,14 @@ func (info *SrlnokiaSystemNtpReconcileInfo) DeleteCache(deletepaths, dependencie
 }
 
 // Update Cache
-func (info *SrlnokiaSystemNtpReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
+func (info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
 
 	// marshal data to json
 
 	dd := struct {
-		Ntp *srlinuxv1alpha1.SystemNtp `json:"ntp"`
+		Bgp *srlinuxv1alpha1.NetworkinstanceProtocolsBgp `json:"bgp"`
 	}{
-		Ntp: info.o.Spec.SrlnokiaSystemNtp,
+		Bgp: info.o.Spec.SrlnokiaNetworkinstanceProtocolsBgp,
 	}
 	d := make([][]byte, 0)
 	dj, err := json.Marshal(dd)
@@ -792,24 +902,24 @@ func (info *SrlnokiaSystemNtpReconcileInfo) UpdateCache(path string, deletepaths
 	return nil
 }
 
-type SrlnokiaSystemNtpStateMachine struct {
-	Object     *srlinuxv1alpha1.SrlnokiaSystemNtp
-	Reconciler *SrlnokiaSystemNtpReconciler
+type SrlnokiaNetworkinstanceProtocolsBgpStateMachine struct {
+	Object     *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp
+	Reconciler *SrlnokiaNetworkinstanceProtocolsBgpReconciler
 	Target     *string
 	TargetName *string
 	NextState  *srlinuxv1alpha1.ConfigStatus
 }
 
 // appendEvent
-func (info *SrlnokiaSystemNtpReconcileInfo) appendEvent(reason, message string) {
+func (info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) appendEvent(reason, message string) {
 	info.events = append(info.events, info.o.NewEvent(reason, message))
 }
 
-func newSrlnokiaSystemNtpStateMachine(o *srlinuxv1alpha1.SrlnokiaSystemNtp,
-	reconciler *SrlnokiaSystemNtpReconciler, n *string,
-	info *SrlnokiaSystemNtpReconcileInfo) *SrlnokiaSystemNtpStateMachine {
+func newSrlnokiaNetworkinstanceProtocolsBgpStateMachine(o *srlinuxv1alpha1.SrlnokiaNetworkinstanceProtocolsBgp,
+	reconciler *SrlnokiaNetworkinstanceProtocolsBgpReconciler, n *string,
+	info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) *SrlnokiaNetworkinstanceProtocolsBgpStateMachine {
 	currentState := o.Status.Target[*n].ConfigStatus
-	r := SrlnokiaSystemNtpStateMachine{
+	r := SrlnokiaNetworkinstanceProtocolsBgpStateMachine{
 		Object:     o,
 		NextState:  currentState, // Remain in current state by default
 		Reconciler: reconciler,
@@ -819,10 +929,10 @@ func newSrlnokiaSystemNtpStateMachine(o *srlinuxv1alpha1.SrlnokiaSystemNtp,
 	return &r
 }
 
-type SrlnokiaSystemNtpstateHandler func(*SrlnokiaSystemNtpReconcileInfo) actionResult
+type SrlnokiaNetworkinstanceProtocolsBgpstateHandler func(*SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult
 
-func (o *SrlnokiaSystemNtpStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlnokiaSystemNtpstateHandler {
-	return map[srlinuxv1alpha1.ConfigStatus]SrlnokiaSystemNtpstateHandler{
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlnokiaNetworkinstanceProtocolsBgpstateHandler {
+	return map[srlinuxv1alpha1.ConfigStatus]SrlnokiaNetworkinstanceProtocolsBgpstateHandler{
 		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
 		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
 		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,
@@ -831,8 +941,8 @@ func (o *SrlnokiaSystemNtpStateMachine) handlers() map[srlinuxv1alpha1.ConfigSta
 	}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) updateSrlnokiaSystemNtpStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
-	info *SrlnokiaSystemNtpReconcileInfo) {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) updateSrlnokiaNetworkinstanceProtocolsBgpStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
+	info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) {
 	if o.NextState != initialState {
 		info.log.Info("changing configuration state",
 			"old", initialState,
@@ -841,13 +951,13 @@ func (o *SrlnokiaSystemNtpStateMachine) updateSrlnokiaSystemNtpStateFrom(initial
 	}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) ReconcileState(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) ReconcileState(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	initialState := o.Object.Status.Target[*o.TargetName].ConfigStatus
-	defer o.updateSrlnokiaSystemNtpStateFrom(initialState, info)
+	defer o.updateSrlnokiaNetworkinstanceProtocolsBgpStateFrom(initialState, info)
 
 	if o.checkInitiateDelete() {
 		// initiate cache delete
-		info.log.Info("Initiating SrlnokiaSystemNtpStateMachine deletion")
+		info.log.Info("Initiating SrlnokiaNetworkinstanceProtocolsBgpStateMachine deletion")
 		info.DeleteCache(info.deletepaths, info.dependencies)
 		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
 		//time.Sleep(15 * time.Second)
@@ -861,8 +971,8 @@ func (o *SrlnokiaSystemNtpStateMachine) ReconcileState(info *SrlnokiaSystemNtpRe
 	return actionError{fmt.Errorf("No handler found for state \"%s\"", *initialState)}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) checkInitiateDelete() bool {
-	if !o.Object.DeletionTimestamp.IsZero() && SrlnokiaSystemNtphasFinalizer(o.Object) {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) checkInitiateDelete() bool {
+	if !o.Object.DeletionTimestamp.IsZero() && SrlnokiaNetworkinstanceProtocolsBgphasFinalizer(o.Object) {
 		// Delete requested
 		switch o.NextState {
 		default:
@@ -880,7 +990,7 @@ func (o *SrlnokiaSystemNtpStateMachine) checkInitiateDelete() bool {
 	return false
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) handleNone(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleNone(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -915,7 +1025,7 @@ func (o *SrlnokiaSystemNtpStateMachine) handleNone(info *SrlnokiaSystemNtpReconc
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) handleConfiguring(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleConfiguring(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -943,11 +1053,12 @@ func (o *SrlnokiaSystemNtpStateMachine) handleConfiguring(info *SrlnokiaSystemNt
 		// update action
 		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
+		
 	}
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) handleConfigStatusConfigureSuccess(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleConfigStatusConfigureSuccess(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -969,7 +1080,7 @@ func (o *SrlnokiaSystemNtpStateMachine) handleConfigStatusConfigureSuccess(info 
 	return actionComplete{}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) handleConfigStatusConfigureFailed(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleConfigStatusConfigureFailed(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1001,7 +1112,7 @@ func (o *SrlnokiaSystemNtpStateMachine) handleConfigStatusConfigureFailed(info *
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) handleDeleting(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) handleDeleting(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1020,7 +1131,7 @@ func (o *SrlnokiaSystemNtpStateMachine) handleDeleting(info *SrlnokiaSystemNtpRe
 
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) DeleteFailed(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) DeleteFailed(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1038,6 +1149,6 @@ func (o *SrlnokiaSystemNtpStateMachine) DeleteFailed(info *SrlnokiaSystemNtpReco
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlnokiaSystemNtpStateMachine) DeleteSuccess(info *SrlnokiaSystemNtpReconcileInfo) actionResult {
+func (o *SrlnokiaNetworkinstanceProtocolsBgpStateMachine) DeleteSuccess(info *SrlnokiaNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	return actionComplete{}
 }

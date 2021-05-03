@@ -158,6 +158,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -165,6 +168,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -634,6 +638,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -641,6 +648,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -1798,6 +1806,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -1805,6 +1816,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -2751,6 +2763,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -2758,6 +2773,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -3011,6 +3027,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -3018,6 +3037,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -3315,6 +3335,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -3322,6 +3345,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -4492,6 +4516,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -4499,6 +4526,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -5626,6 +5654,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -5633,6 +5664,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -6353,6 +6385,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -6360,6 +6395,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -7054,6 +7090,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -7061,6 +7100,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -7762,6 +7802,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -7769,6 +7812,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -8804,6 +8848,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -8811,6 +8858,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -9317,6 +9365,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -9324,6 +9375,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -9497,6 +9549,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -9504,6 +9559,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -9658,6 +9714,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -9665,6 +9724,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -10067,6 +10127,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -10074,6 +10137,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -10490,6 +10554,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -10497,6 +10564,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -10668,6 +10736,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -10675,6 +10746,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -10834,6 +10906,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -10841,6 +10916,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -11001,6 +11077,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -11008,6 +11087,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -11181,6 +11261,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -11188,6 +11271,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -11350,6 +11434,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -11357,6 +11444,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the
@@ -11599,6 +11687,9 @@ spec:
                       - ConfiguredSuccess
                       - ConfigStatusConfigureFailed
                       type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
@@ -11606,6 +11697,7 @@ spec:
                       type: integer
                   required:
                   - configStatus
+                  - configStatusDetails
                   - errorCount
                   type: object
                 description: Target provides the status of the configuration on the

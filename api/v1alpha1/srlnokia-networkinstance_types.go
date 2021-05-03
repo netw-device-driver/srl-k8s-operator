@@ -30,6 +30,12 @@ const (
 
 // NetworkinstanceBridgeTableMacDuplication struct
 type NetworkinstanceBridgeTableMacDuplication struct {
+	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
+	// +kubebuilder:default:=stop-learning
+	Action *string `json:"action,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:default:=9
 	HoldDownTime *uint32 `json:"hold-down-time,omitempty"`
 	// +kubebuilder:validation:Minimum=1
@@ -40,31 +46,25 @@ type NetworkinstanceBridgeTableMacDuplication struct {
 	// +kubebuilder:validation:Maximum=10
 	// +kubebuilder:default:=5
 	NumMoves *uint32 `json:"num-moves,omitempty"`
-	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
-	// +kubebuilder:default:=stop-learning
-	Action *string `json:"action,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceBridgeTableMacLearningAging struct
 type NetworkinstanceBridgeTableMacLearningAging struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=60
 	// +kubebuilder:validation:Maximum=86400
 	// +kubebuilder:default:=300
 	AgeTime *int32 `json:"age-time,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceBridgeTableMacLearning struct
 type NetworkinstanceBridgeTableMacLearning struct {
+	Aging *NetworkinstanceBridgeTableMacLearningAging `json:"aging,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string                                     `json:"admin-state,omitempty"`
-	Aging      *NetworkinstanceBridgeTableMacLearningAging `json:"aging,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceBridgeTableMacLimit struct
@@ -94,14 +94,14 @@ type NetworkinstanceBridgeTableStaticMac struct {
 
 // NetworkinstanceBridgeTable struct
 type NetworkinstanceBridgeTable struct {
-	MacLearning *NetworkinstanceBridgeTableMacLearning `json:"mac-learning,omitempty"`
-	MacLimit    *NetworkinstanceBridgeTableMacLimit    `json:"mac-limit,omitempty"`
+	MacLimit *NetworkinstanceBridgeTableMacLimit `json:"mac-limit,omitempty"`
 	// +kubebuilder:default:=false
 	ProtectAnycastGwMac *bool                                `json:"protect-anycast-gw-mac,omitempty"`
 	StaticMac           *NetworkinstanceBridgeTableStaticMac `json:"static-mac,omitempty"`
 	// +kubebuilder:default:=false
 	DiscardUnknownDestMac *bool                                     `json:"discard-unknown-dest-mac,omitempty"`
 	MacDuplication        *NetworkinstanceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
+	MacLearning           *NetworkinstanceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
 }
 
 // NetworkinstanceInterface struct
@@ -121,9 +121,6 @@ type NetworkinstanceIpForwarding struct {
 
 // NetworkinstanceIpLoadBalancingResilientHashPrefix struct
 type NetworkinstanceIpLoadBalancingResilientHashPrefix struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
-	IpPrefix *string `json:"ip-prefix"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=32
 	// +kubebuilder:default:=1
@@ -132,6 +129,9 @@ type NetworkinstanceIpLoadBalancingResilientHashPrefix struct {
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxPaths *uint8 `json:"max-paths,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
+	IpPrefix *string `json:"ip-prefix"`
 }
 
 // NetworkinstanceIpLoadBalancing struct
@@ -141,17 +141,17 @@ type NetworkinstanceIpLoadBalancing struct {
 
 // NetworkinstanceMplsStaticMplsEntry struct
 type NetworkinstanceMplsStaticMplsEntry struct {
+	TopLabel *string `json:"top-label"`
+	// +kubebuilder:default:=false
+	CollectStats *bool   `json:"collect-stats,omitempty"`
+	NextHopGroup *string `json:"next-hop-group,omitempty"`
 	// +kubebuilder:validation:Enum=`pop`;`swap`
 	// +kubebuilder:default:=swap
 	Operation *string `json:"operation,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=5
-	Preference *uint8  `json:"preference,omitempty"`
-	TopLabel   *string `json:"top-label"`
-	// +kubebuilder:default:=false
-	CollectStats *bool   `json:"collect-stats,omitempty"`
-	NextHopGroup *string `json:"next-hop-group,omitempty"`
+	Preference *uint8 `json:"preference,omitempty"`
 }
 
 // NetworkinstanceMpls struct
@@ -195,13 +195,13 @@ type NetworkinstanceTrafficEngineeringInterfaceDelay struct {
 
 // NetworkinstanceTrafficEngineeringInterface struct
 type NetworkinstanceTrafficEngineeringInterface struct {
-	InterfaceName  *string                                          `json:"interface-name"`
-	AdminGroup     *string                                          `json:"admin-group,omitempty"`
 	Delay          *NetworkinstanceTrafficEngineeringInterfaceDelay `json:"delay,omitempty"`
 	SrlgMembership *string                                          `json:"srlg-membership,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16777215
-	TeMetric *uint32 `json:"te-metric,omitempty"`
+	TeMetric      *uint32 `json:"te-metric,omitempty"`
+	InterfaceName *string `json:"interface-name"`
+	AdminGroup    *string `json:"admin-group,omitempty"`
 }
 
 // NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember struct
@@ -216,6 +216,10 @@ type NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember stru
 
 // NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct
 type NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct {
+	StaticMember []*NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember `json:"static-member,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	Value *uint32 `json:"value,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -223,11 +227,7 @@ type NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct {
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
-	Cost         *uint32                                                                   `json:"cost,omitempty"`
-	StaticMember []*NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember `json:"static-member,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	Value *uint32 `json:"value,omitempty"`
+	Cost *uint32 `json:"cost,omitempty"`
 }
 
 // NetworkinstanceTrafficEngineeringSharedRiskLinkGroups struct
@@ -262,14 +262,21 @@ type NetworkinstanceVxlanInterface struct {
 
 // Networkinstance struct
 type Networkinstance struct {
-	IpForwarding    *NetworkinstanceIpForwarding    `json:"ip-forwarding,omitempty"`
-	IpLoadBalancing *NetworkinstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
-	Mpls            *NetworkinstanceMpls            `json:"mpls,omitempty"`
-	Mtu             *NetworkinstanceMtu             `json:"mtu,omitempty"`
+	VxlanInterface []*NetworkinstanceVxlanInterface `json:"vxlan-interface,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
+	Name        *string                     `json:"name"`
+	BridgeTable *NetworkinstanceBridgeTable `json:"bridge-table,omitempty"`
+	Mpls        *NetworkinstanceMpls        `json:"mpls,omitempty"`
+	Mtu         *NetworkinstanceMtu         `json:"mtu,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	RouterId           *string                            `json:"router-id,omitempty"`
 	TrafficEngineering *NetworkinstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
+	// +kubebuilder:default:=default
+	Type *string `json:"type,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -277,17 +284,10 @@ type Networkinstance struct {
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Description    *string                          `json:"description,omitempty"`
-	VxlanInterface []*NetworkinstanceVxlanInterface `json:"vxlan-interface,omitempty"`
-	Interface      []*NetworkinstanceInterface      `json:"interface,omitempty"`
-	// +kubebuilder:default:=default
-	Type *string `json:"type,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name        *string                     `json:"name"`
-	BridgeTable *NetworkinstanceBridgeTable `json:"bridge-table,omitempty"`
+	Description     *string                         `json:"description,omitempty"`
+	Interface       []*NetworkinstanceInterface     `json:"interface,omitempty"`
+	IpForwarding    *NetworkinstanceIpForwarding    `json:"ip-forwarding,omitempty"`
+	IpLoadBalancing *NetworkinstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
 }
 
 // SrlnokiaNetworkinstanceSpec struct

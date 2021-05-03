@@ -3,7 +3,8 @@ package controllers
 import "time"
 
 const (
-	targetNotFoundRetryDelay = time.Second * 60
+	targetNotFoundRetryDelay  = time.Second * 60
+	validationErrorRetyrDelay = time.Second * 60
 )
 
 // StringInList returns a boolean indicating whether strToSearch is a

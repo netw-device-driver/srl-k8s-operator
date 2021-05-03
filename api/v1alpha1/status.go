@@ -75,6 +75,8 @@ type TargetStatus struct {
 	// +kubebuilder:default:=""
 	// +kubebuilder:validation:Enum="";Deleting;DeleteFailed;DeleteSuccess;Configuring;ConfiguredSuccess;ConfigStatusConfigureFailed
 	ConfigStatus *ConfigStatus `json:"configStatus"`
+	// +kubebuilder:default:=""
+	ConfigStatusDetails *string `json:"configStatusDetails"`
 	// ErrorCount records how many times the host has encoutered an error since the last successful operation
 	// +kubebuilder:default:=0
 	ErrorCount *int `json:"errorCount"`
