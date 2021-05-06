@@ -1,7 +1,0 @@
-apiVersion: srlinux.henderiw.be/v1alpha1
-kind: K8sSrlNokiaNetworkInstanceNetworkInstanceProtocolsBgp
-metadata:
-  name: k8ssrlnokianetworkinstancenetworkinstanceprotocolsbgp-sample
-spec:
-  # Add fields here
-  foo: bar

@@ -1,0 +1,653 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlinterfaces.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: SrlInterface
+    listKind: SrlInterfaceList
+    plural: srlinterfaces
+    singular: srlinterface
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SrlInterface is the Schema for the SrlInterfaces API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlInterfaceSpec struct
+            properties:
+              interface:
+                items:
+                  description: Interface struct
+                  properties:
+                    admin-state:
+                      default: enable
+                      enum:
+                      - disable
+                      - enable
+                      type: string
+                    description:
+                      maxLength: 255
+                      minLength: 1
+                      pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                      type: string
+                    ethernet:
+                      description: InterfaceEthernet struct
+                      properties:
+                        aggregate-id:
+                          type: string
+                        auto-negotiate:
+                          type: boolean
+                        duplex-mode:
+                          enum:
+                          - full
+                          - half
+                          type: string
+                        flow-control:
+                          description: InterfaceEthernetFlowControl struct
+                          properties:
+                            receive:
+                              type: boolean
+                            transmit:
+                              type: boolean
+                          type: object
+                        lacp-port-priority:
+                          maximum: 65535
+                          minimum: 0
+                          type: integer
+                        port-speed:
+                          enum:
+                          - 100G
+                          - 100M
+                          - 10G
+                          - 10M
+                          - 1G
+                          - 1T
+                          - 200G
+                          - 25G
+                          - 400G
+                          - 40G
+                          - 50G
+                          type: string
+                      type: object
+                    lag:
+                      description: InterfaceLag struct
+                      properties:
+                        lacp:
+                          description: InterfaceLagLacp struct
+                          properties:
+                            admin-key:
+                              maximum: 65535
+                              minimum: 1
+                              type: integer
+                            interval:
+                              default: SLOW
+                              enum:
+                              - FAST
+                              - SLOW
+                              type: string
+                            lacp-mode:
+                              default: ACTIVE
+                              enum:
+                              - ACTIVE
+                              - PASSIVE
+                              type: string
+                            system-id-mac:
+                              pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                              type: string
+                            system-priority:
+                              maximum: 65535
+                              minimum: 0
+                              type: integer
+                          type: object
+                        lacp-fallback-mode:
+                          enum:
+                          - static
+                          type: string
+                        lacp-fallback-timeout:
+                          maximum: 3600
+                          minimum: 4
+                          type: integer
+                        lag-type:
+                          default: static
+                          enum:
+                          - lacp
+                          - static
+                          type: string
+                        member-speed:
+                          enum:
+                          - 100G
+                          - 100M
+                          - 10G
+                          - 10M
+                          - 1G
+                          - 25G
+                          - 400G
+                          - 40G
+                          type: string
+                        min-links:
+                          default: 1
+                          maximum: 64
+                          minimum: 1
+                          type: integer
+                      type: object
+                    loopback-mode:
+                      type: boolean
+                    mtu:
+                      maximum: 9500
+                      minimum: 1500
+                      type: integer
+                    name:
+                      maxLength: 20
+                      minLength: 3
+                      pattern: (mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))
+                      type: string
+                    qos:
+                      description: InterfaceQos struct
+                      properties:
+                        output:
+                          description: InterfaceQosOutput struct
+                          properties:
+                            multicast-queue:
+                              items:
+                                description: InterfaceQosOutputMulticastQueue struct
+                                properties:
+                                  queue-id:
+                                    maximum: 7
+                                    minimum: 0
+                                    type: integer
+                                  scheduling:
+                                    description: InterfaceQosOutputMulticastQueueScheduling
+                                      struct
+                                    properties:
+                                      peak-rate-percent:
+                                        default: 100
+                                        maximum: 100
+                                        minimum: 1
+                                        type: integer
+                                    type: object
+                                  template:
+                                    type: string
+                                required:
+                                - queue-id
+                                type: object
+                              type: array
+                            scheduler:
+                              description: InterfaceQosOutputScheduler struct
+                              properties:
+                                tier:
+                                  items:
+                                    description: InterfaceQosOutputSchedulerTier struct
+                                    properties:
+                                      level:
+                                        maximum: 4
+                                        minimum: 1
+                                        type: integer
+                                      node:
+                                        items:
+                                          description: InterfaceQosOutputSchedulerTierNode
+                                            struct
+                                          properties:
+                                            node-number:
+                                              maximum: 11
+                                              minimum: 0
+                                              type: integer
+                                            strict-priority:
+                                              type: boolean
+                                            weight:
+                                              default: 1
+                                              maximum: 127
+                                              minimum: 1
+                                              type: integer
+                                          required:
+                                          - node-number
+                                          type: object
+                                        type: array
+                                    required:
+                                    - level
+                                    type: object
+                                  type: array
+                              type: object
+                            unicast-queue:
+                              items:
+                                description: InterfaceQosOutputUnicastQueue struct
+                                properties:
+                                  queue-id:
+                                    maximum: 7
+                                    minimum: 0
+                                    type: integer
+                                  scheduling:
+                                    description: InterfaceQosOutputUnicastQueueScheduling
+                                      struct
+                                    properties:
+                                      peak-rate-percent:
+                                        default: 100
+                                        maximum: 100
+                                        minimum: 1
+                                        type: integer
+                                      strict-priority:
+                                        default: true
+                                        type: boolean
+                                      weight:
+                                        default: 1
+                                        maximum: 255
+                                        minimum: 1
+                                        type: integer
+                                    type: object
+                                  template:
+                                    type: string
+                                  voq-template:
+                                    type: string
+                                required:
+                                - queue-id
+                                type: object
+                              type: array
+                          type: object
+                      type: object
+                    sflow:
+                      description: InterfaceSflow struct
+                      properties:
+                        admin-state:
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                      type: object
+                    transceiver:
+                      description: InterfaceTransceiver struct
+                      properties:
+                        ddm-events:
+                          type: boolean
+                        forward-error-correction:
+                          default: disabled
+                          enum:
+                          - base-r
+                          - disabled
+                          - rs-108
+                          - rs-528
+                          - rs-544
+                          type: string
+                        tx-laser:
+                          type: boolean
+                      type: object
+                    vlan-tagging:
+                      type: boolean
+                  required:
+                  - name
+                  type: object
+                type: array
+            required:
+            - interface
+            type: object
+          status:
+            description: SrlInterfaceStatus struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  interface:
+                    items:
+                      description: Interface struct
+                      properties:
+                        admin-state:
+                          default: enable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                        description:
+                          maxLength: 255
+                          minLength: 1
+                          pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                          type: string
+                        ethernet:
+                          description: InterfaceEthernet struct
+                          properties:
+                            aggregate-id:
+                              type: string
+                            auto-negotiate:
+                              type: boolean
+                            duplex-mode:
+                              enum:
+                              - full
+                              - half
+                              type: string
+                            flow-control:
+                              description: InterfaceEthernetFlowControl struct
+                              properties:
+                                receive:
+                                  type: boolean
+                                transmit:
+                                  type: boolean
+                              type: object
+                            lacp-port-priority:
+                              maximum: 65535
+                              minimum: 0
+                              type: integer
+                            port-speed:
+                              enum:
+                              - 100G
+                              - 100M
+                              - 10G
+                              - 10M
+                              - 1G
+                              - 1T
+                              - 200G
+                              - 25G
+                              - 400G
+                              - 40G
+                              - 50G
+                              type: string
+                          type: object
+                        lag:
+                          description: InterfaceLag struct
+                          properties:
+                            lacp:
+                              description: InterfaceLagLacp struct
+                              properties:
+                                admin-key:
+                                  maximum: 65535
+                                  minimum: 1
+                                  type: integer
+                                interval:
+                                  default: SLOW
+                                  enum:
+                                  - FAST
+                                  - SLOW
+                                  type: string
+                                lacp-mode:
+                                  default: ACTIVE
+                                  enum:
+                                  - ACTIVE
+                                  - PASSIVE
+                                  type: string
+                                system-id-mac:
+                                  pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                  type: string
+                                system-priority:
+                                  maximum: 65535
+                                  minimum: 0
+                                  type: integer
+                              type: object
+                            lacp-fallback-mode:
+                              enum:
+                              - static
+                              type: string
+                            lacp-fallback-timeout:
+                              maximum: 3600
+                              minimum: 4
+                              type: integer
+                            lag-type:
+                              default: static
+                              enum:
+                              - lacp
+                              - static
+                              type: string
+                            member-speed:
+                              enum:
+                              - 100G
+                              - 100M
+                              - 10G
+                              - 10M
+                              - 1G
+                              - 25G
+                              - 400G
+                              - 40G
+                              type: string
+                            min-links:
+                              default: 1
+                              maximum: 64
+                              minimum: 1
+                              type: integer
+                          type: object
+                        loopback-mode:
+                          type: boolean
+                        mtu:
+                          maximum: 9500
+                          minimum: 1500
+                          type: integer
+                        name:
+                          maxLength: 20
+                          minLength: 3
+                          pattern: (mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))
+                          type: string
+                        qos:
+                          description: InterfaceQos struct
+                          properties:
+                            output:
+                              description: InterfaceQosOutput struct
+                              properties:
+                                multicast-queue:
+                                  items:
+                                    description: InterfaceQosOutputMulticastQueue
+                                      struct
+                                    properties:
+                                      queue-id:
+                                        maximum: 7
+                                        minimum: 0
+                                        type: integer
+                                      scheduling:
+                                        description: InterfaceQosOutputMulticastQueueScheduling
+                                          struct
+                                        properties:
+                                          peak-rate-percent:
+                                            default: 100
+                                            maximum: 100
+                                            minimum: 1
+                                            type: integer
+                                        type: object
+                                      template:
+                                        type: string
+                                    required:
+                                    - queue-id
+                                    type: object
+                                  type: array
+                                scheduler:
+                                  description: InterfaceQosOutputScheduler struct
+                                  properties:
+                                    tier:
+                                      items:
+                                        description: InterfaceQosOutputSchedulerTier
+                                          struct
+                                        properties:
+                                          level:
+                                            maximum: 4
+                                            minimum: 1
+                                            type: integer
+                                          node:
+                                            items:
+                                              description: InterfaceQosOutputSchedulerTierNode
+                                                struct
+                                              properties:
+                                                node-number:
+                                                  maximum: 11
+                                                  minimum: 0
+                                                  type: integer
+                                                strict-priority:
+                                                  type: boolean
+                                                weight:
+                                                  default: 1
+                                                  maximum: 127
+                                                  minimum: 1
+                                                  type: integer
+                                              required:
+                                              - node-number
+                                              type: object
+                                            type: array
+                                        required:
+                                        - level
+                                        type: object
+                                      type: array
+                                  type: object
+                                unicast-queue:
+                                  items:
+                                    description: InterfaceQosOutputUnicastQueue struct
+                                    properties:
+                                      queue-id:
+                                        maximum: 7
+                                        minimum: 0
+                                        type: integer
+                                      scheduling:
+                                        description: InterfaceQosOutputUnicastQueueScheduling
+                                          struct
+                                        properties:
+                                          peak-rate-percent:
+                                            default: 100
+                                            maximum: 100
+                                            minimum: 1
+                                            type: integer
+                                          strict-priority:
+                                            default: true
+                                            type: boolean
+                                          weight:
+                                            default: 1
+                                            maximum: 255
+                                            minimum: 1
+                                            type: integer
+                                        type: object
+                                      template:
+                                        type: string
+                                      voq-template:
+                                        type: string
+                                    required:
+                                    - queue-id
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                        sflow:
+                          description: InterfaceSflow struct
+                          properties:
+                            admin-state:
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                          type: object
+                        transceiver:
+                          description: InterfaceTransceiver struct
+                          properties:
+                            ddm-events:
+                              type: boolean
+                            forward-error-correction:
+                              default: disabled
+                              enum:
+                              - base-r
+                              - disabled
+                              - rs-108
+                              - rs-528
+                              - rs-544
+                              type: string
+                            tx-laser:
+                              type: boolean
+                          type: object
+                        vlan-tagging:
+                          type: boolean
+                      required:
+                      - name
+                      type: object
+                    type: array
+                required:
+                - interface
+                type: object
+              validationDetails:
+                additionalProperties:
+                  description: ValidationDetails provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    leafRefParh:
+                      description: LeafRefPath points to the leafref object value
+                      type: string
+                    leafRefValues:
+                      description: LeafRefValues identifies the values assigned in
+                        the leaf ref
+                      items:
+                        type: string
+                      type: array
+                    values:
+                      description: Values identifies the object value that should
+                        match the leafref value if empty it means the object does
+                        not exist.
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                description: ValidationDetails defines the validation details of the
+                  resource object
+                type: object
+              validationStatus:
+                description: ValidationStatus defines the validation status of the
+                  resource object
+                enum:
+                - Success
+                - Failed
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

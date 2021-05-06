@@ -1,7 +1,0 @@
-apiVersion: srlinux.henderiw.be/v1alpha1
-kind: K8sSrlNokiaSystemSystemMtu
-metadata:
-  name: k8ssrlnokiasystemsystemmtu-sample
-spec:
-  # Add fields here
-  foo: bar

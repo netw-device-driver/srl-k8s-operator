@@ -11,20 +11,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiabfds.srlinux.henderiw.be
+  name: srlbfds.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaBfd
-    listKind: SrlnokiaBfdList
-    plural: srlnokiabfds
-    singular: srlnokiabfd
+    kind: SrlBfd
+    listKind: SrlBfdList
+    plural: srlbfds
+    singular: srlbfd
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaBfd is the Schema for the SrlnokiaBfds API
+        description: SrlBfd is the Schema for the SrlBfds API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -39,7 +39,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaBfdSpec struct
+            description: SrlBfdSpec struct
             properties:
               bfd:
                 description: Bfd struct
@@ -134,7 +134,7 @@ spec:
             - bfd
             type: object
           status:
-            description: SrlnokiaBfdStatus struct
+            description: SrlBfdStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -319,20 +319,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiainterfaces.srlinux.henderiw.be
+  name: srlinterfaces.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaInterface
-    listKind: SrlnokiaInterfaceList
-    plural: srlnokiainterfaces
-    singular: srlnokiainterface
+    kind: SrlInterface
+    listKind: SrlInterfaceList
+    plural: srlinterfaces
+    singular: srlinterface
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaInterface is the Schema for the SrlnokiaInterfaces API
+        description: SrlInterface is the Schema for the SrlInterfaces API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -347,7 +347,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaInterfaceSpec struct
+            description: SrlInterfaceSpec struct
             properties:
               interface:
                 items:
@@ -613,7 +613,7 @@ spec:
             - interface
             type: object
           status:
-            description: SrlnokiaInterfaceStatus struct
+            description: SrlInterfaceStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -971,20 +971,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiainterfacesubinterfaces.srlinux.henderiw.be
+  name: srlinterfacesubinterfaces.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaInterfaceSubinterface
-    listKind: SrlnokiaInterfaceSubinterfaceList
-    plural: srlnokiainterfacesubinterfaces
-    singular: srlnokiainterfacesubinterface
+    kind: SrlInterfaceSubinterface
+    listKind: SrlInterfaceSubinterfaceList
+    plural: srlinterfacesubinterfaces
+    singular: srlinterfacesubinterface
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaInterfaceSubinterface is the Schema for the SrlnokiaInterfaceSubinterfaces
+        description: SrlInterfaceSubinterface is the Schema for the SrlInterfaceSubinterfaces
           API
         properties:
           apiVersion:
@@ -1000,7 +1000,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaInterfaceSubinterfaceSpec struct
+            description: SrlInterfaceSubinterfaceSpec struct
             properties:
               interface-name:
                 type: string
@@ -1780,7 +1780,7 @@ spec:
             - subinterface
             type: object
           status:
-            description: SrlnokiaInterfaceSubinterfaceStatus struct
+            description: SrlInterfaceSubinterfaceStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -2653,21 +2653,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceaggregateroutes.srlinux.henderiw.be
+  name: srlnetworkinstanceaggregateroutes.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceAggregateroutes
-    listKind: SrlnokiaNetworkinstanceAggregateroutesList
-    plural: srlnokianetworkinstanceaggregateroutes
-    singular: srlnokianetworkinstanceaggregateroutes
+    kind: SrlNetworkinstanceAggregateroutes
+    listKind: SrlNetworkinstanceAggregateroutesList
+    plural: srlnetworkinstanceaggregateroutes
+    singular: srlnetworkinstanceaggregateroutes
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceAggregateroutes is the Schema for the
-          SrlnokiaNetworkinstanceAggregateroutess API
+        description: SrlNetworkinstanceAggregateroutes is the Schema for the SrlNetworkinstanceAggregateroutess
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -2682,7 +2682,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceAggregateroutesSpec struct
+            description: SrlNetworkinstanceAggregateroutesSpec struct
             properties:
               aggregate-routes:
                 description: NetworkinstanceAggregateroutes struct
@@ -2736,7 +2736,7 @@ spec:
             - network-instance-name
             type: object
           status:
-            description: SrlnokiaNetworkinstanceAggregateroutesStatus struct
+            description: SrlNetworkinstanceAggregateroutesStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -2880,20 +2880,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstancenexthopgroups.srlinux.henderiw.be
+  name: srlnetworkinstancenexthopgroups.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceNexthopgroups
-    listKind: SrlnokiaNetworkinstanceNexthopgroupsList
-    plural: srlnokianetworkinstancenexthopgroups
-    singular: srlnokianetworkinstancenexthopgroups
+    kind: SrlNetworkinstanceNexthopgroups
+    listKind: SrlNetworkinstanceNexthopgroupsList
+    plural: srlnetworkinstancenexthopgroups
+    singular: srlnetworkinstancenexthopgroups
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceNexthopgroups is the Schema for the SrlnokiaNetworkinstanceNexthopgroupss
+        description: SrlNetworkinstanceNexthopgroups is the Schema for the SrlNetworkinstanceNexthopgroupss
           API
         properties:
           apiVersion:
@@ -2909,7 +2909,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceNexthopgroupsSpec struct
+            description: SrlNetworkinstanceNexthopgroupsSpec struct
             properties:
               network-instance-name:
                 type: string
@@ -2999,7 +2999,7 @@ spec:
             - next-hop-groups
             type: object
           status:
-            description: SrlnokiaNetworkinstanceNexthopgroupsStatus struct
+            description: SrlNetworkinstanceNexthopgroupsStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -3179,21 +3179,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceprotocolsbgpevpns.srlinux.henderiw.be
+  name: srlnetworkinstanceprotocolsbgpevpns.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceProtocolsBgpevpn
-    listKind: SrlnokiaNetworkinstanceProtocolsBgpevpnList
-    plural: srlnokianetworkinstanceprotocolsbgpevpns
-    singular: srlnokianetworkinstanceprotocolsbgpevpn
+    kind: SrlNetworkinstanceProtocolsBgpevpn
+    listKind: SrlNetworkinstanceProtocolsBgpevpnList
+    plural: srlnetworkinstanceprotocolsbgpevpns
+    singular: srlnetworkinstanceprotocolsbgpevpn
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceProtocolsBgpevpn is the Schema for the
-          SrlnokiaNetworkinstanceProtocolsBgpevpns API
+        description: SrlNetworkinstanceProtocolsBgpevpn is the Schema for the SrlNetworkinstanceProtocolsBgpevpns
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -3208,7 +3208,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceProtocolsBgpevpnSpec struct
+            description: SrlNetworkinstanceProtocolsBgpevpnSpec struct
             properties:
               bgp-evpn:
                 description: NetworkinstanceProtocolsBgpevpn struct
@@ -3306,7 +3306,7 @@ spec:
             - network-instance-name
             type: object
           status:
-            description: SrlnokiaNetworkinstanceProtocolsBgpevpnStatus struct
+            description: SrlNetworkinstanceProtocolsBgpevpnStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -3495,20 +3495,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceprotocolsbgps.srlinux.henderiw.be
+  name: srlnetworkinstanceprotocolsbgps.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceProtocolsBgp
-    listKind: SrlnokiaNetworkinstanceProtocolsBgpList
-    plural: srlnokianetworkinstanceprotocolsbgps
-    singular: srlnokianetworkinstanceprotocolsbgp
+    kind: SrlNetworkinstanceProtocolsBgp
+    listKind: SrlNetworkinstanceProtocolsBgpList
+    plural: srlnetworkinstanceprotocolsbgps
+    singular: srlnetworkinstanceprotocolsbgp
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceProtocolsBgp is the Schema for the SrlnokiaNetworkinstanceProtocolsBgps
+        description: SrlNetworkinstanceProtocolsBgp is the Schema for the SrlNetworkinstanceProtocolsBgps
           API
         properties:
           apiVersion:
@@ -3524,7 +3524,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceProtocolsBgpSpec struct
+            description: SrlNetworkinstanceProtocolsBgpSpec struct
             properties:
               bgp:
                 description: NetworkinstanceProtocolsBgp struct
@@ -4486,7 +4486,7 @@ spec:
             - network-instance-name
             type: object
           status:
-            description: SrlnokiaNetworkinstanceProtocolsBgpStatus struct
+            description: SrlNetworkinstanceProtocolsBgpStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -5546,21 +5546,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceprotocolsbgpvpns.srlinux.henderiw.be
+  name: srlnetworkinstanceprotocolsbgpvpns.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceProtocolsBgpvpn
-    listKind: SrlnokiaNetworkinstanceProtocolsBgpvpnList
-    plural: srlnokianetworkinstanceprotocolsbgpvpns
-    singular: srlnokianetworkinstanceprotocolsbgpvpn
+    kind: SrlNetworkinstanceProtocolsBgpvpn
+    listKind: SrlNetworkinstanceProtocolsBgpvpnList
+    plural: srlnetworkinstanceprotocolsbgpvpns
+    singular: srlnetworkinstanceprotocolsbgpvpn
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceProtocolsBgpvpn is the Schema for the
-          SrlnokiaNetworkinstanceProtocolsBgpvpns API
+        description: SrlNetworkinstanceProtocolsBgpvpn is the Schema for the SrlNetworkinstanceProtocolsBgpvpns
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -5575,7 +5575,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceProtocolsBgpvpnSpec struct
+            description: SrlNetworkinstanceProtocolsBgpvpnSpec struct
             properties:
               bgp-vpn:
                 description: NetworkinstanceProtocolsBgpvpn struct
@@ -5623,7 +5623,7 @@ spec:
             - network-instance-name
             type: object
           status:
-            description: SrlnokiaNetworkinstanceProtocolsBgpvpnStatus struct
+            description: SrlNetworkinstanceProtocolsBgpvpnStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -5761,20 +5761,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceprotocolsises.srlinux.henderiw.be
+  name: srlnetworkinstanceprotocolsises.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceProtocolsIsis
-    listKind: SrlnokiaNetworkinstanceProtocolsIsisList
-    plural: srlnokianetworkinstanceprotocolsises
-    singular: srlnokianetworkinstanceprotocolsisis
+    kind: SrlNetworkinstanceProtocolsIsis
+    listKind: SrlNetworkinstanceProtocolsIsisList
+    plural: srlnetworkinstanceprotocolsises
+    singular: srlnetworkinstanceprotocolsisis
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceProtocolsIsis is the Schema for the SrlnokiaNetworkinstanceProtocolsIsiss
+        description: SrlNetworkinstanceProtocolsIsis is the Schema for the SrlNetworkinstanceProtocolsIsiss
           API
         properties:
           apiVersion:
@@ -5790,7 +5790,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceProtocolsIsisSpec struct
+            description: SrlNetworkinstanceProtocolsIsisSpec struct
             properties:
               isis:
                 description: NetworkinstanceProtocolsIsis struct
@@ -6353,7 +6353,7 @@ spec:
             - network-instance-name
             type: object
           status:
-            description: SrlnokiaNetworkinstanceProtocolsIsisStatus struct
+            description: SrlNetworkinstanceProtocolsIsisStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -7006,20 +7006,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceprotocolslinuxes.srlinux.henderiw.be
+  name: srlnetworkinstanceprotocolslinuxes.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceProtocolsLinux
-    listKind: SrlnokiaNetworkinstanceProtocolsLinuxList
-    plural: srlnokianetworkinstanceprotocolslinuxes
-    singular: srlnokianetworkinstanceprotocolslinux
+    kind: SrlNetworkinstanceProtocolsLinux
+    listKind: SrlNetworkinstanceProtocolsLinuxList
+    plural: srlnetworkinstanceprotocolslinuxes
+    singular: srlnetworkinstanceprotocolslinux
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceProtocolsLinux is the Schema for the SrlnokiaNetworkinstanceProtocolsLinuxs
+        description: SrlNetworkinstanceProtocolsLinux is the Schema for the SrlNetworkinstanceProtocolsLinuxs
           API
         properties:
           apiVersion:
@@ -7035,7 +7035,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceProtocolsLinuxSpec struct
+            description: SrlNetworkinstanceProtocolsLinuxSpec struct
             properties:
               linux:
                 description: NetworkinstanceProtocolsLinux struct
@@ -7057,7 +7057,7 @@ spec:
             - network-instance-name
             type: object
           status:
-            description: SrlnokiaNetworkinstanceProtocolsLinuxStatus struct
+            description: SrlNetworkinstanceProtocolsLinuxStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -7169,20 +7169,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstanceprotocolsospfs.srlinux.henderiw.be
+  name: srlnetworkinstanceprotocolsospfs.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceProtocolsOspf
-    listKind: SrlnokiaNetworkinstanceProtocolsOspfList
-    plural: srlnokianetworkinstanceprotocolsospfs
-    singular: srlnokianetworkinstanceprotocolsospf
+    kind: SrlNetworkinstanceProtocolsOspf
+    listKind: SrlNetworkinstanceProtocolsOspfList
+    plural: srlnetworkinstanceprotocolsospfs
+    singular: srlnetworkinstanceprotocolsospf
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceProtocolsOspf is the Schema for the SrlnokiaNetworkinstanceProtocolsOspfs
+        description: SrlNetworkinstanceProtocolsOspf is the Schema for the SrlNetworkinstanceProtocolsOspfs
           API
         properties:
           apiVersion:
@@ -7198,7 +7198,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceProtocolsOspfSpec struct
+            description: SrlNetworkinstanceProtocolsOspfSpec struct
             properties:
               network-instance-name:
                 type: string
@@ -7768,7 +7768,7 @@ spec:
             - ospf
             type: object
           status:
-            description: SrlnokiaNetworkinstanceProtocolsOspfStatus struct
+            description: SrlNetworkinstanceProtocolsOspfStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -8429,20 +8429,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstances.srlinux.henderiw.be
+  name: srlnetworkinstances.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstance
-    listKind: SrlnokiaNetworkinstanceList
-    plural: srlnokianetworkinstances
-    singular: srlnokianetworkinstance
+    kind: SrlNetworkinstance
+    listKind: SrlNetworkinstanceList
+    plural: srlnetworkinstances
+    singular: srlnetworkinstance
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstance is the Schema for the SrlnokiaNetworkinstances
+        description: SrlNetworkinstance is the Schema for the SrlNetworkinstances
           API
         properties:
           apiVersion:
@@ -8458,7 +8458,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceSpec struct
+            description: SrlNetworkinstanceSpec struct
             properties:
               network-instance:
                 items:
@@ -8813,7 +8813,7 @@ spec:
             - network-instance
             type: object
           status:
-            description: SrlnokiaNetworkinstanceStatus struct
+            description: SrlNetworkinstanceStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -9259,20 +9259,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokianetworkinstancestaticroutes.srlinux.henderiw.be
+  name: srlnetworkinstancestaticroutes.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaNetworkinstanceStaticroutes
-    listKind: SrlnokiaNetworkinstanceStaticroutesList
-    plural: srlnokianetworkinstancestaticroutes
-    singular: srlnokianetworkinstancestaticroutes
+    kind: SrlNetworkinstanceStaticroutes
+    listKind: SrlNetworkinstanceStaticroutesList
+    plural: srlnetworkinstancestaticroutes
+    singular: srlnetworkinstancestaticroutes
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaNetworkinstanceStaticroutes is the Schema for the SrlnokiaNetworkinstanceStaticroutess
+        description: SrlNetworkinstanceStaticroutes is the Schema for the SrlNetworkinstanceStaticroutess
           API
         properties:
           apiVersion:
@@ -9288,7 +9288,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaNetworkinstanceStaticroutesSpec struct
+            description: SrlNetworkinstanceStaticroutesSpec struct
             properties:
               network-instance-name:
                 type: string
@@ -9329,7 +9329,7 @@ spec:
             - static-routes
             type: object
           status:
-            description: SrlnokiaNetworkinstanceStaticroutesStatus struct
+            description: SrlNetworkinstanceStaticroutesStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -9460,20 +9460,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiaroutingpolicyaspathsets.srlinux.henderiw.be
+  name: srlroutingpolicyaspathsets.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaRoutingpolicyAspathset
-    listKind: SrlnokiaRoutingpolicyAspathsetList
-    plural: srlnokiaroutingpolicyaspathsets
-    singular: srlnokiaroutingpolicyaspathset
+    kind: SrlRoutingpolicyAspathset
+    listKind: SrlRoutingpolicyAspathsetList
+    plural: srlroutingpolicyaspathsets
+    singular: srlroutingpolicyaspathset
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaRoutingpolicyAspathset is the Schema for the SrlnokiaRoutingpolicyAspathsets
+        description: SrlRoutingpolicyAspathset is the Schema for the SrlRoutingpolicyAspathsets
           API
         properties:
           apiVersion:
@@ -9489,7 +9489,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaRoutingpolicyAspathsetSpec struct
+            description: SrlRoutingpolicyAspathsetSpec struct
             properties:
               as-path-set:
                 items:
@@ -9512,7 +9512,7 @@ spec:
             - as-path-set
             type: object
           status:
-            description: SrlnokiaRoutingpolicyAspathsetStatus struct
+            description: SrlRoutingpolicyAspathsetStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -9625,20 +9625,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiaroutingpolicycommunitysets.srlinux.henderiw.be
+  name: srlroutingpolicycommunitysets.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaRoutingpolicyCommunityset
-    listKind: SrlnokiaRoutingpolicyCommunitysetList
-    plural: srlnokiaroutingpolicycommunitysets
-    singular: srlnokiaroutingpolicycommunityset
+    kind: SrlRoutingpolicyCommunityset
+    listKind: SrlRoutingpolicyCommunitysetList
+    plural: srlroutingpolicycommunitysets
+    singular: srlroutingpolicycommunityset
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaRoutingpolicyCommunityset is the Schema for the SrlnokiaRoutingpolicyCommunitysets
+        description: SrlRoutingpolicyCommunityset is the Schema for the SrlRoutingpolicyCommunitysets
           API
         properties:
           apiVersion:
@@ -9654,7 +9654,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaRoutingpolicyCommunitysetSpec struct
+            description: SrlRoutingpolicyCommunitysetSpec struct
             properties:
               community-set:
                 items:
@@ -9676,7 +9676,7 @@ spec:
             - community-set
             type: object
           status:
-            description: SrlnokiaRoutingpolicyCommunitysetStatus struct
+            description: SrlRoutingpolicyCommunitysetStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -9788,20 +9788,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiaroutingpolicypolicies.srlinux.henderiw.be
+  name: srlroutingpolicypolicies.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaRoutingpolicyPolicy
-    listKind: SrlnokiaRoutingpolicyPolicyList
-    plural: srlnokiaroutingpolicypolicies
-    singular: srlnokiaroutingpolicypolicy
+    kind: SrlRoutingpolicyPolicy
+    listKind: SrlRoutingpolicyPolicyList
+    plural: srlroutingpolicypolicies
+    singular: srlroutingpolicypolicy
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaRoutingpolicyPolicy is the Schema for the SrlnokiaRoutingpolicyPolicys
+        description: SrlRoutingpolicyPolicy is the Schema for the SrlRoutingpolicyPolicys
           API
         properties:
           apiVersion:
@@ -9817,7 +9817,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaRoutingpolicyPolicySpec struct
+            description: SrlRoutingpolicyPolicySpec struct
             properties:
               policy:
                 items:
@@ -10088,7 +10088,7 @@ spec:
             - policy
             type: object
           status:
-            description: SrlnokiaRoutingpolicyPolicyStatus struct
+            description: SrlRoutingpolicyPolicyStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -10452,20 +10452,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiaroutingpolicyprefixsets.srlinux.henderiw.be
+  name: srlroutingpolicyprefixsets.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaRoutingpolicyPrefixset
-    listKind: SrlnokiaRoutingpolicyPrefixsetList
-    plural: srlnokiaroutingpolicyprefixsets
-    singular: srlnokiaroutingpolicyprefixset
+    kind: SrlRoutingpolicyPrefixset
+    listKind: SrlRoutingpolicyPrefixsetList
+    plural: srlroutingpolicyprefixsets
+    singular: srlroutingpolicyprefixset
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaRoutingpolicyPrefixset is the Schema for the SrlnokiaRoutingpolicyPrefixsets
+        description: SrlRoutingpolicyPrefixset is the Schema for the SrlRoutingpolicyPrefixsets
           API
         properties:
           apiVersion:
@@ -10481,7 +10481,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaRoutingpolicyPrefixsetSpec struct
+            description: SrlRoutingpolicyPrefixsetSpec struct
             properties:
               prefix-set:
                 items:
@@ -10514,7 +10514,7 @@ spec:
             - prefix-set
             type: object
           status:
-            description: SrlnokiaRoutingpolicyPrefixsetStatus struct
+            description: SrlRoutingpolicyPrefixsetStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -10637,20 +10637,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiasystemmtus.srlinux.henderiw.be
+  name: srlsystemmtus.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaSystemMtu
-    listKind: SrlnokiaSystemMtuList
-    plural: srlnokiasystemmtus
-    singular: srlnokiasystemmtu
+    kind: SrlSystemMtu
+    listKind: SrlSystemMtuList
+    plural: srlsystemmtus
+    singular: srlsystemmtu
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaSystemMtu is the Schema for the SrlnokiaSystemMtus API
+        description: SrlSystemMtu is the Schema for the SrlSystemMtus API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -10665,7 +10665,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaSystemMtuSpec struct
+            description: SrlSystemMtuSpec struct
             properties:
               mtu:
                 description: SystemMtu struct
@@ -10695,7 +10695,7 @@ spec:
             - mtu
             type: object
           status:
-            description: SrlnokiaSystemMtuStatus struct
+            description: SrlSystemMtuStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -10815,21 +10815,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiasystemnames.srlinux.henderiw.be
+  name: srlsystemnames.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaSystemName
-    listKind: SrlnokiaSystemNameList
-    plural: srlnokiasystemnames
-    singular: srlnokiasystemname
+    kind: SrlSystemName
+    listKind: SrlSystemNameList
+    plural: srlsystemnames
+    singular: srlsystemname
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaSystemName is the Schema for the SrlnokiaSystemNames
-          API
+        description: SrlSystemName is the Schema for the SrlSystemNames API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -10844,7 +10843,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaSystemNameSpec struct
+            description: SrlSystemNameSpec struct
             properties:
               name:
                 description: SystemName struct
@@ -10864,7 +10863,7 @@ spec:
             - name
             type: object
           status:
-            description: SrlnokiaSystemNameStatus struct
+            description: SrlSystemNameStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -10974,21 +10973,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiasystemnetworkinstanceprotocolsbgpvpns.srlinux.henderiw.be
+  name: srlsystemnetworkinstanceprotocolsbgpvpns.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaSystemNetworkinstanceProtocolsBgpvpn
-    listKind: SrlnokiaSystemNetworkinstanceProtocolsBgpvpnList
-    plural: srlnokiasystemnetworkinstanceprotocolsbgpvpns
-    singular: srlnokiasystemnetworkinstanceprotocolsbgpvpn
+    kind: SrlSystemNetworkinstanceProtocolsBgpvpn
+    listKind: SrlSystemNetworkinstanceProtocolsBgpvpnList
+    plural: srlsystemnetworkinstanceprotocolsbgpvpns
+    singular: srlsystemnetworkinstanceprotocolsbgpvpn
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaSystemNetworkinstanceProtocolsBgpvpn is the Schema for
-          the SrlnokiaSystemNetworkinstanceProtocolsBgpvpns API
+        description: SrlSystemNetworkinstanceProtocolsBgpvpn is the Schema for the
+          SrlSystemNetworkinstanceProtocolsBgpvpns API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -11003,7 +11002,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaSystemNetworkinstanceProtocolsBgpvpnSpec struct
+            description: SrlSystemNetworkinstanceProtocolsBgpvpnSpec struct
             properties:
               bgp-vpn:
                 description: SystemNetworkinstanceProtocolsBgpvpn struct
@@ -11034,7 +11033,7 @@ spec:
             - bgp-vpn
             type: object
           status:
-            description: SrlnokiaSystemNetworkinstanceProtocolsBgpvpnStatus struct
+            description: SrlSystemNetworkinstanceProtocolsBgpvpnStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -11155,20 +11154,22 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiasystemntps.srlinux.henderiw.be
+  name: srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaSystemNtp
-    listKind: SrlnokiaSystemNtpList
-    plural: srlnokiasystemntps
-    singular: srlnokiasystemntp
+    kind: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi
+    listKind: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiList
+    plural: srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis
+    singular: srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesi
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaSystemNtp is the Schema for the SrlnokiaSystemNtps API
+        description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi is the
+          Schema for the SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsis
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -11183,7 +11184,527 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaSystemNtpSpec struct
+            description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec
+              struct
+            properties:
+              bgp-instance-id:
+                type: string
+              ethernet-segment:
+                items:
+                  description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi
+                    struct
+                  properties:
+                    admin-state:
+                      default: disable
+                      enum:
+                      - disable
+                      - enable
+                      type: string
+                    df-election:
+                      description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection
+                        struct
+                      properties:
+                        algorithm:
+                          description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm
+                            struct
+                          properties:
+                            default-alg:
+                              description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlg
+                                struct
+                              properties:
+                                capabilities:
+                                  description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlgCapabilities
+                                    struct
+                                  properties:
+                                    ac-df:
+                                      default: true
+                                      type: boolean
+                                  type: object
+                              type: object
+                            preference-alg:
+                              description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg
+                                struct
+                              properties:
+                                capabilities:
+                                  description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities
+                                    struct
+                                  properties:
+                                    ac-df:
+                                      default: true
+                                      type: boolean
+                                    non-revertive:
+                                      default: false
+                                      type: boolean
+                                  type: object
+                                preference-value:
+                                  default: 32767
+                                  format: int32
+                                  maximum: 65535
+                                  minimum: 0
+                                  type: integer
+                              type: object
+                            type:
+                              default: default
+                              enum:
+                              - default
+                              - preference
+                              type: string
+                          type: object
+                        interface-standby-signaling-on-non-df:
+                          type: boolean
+                        timers:
+                          description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers
+                            struct
+                          properties:
+                            activation-timer:
+                              format: int32
+                              maximum: 100
+                              minimum: 0
+                              type: integer
+                          type: object
+                      type: object
+                    esi:
+                      pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}'
+                      type: string
+                    interface:
+                      type: string
+                    multi-homing-mode:
+                      default: all-active
+                      enum:
+                      - all-active
+                      - single-active
+                      type: string
+                    name:
+                      maxLength: 255
+                      minLength: 1
+                      pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                      type: string
+                    routes:
+                      description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes
+                        struct
+                      properties:
+                        ethernet-segment:
+                          description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi
+                            struct
+                          properties:
+                            originating-ip:
+                              default: use-system-ipv4-address
+                              enum:
+                              - use-system-ipv4-address
+                              type: string
+                          type: object
+                        next-hop:
+                          default: use-system-ipv4-address
+                          enum:
+                          - use-system-ipv4-address
+                          type: string
+                      type: object
+                  required:
+                  - name
+                  type: object
+                type: array
+            required:
+            - bgp-instance-id
+            - ethernet-segment
+            type: object
+          status:
+            description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus
+              struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  bgp-instance-id:
+                    type: string
+                  ethernet-segment:
+                    items:
+                      description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi
+                        struct
+                      properties:
+                        admin-state:
+                          default: disable
+                          enum:
+                          - disable
+                          - enable
+                          type: string
+                        df-election:
+                          description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection
+                            struct
+                          properties:
+                            algorithm:
+                              description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm
+                                struct
+                              properties:
+                                default-alg:
+                                  description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlg
+                                    struct
+                                  properties:
+                                    capabilities:
+                                      description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlgCapabilities
+                                        struct
+                                      properties:
+                                        ac-df:
+                                          default: true
+                                          type: boolean
+                                      type: object
+                                  type: object
+                                preference-alg:
+                                  description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg
+                                    struct
+                                  properties:
+                                    capabilities:
+                                      description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities
+                                        struct
+                                      properties:
+                                        ac-df:
+                                          default: true
+                                          type: boolean
+                                        non-revertive:
+                                          default: false
+                                          type: boolean
+                                      type: object
+                                    preference-value:
+                                      default: 32767
+                                      format: int32
+                                      maximum: 65535
+                                      minimum: 0
+                                      type: integer
+                                  type: object
+                                type:
+                                  default: default
+                                  enum:
+                                  - default
+                                  - preference
+                                  type: string
+                              type: object
+                            interface-standby-signaling-on-non-df:
+                              type: boolean
+                            timers:
+                              description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers
+                                struct
+                              properties:
+                                activation-timer:
+                                  format: int32
+                                  maximum: 100
+                                  minimum: 0
+                                  type: integer
+                              type: object
+                          type: object
+                        esi:
+                          pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}'
+                          type: string
+                        interface:
+                          type: string
+                        multi-homing-mode:
+                          default: all-active
+                          enum:
+                          - all-active
+                          - single-active
+                          type: string
+                        name:
+                          maxLength: 255
+                          minLength: 1
+                          pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                          type: string
+                        routes:
+                          description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes
+                            struct
+                          properties:
+                            ethernet-segment:
+                              description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi
+                                struct
+                              properties:
+                                originating-ip:
+                                  default: use-system-ipv4-address
+                                  enum:
+                                  - use-system-ipv4-address
+                                  type: string
+                              type: object
+                            next-hop:
+                              default: use-system-ipv4-address
+                              enum:
+                              - use-system-ipv4-address
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                required:
+                - bgp-instance-id
+                - ethernet-segment
+                type: object
+              validationDetails:
+                additionalProperties:
+                  description: ValidationDetails provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    leafRefParh:
+                      description: LeafRefPath points to the leafref object value
+                      type: string
+                    leafRefValues:
+                      description: LeafRefValues identifies the values assigned in
+                        the leaf ref
+                      items:
+                        type: string
+                      type: array
+                    values:
+                      description: Values identifies the object value that should
+                        match the leafref value if empty it means the object does
+                        not exist.
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                description: ValidationDetails defines the validation details of the
+                  resource object
+                type: object
+              validationStatus:
+                description: ValidationStatus defines the validation status of the
+                  resource object
+                enum:
+                - Success
+                - Failed
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlsystemnetworkinstanceprotocolsevpnesisbgpinstances.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance
+    listKind: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceList
+    plural: srlsystemnetworkinstanceprotocolsevpnesisbgpinstances
+    singular: srlsystemnetworkinstanceprotocolsevpnesisbgpinstance
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance is the Schema
+          for the SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstances API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceSpec
+              struct
+            properties:
+              bgp-instance:
+                items:
+                  description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstance struct
+                  properties:
+                    id:
+                      type: string
+                  required:
+                  - id
+                  type: object
+                type: array
+            required:
+            - bgp-instance
+            type: object
+          status:
+            description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceStatus
+              struct
+            properties:
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
+              targetStatus:
+                additionalProperties:
+                  description: TargetStatus provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    configStatus:
+                      default: ""
+                      description: ConfigStatus defines the states the resource object
+                        is reporting
+                      enum:
+                      - ""
+                      - Deleting
+                      - DeleteFailed
+                      - DeleteSuccess
+                      - Configuring
+                      - ConfiguredSuccess
+                      - ConfigStatusConfigureFailed
+                      type: string
+                    configStatusDetails:
+                      default: ""
+                      type: string
+                    errorCount:
+                      default: 0
+                      description: ErrorCount records how many times the host has
+                        encoutered an error since the last successful operation
+                      type: integer
+                  required:
+                  - configStatus
+                  - errorCount
+                  type: object
+                description: Target provides the status of the configuration on the
+                  device
+                type: object
+              usedSpec:
+                description: UsedSpec provides the spec used for the configuration
+                properties:
+                  bgp-instance:
+                    items:
+                      description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstance
+                        struct
+                      properties:
+                        id:
+                          type: string
+                      required:
+                      - id
+                      type: object
+                    type: array
+                required:
+                - bgp-instance
+                type: object
+              validationDetails:
+                additionalProperties:
+                  description: ValidationDetails provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    leafRefParh:
+                      description: LeafRefPath points to the leafref object value
+                      type: string
+                    leafRefValues:
+                      description: LeafRefValues identifies the values assigned in
+                        the leaf ref
+                      items:
+                        type: string
+                      type: array
+                    values:
+                      description: Values identifies the object value that should
+                        match the leafref value if empty it means the object does
+                        not exist.
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                description: ValidationDetails defines the validation details of the
+                  resource object
+                type: object
+              validationStatus:
+                description: ValidationStatus defines the validation status of the
+                  resource object
+                enum:
+                - Success
+                - Failed
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlsystemntps.srlinux.henderiw.be
+spec:
+  group: srlinux.henderiw.be
+  names:
+    kind: SrlSystemNtp
+    listKind: SrlSystemNtpList
+    plural: srlsystemntps
+    singular: srlsystemntp
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SrlSystemNtp is the Schema for the SrlSystemNtps API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SrlSystemNtpSpec struct
             properties:
               ntp:
                 description: SystemNtp struct
@@ -11217,7 +11738,7 @@ spec:
             - ntp
             type: object
           status:
-            description: SrlnokiaSystemNtpStatus struct
+            description: SrlSystemNtpStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -11341,20 +11862,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiatunnelinterfaces.srlinux.henderiw.be
+  name: srltunnelinterfaces.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaTunnelinterface
-    listKind: SrlnokiaTunnelinterfaceList
-    plural: srlnokiatunnelinterfaces
-    singular: srlnokiatunnelinterface
+    kind: SrlTunnelinterface
+    listKind: SrlTunnelinterfaceList
+    plural: srltunnelinterfaces
+    singular: srltunnelinterface
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaTunnelinterface is the Schema for the SrlnokiaTunnelinterfaces
+        description: SrlTunnelinterface is the Schema for the SrlTunnelinterfaces
           API
         properties:
           apiVersion:
@@ -11370,7 +11891,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaTunnelinterfaceSpec struct
+            description: SrlTunnelinterfaceSpec struct
             properties:
               tunnel-interface:
                 items:
@@ -11389,7 +11910,7 @@ spec:
             - tunnel-interface
             type: object
           status:
-            description: SrlnokiaTunnelinterfaceStatus struct
+            description: SrlTunnelinterfaceStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -11498,20 +12019,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: srlnokiatunnelinterfacevxlaninterfaces.srlinux.henderiw.be
+  name: srltunnelinterfacevxlaninterfaces.srlinux.henderiw.be
 spec:
   group: srlinux.henderiw.be
   names:
-    kind: SrlnokiaTunnelinterfaceVxlaninterface
-    listKind: SrlnokiaTunnelinterfaceVxlaninterfaceList
-    plural: srlnokiatunnelinterfacevxlaninterfaces
-    singular: srlnokiatunnelinterfacevxlaninterface
+    kind: SrlTunnelinterfaceVxlaninterface
+    listKind: SrlTunnelinterfaceVxlaninterfaceList
+    plural: srltunnelinterfacevxlaninterfaces
+    singular: srltunnelinterfacevxlaninterface
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SrlnokiaTunnelinterfaceVxlaninterface is the Schema for the SrlnokiaTunnelinterfaceVxlaninterfaces
+        description: SrlTunnelinterfaceVxlaninterface is the Schema for the SrlTunnelinterfaceVxlaninterfaces
           API
         properties:
           apiVersion:
@@ -11527,7 +12048,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SrlnokiaTunnelinterfaceVxlaninterfaceSpec struct
+            description: SrlTunnelinterfaceVxlaninterfaceSpec struct
             properties:
               tunnel-interface-name:
                 type: string
@@ -11641,7 +12162,7 @@ spec:
             - vxlan-interface
             type: object
           status:
-            description: SrlnokiaTunnelinterfaceVxlaninterfaceStatus struct
+            description: SrlTunnelinterfaceVxlaninterfaceStatus struct
             properties:
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
@@ -11884,7 +12405,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiabfds
+  - srlbfds
   verbs:
   - create
   - delete
@@ -11896,13 +12417,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiabfds/finalizers
+  - srlbfds/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiabfds/status
+  - srlbfds/status
   verbs:
   - get
   - patch
@@ -11910,7 +12431,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfaces
+  - srlinterfaces
   verbs:
   - create
   - delete
@@ -11922,13 +12443,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfaces/finalizers
+  - srlinterfaces/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfaces/status
+  - srlinterfaces/status
   verbs:
   - get
   - patch
@@ -11936,7 +12457,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfacesubinterfaces
+  - srlinterfacesubinterfaces
   verbs:
   - create
   - delete
@@ -11948,13 +12469,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfacesubinterfaces/finalizers
+  - srlinterfacesubinterfaces/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfacesubinterfaces/status
+  - srlinterfacesubinterfaces/status
   verbs:
   - get
   - patch
@@ -11962,7 +12483,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceaggregateroutes
+  - srlnetworkinstanceaggregateroutes
   verbs:
   - create
   - delete
@@ -11974,13 +12495,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceaggregateroutes/finalizers
+  - srlnetworkinstanceaggregateroutes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceaggregateroutes/status
+  - srlnetworkinstanceaggregateroutes/status
   verbs:
   - get
   - patch
@@ -11988,7 +12509,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancenexthopgroups
+  - srlnetworkinstancenexthopgroups
   verbs:
   - create
   - delete
@@ -12000,13 +12521,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancenexthopgroups/finalizers
+  - srlnetworkinstancenexthopgroups/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancenexthopgroups/status
+  - srlnetworkinstancenexthopgroups/status
   verbs:
   - get
   - patch
@@ -12014,7 +12535,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpevpns
+  - srlnetworkinstanceprotocolsbgpevpns
   verbs:
   - create
   - delete
@@ -12026,13 +12547,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpevpns/finalizers
+  - srlnetworkinstanceprotocolsbgpevpns/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpevpns/status
+  - srlnetworkinstanceprotocolsbgpevpns/status
   verbs:
   - get
   - patch
@@ -12040,7 +12561,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgps
+  - srlnetworkinstanceprotocolsbgps
   verbs:
   - create
   - delete
@@ -12052,13 +12573,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgps/finalizers
+  - srlnetworkinstanceprotocolsbgps/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgps/status
+  - srlnetworkinstanceprotocolsbgps/status
   verbs:
   - get
   - patch
@@ -12066,7 +12587,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpvpns
+  - srlnetworkinstanceprotocolsbgpvpns
   verbs:
   - create
   - delete
@@ -12078,13 +12599,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpvpns/finalizers
+  - srlnetworkinstanceprotocolsbgpvpns/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpvpns/status
+  - srlnetworkinstanceprotocolsbgpvpns/status
   verbs:
   - get
   - patch
@@ -12092,7 +12613,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsises
+  - srlnetworkinstanceprotocolsises
   verbs:
   - create
   - delete
@@ -12104,13 +12625,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsises/finalizers
+  - srlnetworkinstanceprotocolsises/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsises/status
+  - srlnetworkinstanceprotocolsises/status
   verbs:
   - get
   - patch
@@ -12118,7 +12639,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolslinuxes
+  - srlnetworkinstanceprotocolslinuxes
   verbs:
   - create
   - delete
@@ -12130,13 +12651,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolslinuxes/finalizers
+  - srlnetworkinstanceprotocolslinuxes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolslinuxes/status
+  - srlnetworkinstanceprotocolslinuxes/status
   verbs:
   - get
   - patch
@@ -12144,7 +12665,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsospfs
+  - srlnetworkinstanceprotocolsospfs
   verbs:
   - create
   - delete
@@ -12156,13 +12677,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsospfs/finalizers
+  - srlnetworkinstanceprotocolsospfs/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsospfs/status
+  - srlnetworkinstanceprotocolsospfs/status
   verbs:
   - get
   - patch
@@ -12170,7 +12691,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstances
+  - srlnetworkinstances
   verbs:
   - create
   - delete
@@ -12182,13 +12703,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstances/finalizers
+  - srlnetworkinstances/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstances/status
+  - srlnetworkinstances/status
   verbs:
   - get
   - patch
@@ -12196,7 +12717,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancestaticroutes
+  - srlnetworkinstancestaticroutes
   verbs:
   - create
   - delete
@@ -12208,13 +12729,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancestaticroutes/finalizers
+  - srlnetworkinstancestaticroutes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancestaticroutes/status
+  - srlnetworkinstancestaticroutes/status
   verbs:
   - get
   - patch
@@ -12222,7 +12743,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyaspathsets
+  - srlroutingpolicyaspathsets
   verbs:
   - create
   - delete
@@ -12234,13 +12755,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyaspathsets/finalizers
+  - srlroutingpolicyaspathsets/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyaspathsets/status
+  - srlroutingpolicyaspathsets/status
   verbs:
   - get
   - patch
@@ -12248,7 +12769,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicycommunitysets
+  - srlroutingpolicycommunitysets
   verbs:
   - create
   - delete
@@ -12260,13 +12781,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicycommunitysets/finalizers
+  - srlroutingpolicycommunitysets/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicycommunitysets/status
+  - srlroutingpolicycommunitysets/status
   verbs:
   - get
   - patch
@@ -12274,7 +12795,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicypolicies
+  - srlroutingpolicypolicies
   verbs:
   - create
   - delete
@@ -12286,13 +12807,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicypolicies/finalizers
+  - srlroutingpolicypolicies/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicypolicies/status
+  - srlroutingpolicypolicies/status
   verbs:
   - get
   - patch
@@ -12300,7 +12821,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyprefixsets
+  - srlroutingpolicyprefixsets
   verbs:
   - create
   - delete
@@ -12312,13 +12833,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyprefixsets/finalizers
+  - srlroutingpolicyprefixsets/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyprefixsets/status
+  - srlroutingpolicyprefixsets/status
   verbs:
   - get
   - patch
@@ -12326,7 +12847,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemmtus
+  - srlsystemmtus
   verbs:
   - create
   - delete
@@ -12338,13 +12859,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemmtus/finalizers
+  - srlsystemmtus/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemmtus/status
+  - srlsystemmtus/status
   verbs:
   - get
   - patch
@@ -12352,7 +12873,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnames
+  - srlsystemnames
   verbs:
   - create
   - delete
@@ -12364,13 +12885,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnames/finalizers
+  - srlsystemnames/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnames/status
+  - srlsystemnames/status
   verbs:
   - get
   - patch
@@ -12378,7 +12899,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnetworkinstanceprotocolsbgpvpns
+  - srlsystemnetworkinstanceprotocolsbgpvpns
   verbs:
   - create
   - delete
@@ -12390,13 +12911,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnetworkinstanceprotocolsbgpvpns/finalizers
+  - srlsystemnetworkinstanceprotocolsbgpvpns/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnetworkinstanceprotocolsbgpvpns/status
+  - srlsystemnetworkinstanceprotocolsbgpvpns/status
   verbs:
   - get
   - patch
@@ -12404,7 +12925,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemntps
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis
   verbs:
   - create
   - delete
@@ -12416,13 +12937,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemntps/finalizers
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemntps/status
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis/status
   verbs:
   - get
   - patch
@@ -12430,7 +12951,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfaces
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstances
   verbs:
   - create
   - delete
@@ -12442,13 +12963,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfaces/finalizers
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstances/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfaces/status
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstances/status
   verbs:
   - get
   - patch
@@ -12456,7 +12977,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfacevxlaninterfaces
+  - srlsystemntps
   verbs:
   - create
   - delete
@@ -12468,13 +12989,65 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfacevxlaninterfaces/finalizers
+  - srlsystemntps/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfacevxlaninterfaces/status
+  - srlsystemntps/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfaces/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfaces/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfacevxlaninterfaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfacevxlaninterfaces/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfacevxlaninterfaces/status
   verbs:
   - get
   - patch

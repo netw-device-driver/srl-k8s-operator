@@ -17,7 +17,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiabfds
+  - srlbfds
   verbs:
   - create
   - delete
@@ -29,13 +29,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiabfds/finalizers
+  - srlbfds/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiabfds/status
+  - srlbfds/status
   verbs:
   - get
   - patch
@@ -43,7 +43,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfaces
+  - srlinterfaces
   verbs:
   - create
   - delete
@@ -55,13 +55,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfaces/finalizers
+  - srlinterfaces/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfaces/status
+  - srlinterfaces/status
   verbs:
   - get
   - patch
@@ -69,7 +69,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfacesubinterfaces
+  - srlinterfacesubinterfaces
   verbs:
   - create
   - delete
@@ -81,13 +81,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfacesubinterfaces/finalizers
+  - srlinterfacesubinterfaces/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiainterfacesubinterfaces/status
+  - srlinterfacesubinterfaces/status
   verbs:
   - get
   - patch
@@ -95,7 +95,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceaggregateroutes
+  - srlnetworkinstanceaggregateroutes
   verbs:
   - create
   - delete
@@ -107,13 +107,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceaggregateroutes/finalizers
+  - srlnetworkinstanceaggregateroutes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceaggregateroutes/status
+  - srlnetworkinstanceaggregateroutes/status
   verbs:
   - get
   - patch
@@ -121,7 +121,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancenexthopgroups
+  - srlnetworkinstancenexthopgroups
   verbs:
   - create
   - delete
@@ -133,13 +133,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancenexthopgroups/finalizers
+  - srlnetworkinstancenexthopgroups/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancenexthopgroups/status
+  - srlnetworkinstancenexthopgroups/status
   verbs:
   - get
   - patch
@@ -147,7 +147,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpevpns
+  - srlnetworkinstanceprotocolsbgpevpns
   verbs:
   - create
   - delete
@@ -159,13 +159,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpevpns/finalizers
+  - srlnetworkinstanceprotocolsbgpevpns/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpevpns/status
+  - srlnetworkinstanceprotocolsbgpevpns/status
   verbs:
   - get
   - patch
@@ -173,7 +173,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgps
+  - srlnetworkinstanceprotocolsbgps
   verbs:
   - create
   - delete
@@ -185,13 +185,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgps/finalizers
+  - srlnetworkinstanceprotocolsbgps/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgps/status
+  - srlnetworkinstanceprotocolsbgps/status
   verbs:
   - get
   - patch
@@ -199,7 +199,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpvpns
+  - srlnetworkinstanceprotocolsbgpvpns
   verbs:
   - create
   - delete
@@ -211,13 +211,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpvpns/finalizers
+  - srlnetworkinstanceprotocolsbgpvpns/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsbgpvpns/status
+  - srlnetworkinstanceprotocolsbgpvpns/status
   verbs:
   - get
   - patch
@@ -225,7 +225,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsises
+  - srlnetworkinstanceprotocolsises
   verbs:
   - create
   - delete
@@ -237,13 +237,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsises/finalizers
+  - srlnetworkinstanceprotocolsises/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsises/status
+  - srlnetworkinstanceprotocolsises/status
   verbs:
   - get
   - patch
@@ -251,7 +251,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolslinuxes
+  - srlnetworkinstanceprotocolslinuxes
   verbs:
   - create
   - delete
@@ -263,13 +263,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolslinuxes/finalizers
+  - srlnetworkinstanceprotocolslinuxes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolslinuxes/status
+  - srlnetworkinstanceprotocolslinuxes/status
   verbs:
   - get
   - patch
@@ -277,7 +277,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsospfs
+  - srlnetworkinstanceprotocolsospfs
   verbs:
   - create
   - delete
@@ -289,13 +289,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsospfs/finalizers
+  - srlnetworkinstanceprotocolsospfs/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstanceprotocolsospfs/status
+  - srlnetworkinstanceprotocolsospfs/status
   verbs:
   - get
   - patch
@@ -303,7 +303,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstances
+  - srlnetworkinstances
   verbs:
   - create
   - delete
@@ -315,13 +315,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstances/finalizers
+  - srlnetworkinstances/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstances/status
+  - srlnetworkinstances/status
   verbs:
   - get
   - patch
@@ -329,7 +329,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancestaticroutes
+  - srlnetworkinstancestaticroutes
   verbs:
   - create
   - delete
@@ -341,13 +341,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancestaticroutes/finalizers
+  - srlnetworkinstancestaticroutes/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokianetworkinstancestaticroutes/status
+  - srlnetworkinstancestaticroutes/status
   verbs:
   - get
   - patch
@@ -355,7 +355,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyaspathsets
+  - srlroutingpolicyaspathsets
   verbs:
   - create
   - delete
@@ -367,13 +367,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyaspathsets/finalizers
+  - srlroutingpolicyaspathsets/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyaspathsets/status
+  - srlroutingpolicyaspathsets/status
   verbs:
   - get
   - patch
@@ -381,7 +381,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicycommunitysets
+  - srlroutingpolicycommunitysets
   verbs:
   - create
   - delete
@@ -393,13 +393,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicycommunitysets/finalizers
+  - srlroutingpolicycommunitysets/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicycommunitysets/status
+  - srlroutingpolicycommunitysets/status
   verbs:
   - get
   - patch
@@ -407,7 +407,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicypolicies
+  - srlroutingpolicypolicies
   verbs:
   - create
   - delete
@@ -419,13 +419,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicypolicies/finalizers
+  - srlroutingpolicypolicies/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicypolicies/status
+  - srlroutingpolicypolicies/status
   verbs:
   - get
   - patch
@@ -433,7 +433,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyprefixsets
+  - srlroutingpolicyprefixsets
   verbs:
   - create
   - delete
@@ -445,13 +445,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyprefixsets/finalizers
+  - srlroutingpolicyprefixsets/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiaroutingpolicyprefixsets/status
+  - srlroutingpolicyprefixsets/status
   verbs:
   - get
   - patch
@@ -459,7 +459,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemmtus
+  - srlsystemmtus
   verbs:
   - create
   - delete
@@ -471,13 +471,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemmtus/finalizers
+  - srlsystemmtus/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemmtus/status
+  - srlsystemmtus/status
   verbs:
   - get
   - patch
@@ -485,7 +485,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnames
+  - srlsystemnames
   verbs:
   - create
   - delete
@@ -497,13 +497,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnames/finalizers
+  - srlsystemnames/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnames/status
+  - srlsystemnames/status
   verbs:
   - get
   - patch
@@ -511,7 +511,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnetworkinstanceprotocolsbgpvpns
+  - srlsystemnetworkinstanceprotocolsbgpvpns
   verbs:
   - create
   - delete
@@ -523,13 +523,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnetworkinstanceprotocolsbgpvpns/finalizers
+  - srlsystemnetworkinstanceprotocolsbgpvpns/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemnetworkinstanceprotocolsbgpvpns/status
+  - srlsystemnetworkinstanceprotocolsbgpvpns/status
   verbs:
   - get
   - patch
@@ -537,7 +537,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemntps
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis
   verbs:
   - create
   - delete
@@ -549,13 +549,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemntps/finalizers
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiasystemntps/status
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis/status
   verbs:
   - get
   - patch
@@ -563,7 +563,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfaces
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstances
   verbs:
   - create
   - delete
@@ -575,13 +575,13 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfaces/finalizers
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstances/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfaces/status
+  - srlsystemnetworkinstanceprotocolsevpnesisbgpinstances/status
   verbs:
   - get
   - patch
@@ -589,7 +589,7 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfacevxlaninterfaces
+  - srlsystemntps
   verbs:
   - create
   - delete
@@ -601,13 +601,65 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfacevxlaninterfaces/finalizers
+  - srlsystemntps/finalizers
   verbs:
   - update
 - apiGroups:
   - srlinux.henderiw.be
   resources:
-  - srlnokiatunnelinterfacevxlaninterfaces/status
+  - srlsystemntps/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfaces/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfaces/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfacevxlaninterfaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfacevxlaninterfaces/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srltunnelinterfacevxlaninterfaces/status
   verbs:
   - get
   - patch
