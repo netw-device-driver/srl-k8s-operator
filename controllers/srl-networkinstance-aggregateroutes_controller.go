@@ -517,6 +517,7 @@ func (r *SrlNetworkinstanceAggregateroutesReconciler) Reconcile(ctx context.Cont
 
 	dependencies := make([]string, 0)
 	dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
+	//dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
 	deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/aggregate-routes", hkey0))

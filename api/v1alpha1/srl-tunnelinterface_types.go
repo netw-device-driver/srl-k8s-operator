@@ -25,7 +25,7 @@ const (
 	// SrlTunnelinterfaceFinalizer is the name of the finalizer added to
 	// SrlTunnelinterface to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlTunnelinterfaceFinalizer string = "Tunnelinterface.srlinux.henderiw.be"
+	SrlTunnelinterfaceFinalizer string = "TunnelInterface.srlinux.henderiw.be"
 )
 
 // Tunnelinterface struct

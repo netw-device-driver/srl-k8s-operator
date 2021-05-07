@@ -25,7 +25,7 @@ const (
 	// SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceFinalizer is the name of the finalizer added to
 	// SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceFinalizer string = "SystemNetworkinstanceProtocolsEvpnEsisBgpinstance.srlinux.henderiw.be"
+	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceFinalizer string = "BgpInstance.srlinux.henderiw.be"
 )
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstance struct

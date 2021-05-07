@@ -25,7 +25,7 @@ const (
 	// SrlSystemNetworkinstanceProtocolsBgpvpnFinalizer is the name of the finalizer added to
 	// SrlSystemNetworkinstanceProtocolsBgpvpn to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlSystemNetworkinstanceProtocolsBgpvpnFinalizer string = "SystemNetworkinstanceProtocolsBgpvpn.srlinux.henderiw.be"
+	SrlSystemNetworkinstanceProtocolsBgpvpnFinalizer string = "BgpVpn.srlinux.henderiw.be"
 )
 
 // SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher struct

@@ -589,6 +589,32 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
+  - srlsystemnetworkinstanceprotocolsevpns
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srlsystemnetworkinstanceprotocolsevpns/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - srlsystemnetworkinstanceprotocolsevpns/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
   - srlsystemntps
   verbs:
   - create

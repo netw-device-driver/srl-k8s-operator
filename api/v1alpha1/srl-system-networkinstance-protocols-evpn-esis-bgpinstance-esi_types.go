@@ -25,7 +25,7 @@ const (
 	// SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiFinalizer is the name of the finalizer added to
 	// SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiFinalizer string = "SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi.srlinux.henderiw.be"
+	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiFinalizer string = "EthernetSegment.srlinux.henderiw.be"
 )
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlgCapabilities struct
@@ -49,11 +49,11 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPref
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg struct {
-	Capabilities *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=32767
-	PreferenceValue *uint32 `json:"preference-value,omitempty"`
+	PreferenceValue *uint32                                                                                           `json:"preference-value,omitempty"`
+	Capabilities    *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm struct
@@ -74,9 +74,9 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers struct
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct {
-	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
 	InterfaceStandbySignalingOnNonDf *bool                                                                    `json:"interface-standby-signaling-on-non-df,omitempty"`
 	Timers                           *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers    `json:"timers,omitempty"`
+	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct
@@ -88,7 +88,7 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
-	EthernetSegment *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi `json:"ethernet-segment,omitempty"`
+	Esi *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi `json:"ethernet-segment,omitempty"`
 	// +kubebuilder:validation:Enum=`use-system-ipv4-address`
 	// +kubebuilder:default:=use-system-ipv4-address
 	NextHop *string `json:"next-hop,omitempty"`
@@ -96,10 +96,6 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string                                                         `json:"admin-state,omitempty"`
-	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
 	Esi       *string `json:"esi,omitempty"`
@@ -113,6 +109,10 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState *string                                                         `json:"admin-state,omitempty"`
+	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
 }
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct

@@ -293,6 +293,15 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 		setupLog.Error(err, "unable to create controller", "controller", "SrlSystemNetworkinstanceProtocolsBgpvpn")
 		os.Exit(1)
 	}
+	if err := (&controllers.SrlSystemNetworkinstanceProtocolsEvpnReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("Controller").WithName("SrlSystemNetworkinstanceProtocolsEvpn"),
+		Scheme: mgr.GetScheme(),
+		Ctx:    ctx,
+	}).SetupWithManager(ctx, mgr, concurrency(srlConcurrency)); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "SrlSystemNetworkinstanceProtocolsEvpn")
+		os.Exit(1)
+	}
 	if err := (&controllers.SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceReconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("Controller").WithName("SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance"),

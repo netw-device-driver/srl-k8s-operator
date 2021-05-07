@@ -523,20 +523,22 @@ func (r *SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceReconciler) Reconci
 	// initialize the resource parameters
 	level := int32(6)
 	resource := "srlinux.henderiw.be" + "." + "SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance" + "." + strcase.UpperCamelCase(o.Name)
-	hkeys0 := make([]string, 0)
+	hkeys1 := make([]string, 0)
 	for _, n := range *o.Spec.SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance {
-		hkeys0 = append(hkeys0, *n.Id)
+		hkeys1 = append(hkeys1, *n.Id)
 	}
 
 	dependencies := make([]string, 0)
+	dependencies = append(dependencies, fmt.Sprintf("/system/network-instance/protocols/evpn/ethernet-segments"))
+	//dependencies = append(dependencies, fmt.Sprintf("/evpn[=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
-	for _, hkey0 := range hkeys0 {
-		deletepaths = append(deletepaths, fmt.Sprintf("/system/network-instance/protocols/evpn/ethernet-segments/bgp-instance[id=%s]", hkey0))
+	for _, hkey1 := range hkeys1 {
+		deletepaths = append(deletepaths, fmt.Sprintf("/system/network-instance/protocols/evpn/ethernet-segments/bgp-instance[id=%s]", hkey1))
 	}
 
 	// path to be used for this object
-	path := "/system/network-instance/protocols/evpn/ethernet-segments"
+	path := fmt.Sprintf("/system/network-instance/protocols/evpn/ethernet-segments")
 
 	info := make(map[string]*SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceReconcileInfo)
 	result := make(map[string]reconcile.Result)

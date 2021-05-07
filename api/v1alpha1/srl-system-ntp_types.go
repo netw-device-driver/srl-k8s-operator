@@ -25,7 +25,7 @@ const (
 	// SrlSystemNtpFinalizer is the name of the finalizer added to
 	// SrlSystemNtp to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlSystemNtpFinalizer string = "SystemNtp.srlinux.henderiw.be"
+	SrlSystemNtpFinalizer string = "Ntp.srlinux.henderiw.be"
 )
 
 // SystemNtpServer struct

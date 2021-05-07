@@ -25,7 +25,7 @@ const (
 	// SrlNetworkinstanceNexthopgroupsFinalizer is the name of the finalizer added to
 	// SrlNetworkinstanceNexthopgroups to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlNetworkinstanceNexthopgroupsFinalizer string = "NetworkinstanceNexthopgroups.srlinux.henderiw.be"
+	SrlNetworkinstanceNexthopgroupsFinalizer string = "NextHopGroups.srlinux.henderiw.be"
 )
 
 // NetworkinstanceNexthopgroupsGroupBlackhole struct
@@ -54,9 +54,6 @@ type NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct {
 
 // NetworkinstanceNexthopgroupsGroupNexthop struct
 type NetworkinstanceNexthopgroupsGroupNexthop struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState       *string                                                   `json:"admin-state,omitempty"`
@@ -67,20 +64,23 @@ type NetworkinstanceNexthopgroupsGroupNexthop struct {
 	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
 	// +kubebuilder:default:=true
 	Resolve *bool `json:"resolve,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	Index *uint16 `json:"index"`
 }
 
 // NetworkinstanceNexthopgroupsGroup struct
 type NetworkinstanceNexthopgroupsGroup struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string                                     `json:"admin-state,omitempty"`
-	Blackhole  *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
-	Nexthop    []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string                                     `json:"admin-state,omitempty"`
+	Blackhole  *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
+	Nexthop    []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
 }
 
 // NetworkinstanceNexthopgroups struct

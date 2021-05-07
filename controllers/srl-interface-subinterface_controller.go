@@ -636,6 +636,7 @@ func (r *SrlInterfaceSubinterfaceReconciler) Reconcile(ctx context.Context, req 
 
 	dependencies := make([]string, 0)
 	dependencies = append(dependencies, fmt.Sprintf("/interface[name=%s]", hkey0))
+	//dependencies = append(dependencies, fmt.Sprintf("/interface[name=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
 	for _, hkey1 := range hkeys1 {

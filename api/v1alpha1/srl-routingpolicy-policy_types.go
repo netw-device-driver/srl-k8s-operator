@@ -25,7 +25,7 @@ const (
 	// SrlRoutingpolicyPolicyFinalizer is the name of the finalizer added to
 	// SrlRoutingpolicyPolicy to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlRoutingpolicyPolicyFinalizer string = "RoutingpolicyPolicy.srlinux.henderiw.be"
+	SrlRoutingpolicyPolicyFinalizer string = "Policy.srlinux.henderiw.be"
 )
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend struct
@@ -110,18 +110,18 @@ type RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct
 type RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	Replace *uint32                                                   `json:"replace,omitempty"`
 	Prepend *RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
 	Remove  *bool                                                     `json:"remove,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	Replace *uint32 `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpCommunities struct
 type RoutingpolicyPolicyStatementActionAcceptBgpCommunities struct {
-	Replace *string `json:"replace,omitempty"`
 	Add     *string `json:"add,omitempty"`
 	Remove  *string `json:"remove,omitempty"`
+	Replace *string `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpLocalPreference struct
@@ -229,22 +229,22 @@ type RoutingpolicyPolicyStatementMatch struct {
 
 // RoutingpolicyPolicyStatement struct
 type RoutingpolicyPolicyStatement struct {
-	Action *RoutingpolicyPolicyStatementAction `json:"action,omitempty"`
-	Match  *RoutingpolicyPolicyStatementMatch  `json:"match,omitempty"`
+	Match *RoutingpolicyPolicyStatementMatch `json:"match,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
-	SequenceId *uint32 `json:"sequence-id"`
+	SequenceId *uint32                             `json:"sequence-id"`
+	Action     *RoutingpolicyPolicyStatementAction `json:"action,omitempty"`
 }
 
 // RoutingpolicyPolicy struct
 type RoutingpolicyPolicy struct {
+	Statement []*RoutingpolicyPolicyStatement `json:"statement,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Name          *string                           `json:"name"`
 	DefaultAction *RoutingpolicyPolicyDefaultAction `json:"default-action,omitempty"`
-	Statement     []*RoutingpolicyPolicyStatement   `json:"statement,omitempty"`
 }
 
 // SrlRoutingpolicyPolicySpec struct

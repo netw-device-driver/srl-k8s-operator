@@ -25,7 +25,7 @@ const (
 	// SrlRoutingpolicyPrefixsetFinalizer is the name of the finalizer added to
 	// SrlRoutingpolicyPrefixset to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlRoutingpolicyPrefixsetFinalizer string = "RoutingpolicyPrefixset.srlinux.henderiw.be"
+	SrlRoutingpolicyPrefixsetFinalizer string = "PrefixSet.srlinux.henderiw.be"
 )
 
 // RoutingpolicyPrefixsetPrefix struct
@@ -41,12 +41,12 @@ type RoutingpolicyPrefixsetPrefix struct {
 
 // RoutingpolicyPrefixset struct
 type RoutingpolicyPrefixset struct {
-	Prefix []*RoutingpolicyPrefixsetPrefix `json:"prefix,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
+	Name   *string                         `json:"name"`
+	Prefix []*RoutingpolicyPrefixsetPrefix `json:"prefix,omitempty"`
 }
 
 // SrlRoutingpolicyPrefixsetSpec struct

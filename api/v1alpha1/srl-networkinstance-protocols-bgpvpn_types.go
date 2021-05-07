@@ -25,7 +25,7 @@ const (
 	// SrlNetworkinstanceProtocolsBgpvpnFinalizer is the name of the finalizer added to
 	// SrlNetworkinstanceProtocolsBgpvpn to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlNetworkinstanceProtocolsBgpvpnFinalizer string = "NetworkinstanceProtocolsBgpvpn.srlinux.henderiw.be"
+	SrlNetworkinstanceProtocolsBgpvpnFinalizer string = "BgpVpn.srlinux.henderiw.be"
 )
 
 // NetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher struct
@@ -47,13 +47,13 @@ type NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 
 // NetworkinstanceProtocolsBgpvpnBgpInstance struct
 type NetworkinstanceProtocolsBgpvpnBgpInstance struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=2
-	Id                 *uint8                                                       `json:"id"`
-	ExportPolicy       *string                                                      `json:"export-policy,omitempty"`
-	ImportPolicy       *string                                                      `json:"import-policy,omitempty"`
 	RouteDistinguisher *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
 	RouteTarget        *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=2
+	Id           *uint8  `json:"id"`
+	ExportPolicy *string `json:"export-policy,omitempty"`
+	ImportPolicy *string `json:"import-policy,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpvpn struct

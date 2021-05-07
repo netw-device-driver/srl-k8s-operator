@@ -23,6 +23,7 @@ resources:
 - bases/srlinux.henderiw.be_srlsystemmtus.yaml
 - bases/srlinux.henderiw.be_srlsystemnames.yaml
 - bases/srlinux.henderiw.be_srlsystemnetworkinstanceprotocolsbgpvpns.yaml
+- bases/srlinux.henderiw.be_srlsystemnetworkinstanceprotocolsevpns.yaml
 - bases/srlinux.henderiw.be_srlsystemnetworkinstanceprotocolsevpnesisbgpinstances.yaml
 - bases/srlinux.henderiw.be_srlsystemnetworkinstanceprotocolsevpnesisbgpinstanceesis.yaml
 - bases/srlinux.henderiw.be_srlsystemntps.yaml

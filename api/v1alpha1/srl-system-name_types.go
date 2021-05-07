@@ -25,7 +25,7 @@ const (
 	// SrlSystemNameFinalizer is the name of the finalizer added to
 	// SrlSystemName to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlSystemNameFinalizer string = "SystemName.srlinux.henderiw.be"
+	SrlSystemNameFinalizer string = "Name.srlinux.henderiw.be"
 )
 
 // SystemName struct

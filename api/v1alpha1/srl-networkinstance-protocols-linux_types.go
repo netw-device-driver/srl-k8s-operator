@@ -25,7 +25,7 @@ const (
 	// SrlNetworkinstanceProtocolsLinuxFinalizer is the name of the finalizer added to
 	// SrlNetworkinstanceProtocolsLinux to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlNetworkinstanceProtocolsLinuxFinalizer string = "NetworkinstanceProtocolsLinux.srlinux.henderiw.be"
+	SrlNetworkinstanceProtocolsLinuxFinalizer string = "Linux.srlinux.henderiw.be"
 )
 
 // NetworkinstanceProtocolsLinux struct

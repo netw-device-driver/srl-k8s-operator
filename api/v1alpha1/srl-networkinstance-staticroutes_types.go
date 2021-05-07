@@ -25,7 +25,7 @@ const (
 	// SrlNetworkinstanceStaticroutesFinalizer is the name of the finalizer added to
 	// SrlNetworkinstanceStaticroutes to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlNetworkinstanceStaticroutesFinalizer string = "NetworkinstanceStaticroutes.srlinux.henderiw.be"
+	SrlNetworkinstanceStaticroutesFinalizer string = "StaticRoutes.srlinux.henderiw.be"
 )
 
 // NetworkinstanceStaticroutesRoute struct

@@ -25,7 +25,7 @@ const (
 	// SrlRoutingpolicyAspathsetFinalizer is the name of the finalizer added to
 	// SrlRoutingpolicyAspathset to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlRoutingpolicyAspathsetFinalizer string = "RoutingpolicyAspathset.srlinux.henderiw.be"
+	SrlRoutingpolicyAspathsetFinalizer string = "AsPathSet.srlinux.henderiw.be"
 )
 
 // RoutingpolicyAspathset struct

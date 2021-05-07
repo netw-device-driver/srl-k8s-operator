@@ -559,7 +559,8 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) Reconcile(ctx context.Contex
 	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 
 	dependencies := make([]string, 0)
-	dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
+	dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]/protocols", hkey0))
+	//dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
 	deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/isis", hkey0))

@@ -25,19 +25,19 @@ const (
 	// SrlRoutingpolicyCommunitysetFinalizer is the name of the finalizer added to
 	// SrlRoutingpolicyCommunityset to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlRoutingpolicyCommunitysetFinalizer string = "RoutingpolicyCommunityset.srlinux.henderiw.be"
+	SrlRoutingpolicyCommunitysetFinalizer string = "CommunitySet.srlinux.henderiw.be"
 )
 
 // RoutingpolicyCommunityset struct
 type RoutingpolicyCommunityset struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])|.*:.*|([1-9][0-9]{0,9}):([1-9][0-9]{0,9}):([1-9][0-9]{0,9})|.*:.*:.*`
-	Member *string `json:"member,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9]):(6553[0-5]|655[0-2][0-9]|654[0-9]{2}|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{1,3}|[0-9])|.*:.*|([1-9][0-9]{0,9}):([1-9][0-9]{0,9}):([1-9][0-9]{0,9})|.*:.*:.*`
+	Member *string `json:"member,omitempty"`
 }
 
 // SrlRoutingpolicyCommunitysetSpec struct

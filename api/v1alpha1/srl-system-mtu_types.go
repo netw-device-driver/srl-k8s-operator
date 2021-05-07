@@ -25,19 +25,11 @@ const (
 	// SrlSystemMtuFinalizer is the name of the finalizer added to
 	// SrlSystemMtu to block delete operations until the physical node can be
 	// deprovisioned.
-	SrlSystemMtuFinalizer string = "SystemMtu.srlinux.henderiw.be"
+	SrlSystemMtuFinalizer string = "Mtu.srlinux.henderiw.be"
 )
 
 // SystemMtu struct
 type SystemMtu struct {
-	// +kubebuilder:validation:Minimum=1500
-	// +kubebuilder:validation:Maximum=9500
-	// +kubebuilder:default:=9232
-	DefaultPortMtu *uint16 `json:"default-port-mtu,omitempty"`
-	// +kubebuilder:validation:Minimum=552
-	// +kubebuilder:validation:Maximum=9232
-	// +kubebuilder:default:=552
-	MinPathMtu *uint16 `json:"min-path-mtu,omitempty"`
 	// +kubebuilder:validation:Minimum=1280
 	// +kubebuilder:validation:Maximum=9486
 	// +kubebuilder:default:=1500
@@ -46,6 +38,14 @@ type SystemMtu struct {
 	// +kubebuilder:validation:Maximum=9500
 	// +kubebuilder:default:=9232
 	DefaultL2Mtu *uint16 `json:"default-l2-mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=1500
+	// +kubebuilder:validation:Maximum=9500
+	// +kubebuilder:default:=9232
+	DefaultPortMtu *uint16 `json:"default-port-mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=552
+	// +kubebuilder:validation:Maximum=9232
+	// +kubebuilder:default:=552
+	MinPathMtu *uint16 `json:"min-path-mtu,omitempty"`
 }
 
 // SrlSystemMtuSpec struct
