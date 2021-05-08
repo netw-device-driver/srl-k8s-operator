@@ -39,6 +39,28 @@ spec:
             properties:
               evpn:
                 description: SystemNetworkinstanceProtocolsEvpn struct
+                properties:
+                  ethernet-segments:
+                    description: SystemNetworkinstanceProtocolsEvpnEsis struct
+                    properties:
+                      timers:
+                        description: SystemNetworkinstanceProtocolsEvpnEsisTimers
+                          struct
+                        properties:
+                          activation-timer:
+                            default: 3
+                            format: int32
+                            maximum: 100
+                            minimum: 0
+                            type: integer
+                          boot-timer:
+                            default: 10
+                            format: int32
+                            maximum: 6000
+                            minimum: 0
+                            type: integer
+                        type: object
+                    type: object
                 type: object
             required:
             - evpn
@@ -88,6 +110,28 @@ spec:
                 properties:
                   evpn:
                     description: SystemNetworkinstanceProtocolsEvpn struct
+                    properties:
+                      ethernet-segments:
+                        description: SystemNetworkinstanceProtocolsEvpnEsis struct
+                        properties:
+                          timers:
+                            description: SystemNetworkinstanceProtocolsEvpnEsisTimers
+                              struct
+                            properties:
+                              activation-timer:
+                                default: 3
+                                format: int32
+                                maximum: 100
+                                minimum: 0
+                                type: integer
+                              boot-timer:
+                                default: 10
+                                format: int32
+                                maximum: 6000
+                                minimum: 0
+                                type: integer
+                            type: object
+                        type: object
                     type: object
                 required:
                 - evpn

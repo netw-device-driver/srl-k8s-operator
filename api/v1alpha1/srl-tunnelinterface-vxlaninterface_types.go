@@ -82,10 +82,10 @@ type TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader struct {
 
 // TunnelinterfaceVxlaninterfaceEgress struct
 type TunnelinterfaceVxlaninterfaceEgress struct {
-	// +kubebuilder:default:=use-system-ipv4-address
-	SourceIp            *string                                                 `json:"source-ip,omitempty"`
 	DestinationGroups   *TunnelinterfaceVxlaninterfaceEgressDestinationGroups   `json:"destination-groups,omitempty"`
 	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
+	// +kubebuilder:default:=use-system-ipv4-address
+	SourceIp *string `json:"source-ip,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceIngress struct
