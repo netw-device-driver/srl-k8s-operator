@@ -70,10 +70,6 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	Id *string `json:"id"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
 	// +kubebuilder:default:=0
@@ -90,6 +86,10 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	Evi            *uint32                                           `json:"evi"`
 	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
+	Id             *string                                           `json:"id"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct

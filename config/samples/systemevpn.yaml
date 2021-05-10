@@ -1,0 +1,9 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: SrlSystemNetworkinstanceProtocolsEvpn
+metadata:
+  name: sysevpn
+  labels:
+    target: leaf-grp1
+spec:
+  evpn:
+    ethernet-segments:

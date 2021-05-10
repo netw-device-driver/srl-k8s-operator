@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/go-logr/logr v0.3.0
-	github.com/google/go-cmp v0.5.3 // indirect
+	github.com/google/go-cmp v0.5.3
 	github.com/metal3-io/baremetal-operator v0.0.0-20210310165305-c74264a6ddcb
 	github.com/netw-device-driver/netw-device-controller v0.1.4
 	github.com/netw-device-driver/netwdevpb v0.1.15

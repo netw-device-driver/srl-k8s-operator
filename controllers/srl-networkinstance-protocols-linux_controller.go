@@ -24,6 +24,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/metal3-io/baremetal-operator/pkg/utils"
 	"github.com/stoewer/go-strcase"
 
@@ -455,21 +456,6 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) Reconcile(ctx context.Conte
 		}
 	}
 
-	// find object delta if resource is not in deleting state
-	if o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsLinuxhasFinalizer(o) {
-		LastUsedSpec := o.Status.UsedSpec
-		if LastUsedSpec != nil {
-			r.Log.WithValues("LastUsedSpec", LastUsedSpec).Info("Last used Spec Info")
-		}
-		delta, err := r.FindSpecDelta(ctx, o)
-		if err != nil {
-			return ctrl.Result{}, errors.Wrap(err,
-				fmt.Sprintf("failed to find spec delta"))
-		}
-		r.Log.WithValues("Spec Detla", *delta).Info("Find Spec Delta")
-		o.Status.UsedSpec = &o.Spec
-	}
-
 	t, dirty, err := r.FindTarget(ctx, o)
 	if err != nil {
 		switch err.(type) {
@@ -510,13 +496,26 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) Reconcile(ctx context.Conte
 	}
 	r.Log.WithValues("Targets", t).Info("Target Info")
 
+	// find object spec difference if resource is not in deleting state
+	var diff bool
+	var dp *[]string
+	if o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsLinuxhasFinalizer(o) {
+		diff, dp, err = r.FindSpecDiff(ctx, o)
+		if err != nil {
+			return ctrl.Result{}, errors.Wrap(err,
+				fmt.Sprintf("failed to find spec delta"))
+		}
+		r.Log.WithValues("Spec is different, update resource", diff, "Spec Delete Paths", *dp).Info("Spec Diff")
+		// the diff handling is handled in the state machine later
+	}
+
 	// initialize the resource parameters
 	level := int32(3)
 	resource := "srlinux.henderiw.be" + "." + "SrlNetworkinstanceProtocolsLinux" + "." + strcase.UpperCamelCase(o.Name)
 	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 
 	dependencies := make([]string, 0)
-	dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]/protocols", hkey0))
+	dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
 	//dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
@@ -530,9 +529,11 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) Reconcile(ctx context.Conte
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
 		initialState := new(srlinuxv1alpha1.ConfigStatus)
+		// the object was not processed on the target if len is 0
 		if len(o.Status.Target) == 0 {
 			o.Status.Target = make(map[string]*srlinuxv1alpha1.TargetStatus)
 		}
+		// initialize the target status if the status was not yet initialized
 		if s, ok := o.Status.Target[target.TargetName]; !ok {
 			o.Status.Target[target.TargetName] = &srlinuxv1alpha1.TargetStatus{
 				ConfigStatus: srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone),
@@ -540,7 +541,16 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) Reconcile(ctx context.Conte
 			}
 			initialState = o.Status.Target[target.TargetName].ConfigStatus
 		} else {
-			initialState = s.ConfigStatus
+			if diff {
+				// if the resource was initalized and the object spec changed we should reinitialize the status on the device driver
+				o.Status.Target[target.TargetName] = &srlinuxv1alpha1.TargetStatus{
+					ConfigStatus: srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone),
+					ErrorCount:   intPtr(0),
+				}
+				initialState = o.Status.Target[target.TargetName].ConfigStatus
+			} else {
+				initialState = s.ConfigStatus
+			}
 		}
 
 		r.Log.Info("configuration status in reconcile",
@@ -564,8 +574,7 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) Reconcile(ctx context.Conte
 				err = errors.Wrap(err, fmt.Sprintf("grpc update %q failed", *initialState))
 				return ctrl.Result{}, err
 			}
-			// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEDIATELY, NOT SURE WHY
-			//time.Sleep(15 * time.Second)
+			o.Status.UsedSpec = &o.Spec
 		}
 
 		// activate the state machine
@@ -658,11 +667,26 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) saveSrlNetworkinstanceProto
 	return nil
 }
 
-// FindTarget finds the SRL target for Object
-func (r *SrlNetworkinstanceProtocolsLinuxReconciler) FindSpecDelta(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsLinux) (*[]string, error) {
+// FindSpecDiff tries to understand the difference from the latest spec to the newest spec
+func (r *SrlNetworkinstanceProtocolsLinuxReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsLinux) (bool, *[]string, error) {
 	r.Log.Info("Find Spec Delta ...")
 
 	deletepaths := make([]string, 0)
+
+	if o.Status.UsedSpec != nil {
+		r.Log.Info("Used spec",
+			"used spec", *o.Status.UsedSpec)
+		r.Log.Info("New spec",
+			"nnew spec", o.Spec)
+		if cmp.Equal(o.Spec, *o.Status.UsedSpec) {
+			return false, &deletepaths, nil
+		} else {
+			return true, &deletepaths, nil
+		}
+	} else {
+		// if no used spec was available it is the first time we go through the diff and hence we return diff == false
+		return false, &deletepaths, nil
+	}
 
 	/*
 		if o.Status.UsedSpec != nil {
@@ -671,8 +695,6 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) FindSpecDelta(ctx context.C
 			}
 		}
 	*/
-
-	return &deletepaths, nil
 }
 
 // FindTarget finds the SRL target for Object
@@ -748,7 +770,7 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) FindTarget(ctx context.Cont
 		}
 	}
 
-	// check for deleted items
+	// check for deleted items and remove the target from the status
 	for activeTargetName := range o.Status.Target {
 		activeTargetDeleted := true
 		for _, target := range targets {
@@ -936,6 +958,7 @@ func (o *SrlNetworkinstanceProtocolsLinuxStateMachine) handleNone(info *SrlNetwo
 				"status", o.Object.Status)
 			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
+			o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(""))
 			return actionComplete{}
 		}
 	}
@@ -969,6 +992,7 @@ func (o *SrlNetworkinstanceProtocolsLinuxStateMachine) handleConfiguring(info *S
 		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
 			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
+			o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(""))
 			return actionComplete{}
 		}
 		if cr.Data.Action == netwdevpb.CacheUpdateRequest_Delete {
@@ -976,6 +1000,11 @@ func (o *SrlNetworkinstanceProtocolsLinuxStateMachine) handleConfiguring(info *S
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
 			return actionContinue{}
 		}
+	} else {
+		info.log.Info("Object got removed by the device driver, most likely due to restart of device driver")
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone))
+		return actionUpdate{delay: 1 * time.Second}
 	}
 	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
 		// delete action
@@ -1014,6 +1043,12 @@ func (o *SrlNetworkinstanceProtocolsLinuxStateMachine) handleConfigStatusConfigu
 		}
 		return actionUpdate{delay: 10 * time.Second}
 	}
+	if !cr.Exists {
+		info.log.Info("Object got removed by the device driver, most likely due to restart of device driver")
+		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone)
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone))
+		return actionUpdate{delay: 1 * time.Second}
+	}
 
 	return actionComplete{}
 }
@@ -1028,6 +1063,7 @@ func (o *SrlNetworkinstanceProtocolsLinuxStateMachine) handleConfigStatusConfigu
 		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
 			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
+			o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(""))
 			return actionComplete{}
 		}
 	}
