@@ -49,12 +49,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var SystemMtuIntraResourceleafRef = map[string]*ElementWithLeafRef{}
+var SystemNtpIntraResourceleafRef = map[string]*ElementWithLeafRef{}
 
-var SystemMtuInterResourceleafRef = map[string]*ElementWithLeafRef{}
+var SystemNtpInterResourceleafRef = map[string]*ElementWithLeafRef{
+	"/system/ntp/network-instance": {
+		AbsolutePath2LeafRef:           "/",
+		RelativePath2LeafRef:           "",
+		RelativePath2ObjectWithLeafRef: "",
+		ElementName:                    "network-instance",
+		KeyName:                        "name",
+	},
+}
 
-// SrlSystemMtuReconciler reconciles a SrlSystemMtu object
-type SrlSystemMtuReconciler struct {
+// SrlSystemNtpReconciler reconciles a SrlSystemNtp object
+type SrlSystemNtpReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
@@ -63,14 +71,14 @@ type SrlSystemMtuReconciler struct {
 
 // Instead of passing a zillion arguments to the action of a phase,
 // hold them in a context per device
-type SrlSystemMtuTargetReconcileInfo struct {
-	Target map[string]*SrlSystemMtuReconcileInfo
+type SrlSystemNtpTargetReconcileInfo struct {
+	Target map[string]*SrlSystemNtpReconcileInfo
 }
 
-type SrlSystemMtuReconcileInfo struct {
+type SrlSystemNtpReconcileInfo struct {
 	target            *string
 	resource          *string
-	o                 *srlinuxv1alpha1.SrlSystemMtu
+	o                 *srlinuxv1alpha1.SrlSystemNtp
 	level             *int32
 	dependencies      *[]string
 	deletepaths       *[]string
@@ -83,14 +91,14 @@ type SrlSystemMtuReconcileInfo struct {
 }
 
 // +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networkdevices,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemmtus,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemmtus/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemmtus/finalizers,verbs=update
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemntps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemntps/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemntps/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
 
-func (r *SrlSystemMtuReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
-	reqLogger := r.Log.WithValues("SrlSystemMtu", request.NamespacedName)
+func (r *SrlSystemNtpReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
+	reqLogger := r.Log.WithValues("SrlSystemNtp", request.NamespacedName)
 	reqLogger.Info("publishing event", "reason", event.Reason, "message", event.Message)
 	err := r.Create(r.Ctx, &event)
 	if err != nil {
@@ -100,9 +108,9 @@ func (r *SrlSystemMtuReconciler) publishEvent(request ctrl.Request, event corev1
 	return
 }
 
-func (r *SrlSystemMtuReconciler) updateEventHandler(e event.UpdateEvent) bool {
-	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlSystemMtu)
-	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlSystemMtu)
+func (r *SrlSystemNtpReconciler) updateEventHandler(e event.UpdateEvent) bool {
+	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlSystemNtp)
+	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlSystemNtp)
 	if !(oldOK && newOK) {
 		// The thing that changed wasn't a host, so we
 		// need to assume that we must update. This
@@ -125,9 +133,9 @@ func (r *SrlSystemMtuReconciler) updateEventHandler(e event.UpdateEvent) bool {
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *SrlSystemMtuReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
+func (r *SrlSystemNtpReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
-		For(&srlinuxv1alpha1.SrlSystemMtu{}).
+		For(&srlinuxv1alpha1.SrlSystemNtp{}).
 		WithEventFilter(
 			predicate.Funcs{
 				UpdateFunc: r.updateEventHandler,
@@ -147,8 +155,8 @@ func (r *SrlSystemMtuReconciler) SetupWithManager(ctx context.Context, mgr ctrl.
 }
 
 // NetworkDeviceMapFunc is a handler.ToRequestsFunc to be used to enqeue
-// request for reconciliation of SrlSystemMtu.
-func (r *SrlSystemMtuReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Request {
+// request for reconciliation of SrlSystemNtp.
+func (r *SrlSystemNtpReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Request {
 	result := []ctrl.Request{}
 
 	nd, ok := o.(*nddv1.NetworkDevice)
@@ -161,7 +169,7 @@ func (r *SrlSystemMtuReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Re
 		client.InNamespace(nd.Namespace),
 		client.MatchingLabels{},
 	}
-	os := &srlinuxv1alpha1.SrlSystemMtuList{}
+	os := &srlinuxv1alpha1.SrlSystemNtpList{}
 	if err := r.Client.List(context.TODO(), os, selectors...); err != nil {
 		return result
 	}
@@ -186,7 +194,7 @@ func (r *SrlSystemMtuReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Re
 // e -> element in the tree
 // x1 -> the data object
 // elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
-func (r *SrlSystemMtuReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+func (r *SrlSystemNtpReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
 	//xType := reflect.TypeOf(o)
 	//xValue := reflect.ValueOf(o)
 	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
@@ -265,7 +273,7 @@ func (r *SrlSystemMtuReconciler) validateIfElementWithLeafRefExists(elements []s
 	return nil, true
 }
 
-func (r *SrlSystemMtuReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+func (r *SrlSystemNtpReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
 	//xType := reflect.TypeOf(o)
 	//xValue := reflect.ValueOf(o)
 	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
@@ -369,12 +377,12 @@ func (r *SrlSystemMtuReconciler) validateLeafRefExists(elements []string, i int,
 	return nil, true
 }
 
-func (r *SrlSystemMtuReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.SystemMtu) (err error) {
+func (r *SrlSystemNtpReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.SystemNtp) (err error) {
 	// marshal data to json
 	dd := struct {
-		Mtu *srlinuxv1alpha1.SystemMtu `json:"mtu"`
+		Ntp *srlinuxv1alpha1.SystemNtp `json:"ntp"`
 	}{
-		Mtu: o,
+		Ntp: o,
 	}
 	d, err := json.Marshal(dd)
 	if err != nil {
@@ -387,7 +395,7 @@ func (r *SrlSystemMtuReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.System
 		return err
 	}
 
-	for elementWithleafrefPath, elementWithleafref := range SystemMtuIntraResourceleafRef {
+	for elementWithleafrefPath, elementWithleafref := range SystemNtpIntraResourceleafRef {
 		elementWithleafref.Values = make([]string, 0)
 		elementWithleafref.LeafRefValues = make([]string, 0)
 		// validate if the element with leafref exist
@@ -425,17 +433,17 @@ func (r *SrlSystemMtuReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.System
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = r.Log.WithValues("SrlSystemMtu", req.NamespacedName)
+func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = r.Log.WithValues("SrlSystemNtp", req.NamespacedName)
 
-	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlSystemMtu")
+	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlSystemNtp")
 
-	o := &srlinuxv1alpha1.SrlSystemMtu{}
+	o := &srlinuxv1alpha1.SrlSystemNtp{}
 	if err := r.Client.Get(ctx, req.NamespacedName, o); err != nil {
 		if apierrors.IsNotFound(err) {
 			return ctrl.Result{}, nil
 		}
-		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlSystemMtu config")
+		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlSystemNtp config")
 		return ctrl.Result{}, err
 	}
 	o.DeepCopy()
@@ -443,14 +451,14 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	//r.Log.WithValues("Object", o).Info("Object Info")
 
 	// Add a finalizer to newly created objects.
-	if o.DeletionTimestamp.IsZero() && !SrlSystemMtuhasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && !SrlSystemNtphasFinalizer(o) {
 		r.Log.Info(
 			"adding finalizer",
 			"existingFinalizers", o.Finalizers,
-			"newValue", srlinuxv1alpha1.SrlSystemMtuFinalizer,
+			"newValue", srlinuxv1alpha1.SrlSystemNtpFinalizer,
 		)
 		o.Finalizers = append(o.Finalizers,
-			srlinuxv1alpha1.SrlSystemMtuFinalizer)
+			srlinuxv1alpha1.SrlSystemNtpFinalizer)
 		err := r.Update(context.TODO(), o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to add finalizer")
@@ -459,14 +467,14 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	// validate local leaf refs if resource is not in deleting state
-	if o.DeletionTimestamp.IsZero() && SrlSystemMtuhasFinalizer(o) {
-		err := r.validateLocalLeafRefs(o.Spec.SrlSystemMtu)
+	if o.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(o) {
+		err := r.validateLocalLeafRefs(o.Spec.SrlSystemNtp)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
 		}
 		validationSuccess := true
 		o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-		for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
+		for s, elementWithLeafRef := range SystemNtpIntraResourceleafRef {
 			if elementWithLeafRef.Exists {
 				if !elementWithLeafRef.DependencyCheckSuccess {
 					validationSuccess = false
@@ -483,12 +491,6 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 		}
 
-		//if validationSuccess {
-		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-		//} else {
-		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
-		//}
-
 		if validationSuccess {
 			// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
 			if o.Status.ConfigurationDependencyValidationStatus != nil && *o.Status.ConfigurationDependencyValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
@@ -503,7 +505,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		}
 
-		if err := r.saveSrlSystemMtuStatus(ctx, o); err != nil {
+		if err := r.saveSrlSystemNtpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -519,9 +521,9 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		case *TargetNotFoundError:
 			// delete the resource
 			// we can remove the finalizer w/o updating the device since no targets where found
-			if !o.DeletionTimestamp.IsZero() && SrlSystemMtuhasFinalizer(o) {
+			if !o.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(o) {
 				// remove our finalizer from the list and update it.
-				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlSystemMtuFinalizer)
+				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlSystemNtpFinalizer)
 				if err := r.Update(ctx, o); err != nil {
 					return ctrl.Result{}, errors.Wrap(err,
 						fmt.Sprintf("failed to remove finalizer"))
@@ -544,7 +546,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
 			// save resource status since last target got deleted
-			if err = r.saveSrlSystemMtuStatus(ctx, o); err != nil {
+			if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
@@ -554,6 +556,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			return ctrl.Result{}, err
 		}
 	}
+
 	if o.Status.ConfigurationDependencyTargetFound == nil {
 		// target status does not exist
 		dirty = true
@@ -567,9 +570,9 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			r.publishEvent(req, o.NewEvent("Target found", ""))
 		}
 	}
-	// save resource status since items got deleted
+	// save resource status since items got deleted or the status transitioned
 	if dirty {
-		if err = r.saveSrlSystemMtuStatus(ctx, o); err != nil {
+		if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -579,7 +582,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	// find object spec difference if resource is not in deleting state
 	var diff bool
 	var dp *[]string
-	if o.DeletionTimestamp.IsZero() && SrlSystemMtuhasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(o) {
 		diff, dp, err = r.FindSpecDiff(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
@@ -594,17 +597,17 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	// initialize the resource parameters
 	level := int32(2)
-	resource := "srlinux.henderiw.be" + "." + "SrlSystemMtu" + "." + strcase.UpperCamelCase(o.Name)
+	resource := "srlinux.henderiw.be" + "." + "SrlSystemNtp" + "." + strcase.UpperCamelCase(o.Name)
 
 	dependencies := make([]string, 0)
 
 	deletepaths := make([]string, 0)
-	deletepaths = append(deletepaths, "/system/mtu")
+	deletepaths = append(deletepaths, "/system/ntp")
 
 	// path to be used for this object
 	path := "/system"
 
-	info := make(map[string]*SrlSystemMtuReconcileInfo)
+	info := make(map[string]*SrlSystemNtpReconcileInfo)
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
@@ -636,7 +639,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		r.Log.Info("configuration status in reconcile",
 			"target", target.TargetName,
 			"status", initialState)
-		info[target.TargetName] = &SrlSystemMtuReconcileInfo{
+		info[target.TargetName] = &SrlSystemNtpReconcileInfo{
 			ctx:          ctx,
 			target:       &target.Target,
 			log:          r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
@@ -663,7 +666,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		r.Log.Info("object status",
 			"target", target.TargetName,
 			"status", o.Status.Target[target.TargetName])
-		stateMachine := newSrlSystemMtuStateMachine(o, r, &target.TargetName, info[target.TargetName])
+		stateMachine := newSrlSystemNtpStateMachine(o, r, &target.TargetName, info[target.TargetName])
 		actResult[target.TargetName] = stateMachine.ReconcileState(info[target.TargetName])
 		result[target.TargetName], err = actResult[target.TargetName].Result()
 		if err != nil {
@@ -672,7 +675,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	}
 
-	if !o.DeletionTimestamp.IsZero() && SrlSystemMtuhasFinalizer(o) {
+	if !o.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(o) {
 		deleted := true
 		for _, target := range t {
 			if result[target.TargetName].RequeueAfter != 0 {
@@ -682,7 +685,7 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if deleted {
 			// delete complete
 			// remove our finalizer from the list and update it.
-			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlSystemMtuFinalizer)
+			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlSystemNtpFinalizer)
 			if err := r.Update(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to remove finalizer"))
@@ -704,12 +707,12 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			dirty = true
 		}
 		if dirty {
-			if err := r.saveSrlSystemMtuStatus(ctx, o); err != nil {
+			if err := r.saveSrlSystemNtpStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
 		}
-		SrlSystemMtulogResult(info[target.TargetName], result[target.TargetName])
+		SrlSystemNtplogResult(info[target.TargetName], result[target.TargetName])
 
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
@@ -726,36 +729,36 @@ func (r *SrlSystemMtuReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	return ctrl.Result{}, nil
 }
 
-func SrlSystemMtulogResult(info *SrlSystemMtuReconcileInfo, result ctrl.Result) {
+func SrlSystemNtplogResult(info *SrlSystemNtpReconcileInfo, result ctrl.Result) {
 	if result.Requeue || result.RequeueAfter != 0 ||
 		!utils.StringInList(info.o.Finalizers,
-			srlinuxv1alpha1.SrlSystemMtuFinalizer) {
+			srlinuxv1alpha1.SrlSystemNtpFinalizer) {
 		info.log.Info("done",
 			"requeue", result.Requeue,
 			"after", result.RequeueAfter)
 	} else {
-		info.log.Info("stopping on SrlSystemMtu",
+		info.log.Info("stopping on SrlSystemNtp",
 			"message", info.o.Status)
 	}
 }
 
-func (r *SrlSystemMtuReconciler) saveSrlSystemMtuStatus(ctx context.Context, o *srlinuxv1alpha1.SrlSystemMtu) error {
+func (r *SrlSystemNtpReconciler) saveSrlSystemNtpStatus(ctx context.Context, o *srlinuxv1alpha1.SrlSystemNtp) error {
 	t := metav1.Now()
 	o.Status.DeepCopy()
 	o.Status.LastUpdated = &t
 
-	r.Log.Info("SrlSystemMtu",
+	r.Log.Info("SrlSystemNtp",
 		"status", o.Status)
 
 	if err := r.Client.Status().Update(ctx, o); err != nil {
-		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlSystemMtu ")
+		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlSystemNtp ")
 		return err
 	}
 	return nil
 }
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec
-func (r *SrlSystemMtuReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlSystemMtu) (bool, *[]string, error) {
+func (r *SrlSystemNtpReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlSystemNtp) (bool, *[]string, error) {
 	r.Log.Info("Find Spec Delta ...")
 
 	deletepaths := make([]string, 0)
@@ -785,7 +788,7 @@ func (r *SrlSystemMtuReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1a
 }
 
 // FindTarget finds the SRL target for Object
-func (r *SrlSystemMtuReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlSystemMtu) ([]*Target, bool, error) {
+func (r *SrlSystemNtpReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlSystemNtp) ([]*Target, bool, error) {
 	r.Log.Info("Find target ...")
 
 	// get the target name the resource should get applied to
@@ -877,16 +880,17 @@ func (r *SrlSystemMtuReconciler) FindTarget(ctx context.Context, o *srlinuxv1alp
 		// Target not found, return target not found error
 		return nil, dirty, &TargetNotFoundError{message: "The Target cannot be found, update label or discovery object"}
 	}
+
 	return targets, dirty, nil
 }
 
-// SrlSystemMtuhasFinalizer checks if object has finalizer
-func SrlSystemMtuhasFinalizer(o *srlinuxv1alpha1.SrlSystemMtu) bool {
-	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlSystemMtuFinalizer)
+// SrlSystemNtphasFinalizer checks if object has finalizer
+func SrlSystemNtphasFinalizer(o *srlinuxv1alpha1.SrlSystemNtp) bool {
+	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlSystemNtpFinalizer)
 }
 
-func (info *SrlSystemMtuReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
-	if !info.o.DeletionTimestamp.IsZero() && SrlSystemMtuhasFinalizer(info.o) {
+func (info *SrlSystemNtpReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
+	if !info.o.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(info.o) {
 
 		// prepare the grpc data
 		req := &netwdevpb.CacheUpdateRequest{
@@ -908,14 +912,14 @@ func (info *SrlSystemMtuReconcileInfo) DeleteCache(deletepaths, dependencies *[]
 }
 
 // Update Cache
-func (info *SrlSystemMtuReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
+func (info *SrlSystemNtpReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
 
 	// marshal data to json
 
 	dd := struct {
-		Mtu *srlinuxv1alpha1.SystemMtu `json:"mtu"`
+		Ntp *srlinuxv1alpha1.SystemNtp `json:"ntp"`
 	}{
-		Mtu: info.o.Spec.SrlSystemMtu,
+		Ntp: info.o.Spec.SrlSystemNtp,
 	}
 	d := make([][]byte, 0)
 	dj, err := json.Marshal(dd)
@@ -944,24 +948,24 @@ func (info *SrlSystemMtuReconcileInfo) UpdateCache(path string, deletepaths, dep
 	return nil
 }
 
-type SrlSystemMtuStateMachine struct {
-	Object     *srlinuxv1alpha1.SrlSystemMtu
-	Reconciler *SrlSystemMtuReconciler
+type SrlSystemNtpStateMachine struct {
+	Object     *srlinuxv1alpha1.SrlSystemNtp
+	Reconciler *SrlSystemNtpReconciler
 	Target     *string
 	TargetName *string
 	NextState  *srlinuxv1alpha1.ConfigStatus
 }
 
 // appendEvent
-func (info *SrlSystemMtuReconcileInfo) appendEvent(reason, message string) {
+func (info *SrlSystemNtpReconcileInfo) appendEvent(reason, message string) {
 	info.events = append(info.events, info.o.NewEvent(reason, message))
 }
 
-func newSrlSystemMtuStateMachine(o *srlinuxv1alpha1.SrlSystemMtu,
-	reconciler *SrlSystemMtuReconciler, n *string,
-	info *SrlSystemMtuReconcileInfo) *SrlSystemMtuStateMachine {
+func newSrlSystemNtpStateMachine(o *srlinuxv1alpha1.SrlSystemNtp,
+	reconciler *SrlSystemNtpReconciler, n *string,
+	info *SrlSystemNtpReconcileInfo) *SrlSystemNtpStateMachine {
 	currentState := o.Status.Target[*n].ConfigStatus
-	r := SrlSystemMtuStateMachine{
+	r := SrlSystemNtpStateMachine{
 		Object:     o,
 		NextState:  currentState, // Remain in current state by default
 		Reconciler: reconciler,
@@ -971,10 +975,10 @@ func newSrlSystemMtuStateMachine(o *srlinuxv1alpha1.SrlSystemMtu,
 	return &r
 }
 
-type SrlSystemMtustateHandler func(*SrlSystemMtuReconcileInfo) actionResult
+type SrlSystemNtpstateHandler func(*SrlSystemNtpReconcileInfo) actionResult
 
-func (o *SrlSystemMtuStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlSystemMtustateHandler {
-	return map[srlinuxv1alpha1.ConfigStatus]SrlSystemMtustateHandler{
+func (o *SrlSystemNtpStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlSystemNtpstateHandler {
+	return map[srlinuxv1alpha1.ConfigStatus]SrlSystemNtpstateHandler{
 		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
 		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
 		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,
@@ -983,8 +987,8 @@ func (o *SrlSystemMtuStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]S
 	}
 }
 
-func (o *SrlSystemMtuStateMachine) updateSrlSystemMtuStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
-	info *SrlSystemMtuReconcileInfo) {
+func (o *SrlSystemNtpStateMachine) updateSrlSystemNtpStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
+	info *SrlSystemNtpReconcileInfo) {
 	if o.NextState != initialState {
 		info.log.Info("changing configuration state",
 			"old", initialState,
@@ -995,13 +999,13 @@ func (o *SrlSystemMtuStateMachine) updateSrlSystemMtuStateFrom(initialState *srl
 	}
 }
 
-func (o *SrlSystemMtuStateMachine) ReconcileState(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) ReconcileState(info *SrlSystemNtpReconcileInfo) actionResult {
 	initialState := o.Object.Status.Target[*o.TargetName].ConfigStatus
-	defer o.updateSrlSystemMtuStateFrom(initialState, info)
+	defer o.updateSrlSystemNtpStateFrom(initialState, info)
 
 	if o.checkInitiateDelete() {
 		// initiate cache delete
-		info.log.Info("Initiating SrlSystemMtuStateMachine deletion")
+		info.log.Info("Initiating SrlSystemNtpStateMachine deletion")
 		info.DeleteCache(info.deletepaths, info.dependencies)
 		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
 		//time.Sleep(15 * time.Second)
@@ -1015,8 +1019,8 @@ func (o *SrlSystemMtuStateMachine) ReconcileState(info *SrlSystemMtuReconcileInf
 	return actionError{fmt.Errorf("No handler found for state \"%s\"", *initialState)}
 }
 
-func (o *SrlSystemMtuStateMachine) checkInitiateDelete() bool {
-	if !o.Object.DeletionTimestamp.IsZero() && SrlSystemMtuhasFinalizer(o.Object) {
+func (o *SrlSystemNtpStateMachine) checkInitiateDelete() bool {
+	if !o.Object.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(o.Object) {
 		// Delete requested
 		switch o.NextState {
 		default:
@@ -1034,7 +1038,7 @@ func (o *SrlSystemMtuStateMachine) checkInitiateDelete() bool {
 	return false
 }
 
-func (o *SrlSystemMtuStateMachine) handleNone(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) handleNone(info *SrlSystemNtpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1071,7 +1075,7 @@ func (o *SrlSystemMtuStateMachine) handleNone(info *SrlSystemMtuReconcileInfo) a
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlSystemMtuStateMachine) handleConfiguring(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) handleConfiguring(info *SrlSystemNtpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1114,7 +1118,7 @@ func (o *SrlSystemMtuStateMachine) handleConfiguring(info *SrlSystemMtuReconcile
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlSystemMtuStateMachine) handleConfigStatusConfigureSuccess(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) handleConfigStatusConfigureSuccess(info *SrlSystemNtpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1142,7 +1146,7 @@ func (o *SrlSystemMtuStateMachine) handleConfigStatusConfigureSuccess(info *SrlS
 	return actionComplete{}
 }
 
-func (o *SrlSystemMtuStateMachine) handleConfigStatusConfigureFailed(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) handleConfigStatusConfigureFailed(info *SrlSystemNtpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1175,7 +1179,7 @@ func (o *SrlSystemMtuStateMachine) handleConfigStatusConfigureFailed(info *SrlSy
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlSystemMtuStateMachine) handleDeleting(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) handleDeleting(info *SrlSystemNtpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1194,7 +1198,7 @@ func (o *SrlSystemMtuStateMachine) handleDeleting(info *SrlSystemMtuReconcileInf
 
 }
 
-func (o *SrlSystemMtuStateMachine) DeleteFailed(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) DeleteFailed(info *SrlSystemNtpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1212,6 +1216,6 @@ func (o *SrlSystemMtuStateMachine) DeleteFailed(info *SrlSystemMtuReconcileInfo)
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlSystemMtuStateMachine) DeleteSuccess(info *SrlSystemMtuReconcileInfo) actionResult {
+func (o *SrlSystemNtpStateMachine) DeleteSuccess(info *SrlSystemNtpReconcileInfo) actionResult {
 	return actionComplete{}
 }

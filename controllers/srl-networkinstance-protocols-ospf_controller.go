@@ -35,7 +35,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
@@ -113,11 +115,52 @@ type SrlNetworkinstanceProtocolsOspfReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsospfs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsospfs/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsospfs/finalizers,verbs=update
+// +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
+// +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
+
+func (r *SrlNetworkinstanceProtocolsOspfReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
+	reqLogger := r.Log.WithValues("SrlNetworkinstanceProtocolsOspf", request.NamespacedName)
+	reqLogger.Info("publishing event", "reason", event.Reason, "message", event.Message)
+	err := r.Create(r.Ctx, &event)
+	if err != nil {
+		reqLogger.Info("failed to record event, ignoring",
+			"reason", event.Reason, "message", event.Message, "error", err)
+	}
+	return
+}
+
+func (r *SrlNetworkinstanceProtocolsOspfReconciler) updateEventHandler(e event.UpdateEvent) bool {
+	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlNetworkinstanceProtocolsOspf)
+	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlNetworkinstanceProtocolsOspf)
+	if !(oldOK && newOK) {
+		// The thing that changed wasn't a host, so we
+		// need to assume that we must update. This
+		// happens when, for example, an owned Secret
+		// changes.
+		return true
+	}
+
+	//If the update increased the resource Generation then let's process it
+	//if e.MetaNew.GetGeneration() != e.MetaOld.GetGeneration() {
+	//	return true
+	//}
+
+	//Discard updates that did not increase the resource Generation (such as on Status.LastUpdated), except for the finalizers or annotations
+	//if reflect.DeepEqual(e.MetaNew.GetFinalizers(), e.MetaOld.GetFinalizers()) && reflect.DeepEqual(e.MetaNew.GetAnnotations(), e.MetaOld.GetAnnotations()) {
+	//	return false
+	//}
+
+	return true
+}
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *SrlNetworkinstanceProtocolsOspfReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
 		For(&srlinuxv1alpha1.SrlNetworkinstanceProtocolsOspf{}).
+		WithEventFilter(
+			predicate.Funcs{
+				UpdateFunc: r.updateEventHandler,
+			}).
 		WithOptions(option).
 		Watches(
 			&source.Kind{Type: &nddv1.NetworkDevice{}},
@@ -451,28 +494,42 @@ func (r *SrlNetworkinstanceProtocolsOspfReconciler) Reconcile(ctx context.Contex
 			return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
 		}
 		validationSuccess := true
-		o.Status.ValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+		o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
 		for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
 			if elementWithLeafRef.Exists {
 				if !elementWithLeafRef.DependencyCheckSuccess {
 					validationSuccess = false
 				}
-				o.Status.ValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+				o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
 					Values:        &elementWithLeafRef.Values,
 					LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
 					LeafRefValues: &elementWithLeafRef.LeafRefValues,
 				}
 			} else {
-				o.Status.ValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+				o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
 					LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
 				}
 			}
 		}
 
+		//if validationSuccess {
+		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+		//} else {
+		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+		//}
+
 		if validationSuccess {
-			o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
+			if o.Status.ConfigurationDependencyValidationStatus != nil && *o.Status.ConfigurationDependencyValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+				r.publishEvent(req, o.NewEvent("Validation success", ""))
+			}
+			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 		} else {
-			o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			// if the validation status did not change we dont have to publish a new event
+			if o.Status.ConfigurationDependencyValidationStatus != nil && *o.Status.ConfigurationDependencyValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+				r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+			}
+			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		}
 
 		if err := r.saveSrlNetworkinstanceProtocolsOspfStatus(ctx, o); err != nil {
@@ -503,17 +560,40 @@ func (r *SrlNetworkinstanceProtocolsOspfReconciler) Reconcile(ctx context.Contex
 				// Stop reconciliation as the resource is deleted
 				return ctrl.Result{}, nil
 			}
-			// save resource status since last target got deleted
-			if dirty {
-				if err = r.saveSrlNetworkinstanceProtocolsOspfStatus(ctx, o); err != nil {
-					return ctrl.Result{}, errors.Wrap(err,
-						fmt.Sprintf("failed to save status"))
+			// check status transitions in order to check if the status need to be updated and/or events need to be initialized
+			if o.Status.ConfigurationDependencyTargetFound == nil {
+				// publish event when the status was not yet initialized
+				o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
+				r.publishEvent(req, o.NewEvent("Target not found", "No valid target defined to apply the resource upon"))
+			} else {
+				// only publish events on status transition
+				if *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusFailed) {
+					r.publishEvent(req, o.NewEvent("Target not found", "No valid target defined to apply the resource upon"))
 				}
+			}
+			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
+			// save resource status since last target got deleted
+			if err = r.saveSrlNetworkinstanceProtocolsOspfStatus(ctx, o); err != nil {
+				return ctrl.Result{}, errors.Wrap(err,
+					fmt.Sprintf("failed to save status"))
 			}
 			// when no target is available requeue to retry after requetimer
 			return ctrl.Result{Requeue: true, RequeueAfter: targetNotFoundRetryDelay}, nil
 		default:
 			return ctrl.Result{}, err
+		}
+	}
+	if o.Status.ConfigurationDependencyTargetFound == nil {
+		// target status does not exist
+		dirty = true
+		o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusSuccess)
+		targets := getTargets(t)
+		r.publishEvent(req, o.NewEvent("Target found", targets))
+	} else {
+		if *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusSuccess) {
+			dirty = true
+			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusSuccess)
+			r.publishEvent(req, o.NewEvent("Target found", ""))
 		}
 	}
 	// save resource status since items got deleted
@@ -533,6 +613,9 @@ func (r *SrlNetworkinstanceProtocolsOspfReconciler) Reconcile(ctx context.Contex
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to find spec delta"))
+		}
+		if diff {
+			r.publishEvent(req, o.NewEvent("Spec changed", "update the resource"))
 		}
 		r.Log.WithValues("Spec is different, update resource", diff, "Spec Delete Paths", *dp).Info("Spec Diff")
 		// the diff handling is handled in the state machine later
@@ -597,6 +680,7 @@ func (r *SrlNetworkinstanceProtocolsOspfReconciler) Reconcile(ctx context.Contex
 			deletepaths:  &deletepaths,
 		}
 		if *initialState == srlinuxv1alpha1.ConfigStatusNone {
+			r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s, Configuration status old: None -> new: Configuring", target.TargetName), "New Resource or Resource Spec changed"))
 			// update the cache through GRPC
 			err := info[target.TargetName].UpdateCache(path, deletepaths, dependencies)
 			if err != nil {
@@ -662,6 +746,12 @@ func (r *SrlNetworkinstanceProtocolsOspfReconciler) Reconcile(ctx context.Contex
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
 			return ctrl.Result{Requeue: true, RequeueAfter: result[target.TargetName].RequeueAfter}, nil
+		}
+	}
+
+	for _, ri := range info {
+		for _, e := range ri.events {
+			r.publishEvent(req, e)
 		}
 	}
 
@@ -932,6 +1022,8 @@ func (o *SrlNetworkinstanceProtocolsOspfStateMachine) updateSrlNetworkinstancePr
 			"old", initialState,
 			"new", o.NextState)
 		o.Object.Status.Target[*o.TargetName].ConfigStatus = o.NextState
+
+		info.appendEvent(fmt.Sprintf("Target: %s, Configuration status old: %s -> new: %s", *o.TargetName, initialState.String(), o.NextState.String()), "")
 	}
 }
 

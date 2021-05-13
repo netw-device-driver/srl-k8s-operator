@@ -474,7 +474,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 		validationSuccess := true
 		o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-		for s, elementWithLeafRef := range SystemNtpIntraResourceleafRef {
+		for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
 			if elementWithLeafRef.Exists {
 				if !elementWithLeafRef.DependencyCheckSuccess {
 					validationSuccess = false
@@ -490,6 +490,12 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				}
 			}
 		}
+
+		//if validationSuccess {
+		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+		//} else {
+		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+		//}
 
 		if validationSuccess {
 			// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
@@ -556,7 +562,6 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			return ctrl.Result{}, err
 		}
 	}
-
 	if o.Status.ConfigurationDependencyTargetFound == nil {
 		// target status does not exist
 		dirty = true
@@ -570,7 +575,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			r.publishEvent(req, o.NewEvent("Target found", ""))
 		}
 	}
-	// save resource status since items got deleted or the status transitioned
+	// save resource status since items got deleted
 	if dirty {
 		if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
@@ -880,7 +885,6 @@ func (r *SrlSystemNtpReconciler) FindTarget(ctx context.Context, o *srlinuxv1alp
 		// Target not found, return target not found error
 		return nil, dirty, &TargetNotFoundError{message: "The Target cannot be found, update label or discovery object"}
 	}
-
 	return targets, dirty, nil
 }
 

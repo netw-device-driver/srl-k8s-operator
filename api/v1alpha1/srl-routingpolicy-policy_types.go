@@ -39,11 +39,11 @@ type RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend struct {
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpAsPath struct
 type RoutingpolicyPolicyDefaultActionAcceptBgpAsPath struct {
-	Remove *bool `json:"remove,omitempty"`
+	Prepend *RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
+	Remove  *bool                                                   `json:"remove,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
-	Replace *uint32                                                 `json:"replace,omitempty"`
-	Prepend *RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
+	Replace *uint32 `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpCommunities struct
@@ -93,10 +93,10 @@ type RoutingpolicyPolicyDefaultActionReject struct {
 
 // RoutingpolicyPolicyDefaultAction struct
 type RoutingpolicyPolicyDefaultAction struct {
-	NextPolicy *RoutingpolicyPolicyDefaultActionNextPolicy `json:"next-policy,omitempty"`
-	Reject     *RoutingpolicyPolicyDefaultActionReject     `json:"reject,omitempty"`
 	Accept     *RoutingpolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
 	NextEntry  *RoutingpolicyPolicyDefaultActionNextEntry  `json:"next-entry,omitempty"`
+	NextPolicy *RoutingpolicyPolicyDefaultActionNextPolicy `json:"next-policy,omitempty"`
+	Reject     *RoutingpolicyPolicyDefaultActionReject     `json:"reject,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct
@@ -139,10 +139,10 @@ type RoutingpolicyPolicyStatementActionAcceptBgpOrigin struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgp struct
 type RoutingpolicyPolicyStatementActionAcceptBgp struct {
-	AsPath          *RoutingpolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
-	Communities     *RoutingpolicyPolicyStatementActionAcceptBgpCommunities     `json:"communities,omitempty"`
 	LocalPreference *RoutingpolicyPolicyStatementActionAcceptBgpLocalPreference `json:"local-preference,omitempty"`
 	Origin          *RoutingpolicyPolicyStatementActionAcceptBgpOrigin          `json:"origin,omitempty"`
+	AsPath          *RoutingpolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
+	Communities     *RoutingpolicyPolicyStatementActionAcceptBgpCommunities     `json:"communities,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAccept struct
@@ -172,14 +172,14 @@ type RoutingpolicyPolicyStatementAction struct {
 
 // RoutingpolicyPolicyStatementMatchBgpAsPathLength struct
 type RoutingpolicyPolicyStatementMatchBgpAsPathLength struct {
-	// +kubebuilder:validation:Enum=`eq`;`ge`;`le`
-	// +kubebuilder:default:=eq
-	Operator *string `json:"operator,omitempty"`
 	// +kubebuilder:default:=false
 	Unique *bool `json:"unique,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	Value *uint8 `json:"value"`
+	// +kubebuilder:validation:Enum=`eq`;`ge`;`le`
+	// +kubebuilder:default:=eq
+	Operator *string `json:"operator,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchBgpEvpn struct
@@ -191,19 +191,19 @@ type RoutingpolicyPolicyStatementMatchBgpEvpn struct {
 
 // RoutingpolicyPolicyStatementMatchBgp struct
 type RoutingpolicyPolicyStatementMatchBgp struct {
+	CommunitySet *string                                           `json:"community-set,omitempty"`
 	Evpn         *RoutingpolicyPolicyStatementMatchBgpEvpn         `json:"evpn,omitempty"`
 	AsPathLength *RoutingpolicyPolicyStatementMatchBgpAsPathLength `json:"as-path-length,omitempty"`
 	AsPathSet    *string                                           `json:"as-path-set,omitempty"`
-	CommunitySet *string                                           `json:"community-set,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchIsis struct
 type RoutingpolicyPolicyStatementMatchIsis struct {
-	// +kubebuilder:validation:Enum=`external`;`internal`
-	RouteType *string `json:"route-type,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Level *uint8 `json:"level,omitempty"`
+	// +kubebuilder:validation:Enum=`external`;`internal`
+	RouteType *string `json:"route-type,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchOspf struct
@@ -219,32 +219,32 @@ type RoutingpolicyPolicyStatementMatchOspf struct {
 
 // RoutingpolicyPolicyStatementMatch struct
 type RoutingpolicyPolicyStatementMatch struct {
-	PrefixSet *string                                `json:"prefix-set,omitempty"`
-	Protocol  *string                                `json:"protocol,omitempty"`
-	Bgp       *RoutingpolicyPolicyStatementMatchBgp  `json:"bgp,omitempty"`
 	Family    *string                                `json:"family,omitempty"`
 	Isis      *RoutingpolicyPolicyStatementMatchIsis `json:"isis,omitempty"`
 	Ospf      *RoutingpolicyPolicyStatementMatchOspf `json:"ospf,omitempty"`
+	PrefixSet *string                                `json:"prefix-set,omitempty"`
+	Protocol  *string                                `json:"protocol,omitempty"`
+	Bgp       *RoutingpolicyPolicyStatementMatchBgp  `json:"bgp,omitempty"`
 }
 
 // RoutingpolicyPolicyStatement struct
 type RoutingpolicyPolicyStatement struct {
+	Action *RoutingpolicyPolicyStatementAction `json:"action,omitempty"`
+	Match  *RoutingpolicyPolicyStatementMatch  `json:"match,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
-	SequenceId *uint32                             `json:"sequence-id"`
-	Action     *RoutingpolicyPolicyStatementAction `json:"action,omitempty"`
-	Match      *RoutingpolicyPolicyStatementMatch  `json:"match,omitempty"`
+	SequenceId *uint32 `json:"sequence-id"`
 }
 
 // RoutingpolicyPolicy struct
 type RoutingpolicyPolicy struct {
-	DefaultAction *RoutingpolicyPolicyDefaultAction `json:"default-action,omitempty"`
-	Statement     []*RoutingpolicyPolicyStatement   `json:"statement,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
+	Name          *string                           `json:"name"`
+	DefaultAction *RoutingpolicyPolicyDefaultAction `json:"default-action,omitempty"`
+	Statement     []*RoutingpolicyPolicyStatement   `json:"statement,omitempty"`
 }
 
 // SrlRoutingpolicyPolicySpec struct
@@ -254,12 +254,16 @@ type SrlRoutingpolicyPolicySpec struct {
 
 // SrlRoutingpolicyPolicyStatus struct
 type SrlRoutingpolicyPolicyStatus struct {
-	// ValidationStatus defines the validation status of the resource object
+	// ConfigurationDependencyTargetNotFound identifies if the target of the resource object is missing or not
 	// +kubebuilder:validation:Enum=Success;Failed
-	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ValidationDetails defines the validation details of the resource object
-	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+
+	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

@@ -41,20 +41,23 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEt
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct {
+	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16777215
+	Vni *uint32 `json:"vni,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState          *string                                                                                  `json:"admin-state,omitempty"`
-	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16777215
-	Vni *uint32 `json:"vni,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -64,9 +67,6 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                 `json:"admin-state,omitempty"`
 	Destination []*TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
@@ -82,10 +82,10 @@ type TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader struct {
 
 // TunnelinterfaceVxlaninterfaceEgress struct
 type TunnelinterfaceVxlaninterfaceEgress struct {
-	// +kubebuilder:default:=use-system-ipv4-address
-	SourceIp            *string                                                 `json:"source-ip,omitempty"`
 	DestinationGroups   *TunnelinterfaceVxlaninterfaceEgressDestinationGroups   `json:"destination-groups,omitempty"`
 	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
+	// +kubebuilder:default:=use-system-ipv4-address
+	SourceIp *string `json:"source-ip,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceIngress struct
@@ -114,12 +114,16 @@ type SrlTunnelinterfaceVxlaninterfaceSpec struct {
 
 // SrlTunnelinterfaceVxlaninterfaceStatus struct
 type SrlTunnelinterfaceVxlaninterfaceStatus struct {
-	// ValidationStatus defines the validation status of the resource object
+	// ConfigurationDependencyTargetNotFound identifies if the target of the resource object is missing or not
 	// +kubebuilder:validation:Enum=Success;Failed
-	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ValidationDetails defines the validation details of the resource object
-	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+
+	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

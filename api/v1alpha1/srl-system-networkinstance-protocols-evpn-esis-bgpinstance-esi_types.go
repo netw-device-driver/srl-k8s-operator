@@ -49,11 +49,11 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPref
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg struct {
-	Capabilities *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=32767
-	PreferenceValue *uint32 `json:"preference-value,omitempty"`
+	PreferenceValue *uint32                                                                                           `json:"preference-value,omitempty"`
+	Capabilities    *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm struct
@@ -74,9 +74,9 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers struct
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct {
-	InterfaceStandbySignalingOnNonDf *bool                                                                    `json:"interface-standby-signaling-on-non-df,omitempty"`
 	Timers                           *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers    `json:"timers,omitempty"`
 	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
+	InterfaceStandbySignalingOnNonDf *bool                                                                    `json:"interface-standby-signaling-on-non-df,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct
@@ -88,14 +88,15 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
+	Esi *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi `json:"ethernet-segment,omitempty"`
 	// +kubebuilder:validation:Enum=`use-system-ipv4-address`
 	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop *string                                                        `json:"next-hop,omitempty"`
-	Esi     *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi `json:"ethernet-segment,omitempty"`
+	NextHop *string `json:"next-hop,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
+	Interface *string `json:"interface,omitempty"`
 	// +kubebuilder:validation:Enum=`all-active`;`single-active`
 	// +kubebuilder:default:=all-active
 	MultiHomingMode *string                                                     `json:"multi-homing-mode,omitempty"`
@@ -111,8 +112,7 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi       *string `json:"esi,omitempty"`
-	Interface *string `json:"interface,omitempty"`
+	Esi *string `json:"esi,omitempty"`
 }
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct
@@ -123,12 +123,16 @@ type SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct {
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus struct
 type SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus struct {
-	// ValidationStatus defines the validation status of the resource object
+	// ConfigurationDependencyTargetNotFound identifies if the target of the resource object is missing or not
 	// +kubebuilder:validation:Enum=Success;Failed
-	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ValidationDetails defines the validation details of the resource object
-	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+
+	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

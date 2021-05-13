@@ -136,6 +136,20 @@ spec:
           status:
             description: SrlBfdStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -290,16 +304,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -615,6 +622,20 @@ spec:
           status:
             description: SrlInterfaceStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -942,16 +963,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -1782,6 +1796,20 @@ spec:
           status:
             description: SrlInterfaceSubinterfaceStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -2624,16 +2652,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -2738,6 +2759,20 @@ spec:
           status:
             description: SrlNetworkinstanceAggregateroutesStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -2851,16 +2886,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -3001,6 +3029,20 @@ spec:
           status:
             description: SrlNetworkinstanceNexthopgroupsStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -3150,16 +3192,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -3308,6 +3343,20 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpevpnStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -3466,16 +3515,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -4488,6 +4530,20 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -5517,16 +5573,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -5625,6 +5674,20 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpvpnStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -5732,16 +5795,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -6355,6 +6411,20 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsIsisStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -6977,16 +7047,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -7059,6 +7122,20 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsLinuxStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -7140,16 +7217,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -7770,6 +7840,20 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsOspfStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -8400,16 +8484,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -8815,6 +8892,20 @@ spec:
           status:
             description: SrlNetworkinstanceStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -9230,16 +9321,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -9331,6 +9415,20 @@ spec:
           status:
             description: SrlNetworkinstanceStaticroutesStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -9431,16 +9529,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -9514,6 +9605,20 @@ spec:
           status:
             description: SrlRoutingpolicyAspathsetStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -9596,16 +9701,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -9678,6 +9776,20 @@ spec:
           status:
             description: SrlRoutingpolicyCommunitysetStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -9759,16 +9871,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -10090,6 +10195,20 @@ spec:
           status:
             description: SrlRoutingpolicyPolicyStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -10423,16 +10542,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -10516,6 +10628,20 @@ spec:
           status:
             description: SrlRoutingpolicyPrefixsetStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -10608,16 +10734,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -10697,6 +10816,20 @@ spec:
           status:
             description: SrlSystemMtuStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -10786,16 +10919,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -10865,6 +10991,20 @@ spec:
           status:
             description: SrlSystemNameStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -10944,16 +11084,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -11035,6 +11168,20 @@ spec:
           status:
             description: SrlSystemNetworkinstanceProtocolsBgpvpnStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -11125,16 +11272,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -11311,6 +11451,20 @@ spec:
             description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus
               struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -11493,16 +11647,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -11571,6 +11718,20 @@ spec:
             description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceStatus
               struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -11647,16 +11808,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -11738,6 +11892,20 @@ spec:
           status:
             description: SrlSystemNetworkinstanceProtocolsEvpnStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -11828,16 +11996,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -12100,6 +12261,20 @@ spec:
           status:
             description: SrlTunnelinterfaceStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -12178,16 +12353,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true
@@ -12352,6 +12520,20 @@ spec:
           status:
             description: SrlTunnelinterfaceVxlaninterfaceStatus struct
             properties:
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
+                enum:
+                - Success
+                - Failed
+                type: string
+              configurationDependencyValidationStatus:
+                description: ConfigurationDependencyValidationStatus identifies the
+                  status of the LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
@@ -12525,16 +12707,9 @@ spec:
                         type: string
                       type: array
                   type: object
-                description: ValidationDetails defines the validation details of the
-                  resource object
+                description: ConfigurationDependencyValidationDetails defines the
+                  validation details of the resource object
                 type: object
-              validationStatus:
-                description: ValidationStatus defines the validation status of the
-                  resource object
-                enum:
-                - Success
-                - Failed
-                type: string
             type: object
         type: object
     served: true

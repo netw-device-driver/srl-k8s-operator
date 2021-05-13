@@ -30,12 +30,12 @@ const (
 
 // NetworkinstanceProtocolsLinux struct
 type NetworkinstanceProtocolsLinux struct {
+	// +kubebuilder:default:=true
+	ExportNeighbors *bool `json:"export-neighbors,omitempty"`
 	// +kubebuilder:default:=false
 	ExportRoutes *bool `json:"export-routes,omitempty"`
 	// +kubebuilder:default:=false
 	ImportRoutes *bool `json:"import-routes,omitempty"`
-	// +kubebuilder:default:=true
-	ExportNeighbors *bool `json:"export-neighbors,omitempty"`
 }
 
 // SrlNetworkinstanceProtocolsLinuxSpec struct
@@ -46,12 +46,16 @@ type SrlNetworkinstanceProtocolsLinuxSpec struct {
 
 // SrlNetworkinstanceProtocolsLinuxStatus struct
 type SrlNetworkinstanceProtocolsLinuxStatus struct {
-	// ValidationStatus defines the validation status of the resource object
+	// ConfigurationDependencyTargetNotFound identifies if the target of the resource object is missing or not
 	// +kubebuilder:validation:Enum=Success;Failed
-	ValidationStatus *ValidationStatus `json:"validationStatus,omitempty"`
+	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ValidationDetails defines the validation details of the resource object
-	ValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+
+	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
