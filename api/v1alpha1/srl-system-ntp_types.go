@@ -56,11 +56,11 @@ type SrlSystemNtpSpec struct {
 type SrlSystemNtpStatus struct {
 	// ConfigurationDependencyTargetNotFound identifies if the target of the resource object is missing or not
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetNotFound"`
+	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetNotFound,omitempty"`
 
 	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus"`
+	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
 
 	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
 	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`

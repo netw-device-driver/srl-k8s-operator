@@ -180,9 +180,6 @@ spec:
                 description: ConfigurationDependencyValidationDetails defines the
                   validation details of the resource object
                 type: object
-            required:
-            - configurationDependencyTargetNotFound
-            - configurationDependencyValidationStatus
             type: object
         type: object
     served: true
