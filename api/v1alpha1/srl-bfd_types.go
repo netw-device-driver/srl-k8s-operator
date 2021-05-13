@@ -30,10 +30,6 @@ const (
 
 // BfdMicroBfdSessionsLagInterface struct
 type BfdMicroBfdSessionsLagInterface struct {
-	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=10000
 	// +kubebuilder:validation:Maximum=100000000
 	// +kubebuilder:default:=1000000
@@ -52,6 +48,10 @@ type BfdMicroBfdSessionsLagInterface struct {
 	// +kubebuilder:validation:Maximum=100000000
 	// +kubebuilder:default:=1000000
 	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
+	Name                   *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // BfdMicroBfdSessions struct
@@ -61,6 +61,14 @@ type BfdMicroBfdSessions struct {
 
 // BfdSubinterface struct
 type BfdSubinterface struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100000000
+	// +kubebuilder:default:=0
+	MinimumEchoReceiveInterval *uint32 `json:"minimum-echo-receive-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=10000
+	// +kubebuilder:validation:Maximum=100000000
+	// +kubebuilder:default:=1000000
+	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:validation:MaxLength=25
 	// +kubebuilder:validation:Required
@@ -77,20 +85,12 @@ type BfdSubinterface struct {
 	// +kubebuilder:validation:Maximum=20
 	// +kubebuilder:default:=3
 	DetectionMultiplier *uint8 `json:"detection-multiplier,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=100000000
-	// +kubebuilder:default:=0
-	MinimumEchoReceiveInterval *uint32 `json:"minimum-echo-receive-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=10000
-	// +kubebuilder:validation:Maximum=100000000
-	// +kubebuilder:default:=1000000
-	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
 }
 
 // Bfd struct
 type Bfd struct {
-	Subinterface     []*BfdSubinterface   `json:"subinterface,omitempty"`
 	MicroBfdSessions *BfdMicroBfdSessions `json:"micro-bfd-sessions,omitempty"`
+	Subinterface     []*BfdSubinterface   `json:"subinterface,omitempty"`
 }
 
 // SrlBfdSpec struct

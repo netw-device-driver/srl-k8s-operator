@@ -74,9 +74,9 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers struct
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct {
-	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
 	InterfaceStandbySignalingOnNonDf *bool                                                                    `json:"interface-standby-signaling-on-non-df,omitempty"`
 	Timers                           *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers    `json:"timers,omitempty"`
+	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct
@@ -88,14 +88,18 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
-	Esi *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi `json:"ethernet-segment,omitempty"`
 	// +kubebuilder:validation:Enum=`use-system-ipv4-address`
 	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop *string `json:"next-hop,omitempty"`
+	NextHop *string                                                        `json:"next-hop,omitempty"`
+	Esi     *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi `json:"ethernet-segment,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
+	// +kubebuilder:validation:Enum=`all-active`;`single-active`
+	// +kubebuilder:default:=all-active
+	MultiHomingMode *string                                                     `json:"multi-homing-mode,omitempty"`
+	Routes          *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes `json:"routes,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -109,10 +113,6 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
 	Esi       *string `json:"esi,omitempty"`
 	Interface *string `json:"interface,omitempty"`
-	// +kubebuilder:validation:Enum=`all-active`;`single-active`
-	// +kubebuilder:default:=all-active
-	MultiHomingMode *string                                                     `json:"multi-homing-mode,omitempty"`
-	Routes          *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes `json:"routes,omitempty"`
 }
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct

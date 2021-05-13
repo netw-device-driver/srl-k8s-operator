@@ -35,7 +35,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
@@ -92,11 +94,52 @@ type SrlSystemNtpReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemntps,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemntps/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlsystemntps/finalizers,verbs=update
+// +kubebuilder:rbac:groups="srlinux.henderiw.be",resources=secrets,verbs=get;list;watch;update
+// +kubebuilder:rbac:groups="srlinux.henderiw.be",resources=events,verbs=get;list;watch;create;update;patch
+
+func (r *SrlSystemNtpReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
+	reqLogger := r.Log.WithValues("SrlSystemNtp", request.NamespacedName)
+	reqLogger.Info("publishing event", "reason", event.Reason, "message", event.Message)
+	err := r.Create(r.Ctx, &event)
+	if err != nil {
+		reqLogger.Info("failed to record event, ignoring",
+			"reason", event.Reason, "message", event.Message, "error", err)
+	}
+	return
+}
+
+func (r *SrlSystemNtpReconciler) updateEventHandler(e event.UpdateEvent) bool {
+	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlSystemNtp)
+	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlSystemNtp)
+	if !(oldOK && newOK) {
+		// The thing that changed wasn't a host, so we
+		// need to assume that we must update. This
+		// happens when, for example, an owned Secret
+		// changes.
+		return true
+	}
+
+	//If the update increased the resource Generation then let's process it
+	//if e.MetaNew.GetGeneration() != e.MetaOld.GetGeneration() {
+	//	return true
+	//}
+
+	//Discard updates that did not increase the resource Generation (such as on Status.LastUpdated), except for the finalizers or annotations
+	//if reflect.DeepEqual(e.MetaNew.GetFinalizers(), e.MetaOld.GetFinalizers()) && reflect.DeepEqual(e.MetaNew.GetAnnotations(), e.MetaOld.GetAnnotations()) {
+	//	return false
+	//}
+
+	return true
+}
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *SrlSystemNtpReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
 		For(&srlinuxv1alpha1.SrlSystemNtp{}).
+		WithEventFilter(
+			predicate.Funcs{
+				UpdateFunc: r.updateEventHandler,
+			}).
 		WithOptions(option).
 		Watches(
 			&source.Kind{Type: &nddv1.NetworkDevice{}},
@@ -460,6 +503,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 
 		if !validationSuccess {
+			r.publishEvent(req, o.NewEvent("ValidationError", "local leafref dont match"))
 			return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
 		}
 	}
@@ -490,6 +534,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				}
 			}
 			// when no target is available requeue to retry after requetimer
+			r.publishEvent(req, o.NewEvent("Target Not found", "No target specified in the resource or therespective target does not exist"))
 			return ctrl.Result{Requeue: true, RequeueAfter: targetNotFoundRetryDelay}, nil
 		default:
 			return ctrl.Result{}, err
@@ -512,6 +557,9 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to find spec delta"))
+		}
+		if diff {
+			r.publishEvent(req, o.NewEvent("Spec changed", "update the resource"))
 		}
 		r.Log.WithValues("Spec is different, update resource", diff, "Spec Delete Paths", *dp).Info("Spec Diff")
 		// the diff handling is handled in the state machine later
@@ -573,6 +621,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			deletepaths:  &deletepaths,
 		}
 		if *initialState == srlinuxv1alpha1.ConfigStatusNone {
+			r.publishEvent(req, o.NewEvent("Update the device driver", "New Resource object or Resource Spec changed"))
 			// update the cache through GRPC
 			err := info[target.TargetName].UpdateCache(path, deletepaths, dependencies)
 			if err != nil {
@@ -638,6 +687,12 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
 			return ctrl.Result{Requeue: true, RequeueAfter: result[target.TargetName].RequeueAfter}, nil
+		}
+	}
+
+	for _, ri := range info {
+		for _, e := range ri.events {
+			r.publishEvent(req, e)
 		}
 	}
 

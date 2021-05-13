@@ -1,5 +1,5 @@
 apiVersion: srlinux.henderiw.be/v1alpha1
-kind: K8sSrlNokiaSystemSystemNtp
+kind: SrlSystemNtp
 metadata:
   name: ntp-sample
   labels:

@@ -36,6 +36,7 @@ type InterfaceEthernetFlowControl struct {
 
 // InterfaceEthernet struct
 type InterfaceEthernet struct {
+	FlowControl *InterfaceEthernetFlowControl `json:"flow-control,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	LacpPortPriority *uint16 `json:"lacp-port-priority,omitempty"`
@@ -44,18 +45,11 @@ type InterfaceEthernet struct {
 	AggregateId   *string `json:"aggregate-id,omitempty"`
 	AutoNegotiate *bool   `json:"auto-negotiate,omitempty"`
 	// +kubebuilder:validation:Enum=`full`;`half`
-	DuplexMode  *string                       `json:"duplex-mode,omitempty"`
-	FlowControl *InterfaceEthernetFlowControl `json:"flow-control,omitempty"`
+	DuplexMode *string `json:"duplex-mode,omitempty"`
 }
 
 // InterfaceLagLacp struct
 type InterfaceLagLacp struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	AdminKey *uint16 `json:"admin-key,omitempty"`
-	// +kubebuilder:validation:Enum=`FAST`;`SLOW`
-	// +kubebuilder:default:=SLOW
-	Interval *string `json:"interval,omitempty"`
 	// +kubebuilder:validation:Enum=`ACTIVE`;`PASSIVE`
 	// +kubebuilder:default:=ACTIVE
 	LacpMode *string `json:"lacp-mode,omitempty"`
@@ -65,6 +59,12 @@ type InterfaceLagLacp struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	SystemPriority *uint16 `json:"system-priority,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	AdminKey *uint16 `json:"admin-key,omitempty"`
+	// +kubebuilder:validation:Enum=`FAST`;`SLOW`
+	// +kubebuilder:default:=SLOW
+	Interval *string `json:"interval,omitempty"`
 }
 
 // InterfaceLag struct
@@ -96,11 +96,11 @@ type InterfaceQosOutputMulticastQueueScheduling struct {
 
 // InterfaceQosOutputMulticastQueue struct
 type InterfaceQosOutputMulticastQueue struct {
-	Scheduling *InterfaceQosOutputMulticastQueueScheduling `json:"scheduling,omitempty"`
-	Template   *string                                     `json:"template,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=7
-	QueueId *uint8 `json:"queue-id"`
+	QueueId    *uint8                                      `json:"queue-id"`
+	Scheduling *InterfaceQosOutputMulticastQueueScheduling `json:"scheduling,omitempty"`
+	Template   *string                                     `json:"template,omitempty"`
 }
 
 // InterfaceQosOutputSchedulerTierNode struct
@@ -117,10 +117,10 @@ type InterfaceQosOutputSchedulerTierNode struct {
 
 // InterfaceQosOutputSchedulerTier struct
 type InterfaceQosOutputSchedulerTier struct {
+	Node []*InterfaceQosOutputSchedulerTierNode `json:"node,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4
-	Level *uint8                                 `json:"level"`
-	Node  []*InterfaceQosOutputSchedulerTierNode `json:"node,omitempty"`
+	Level *uint8 `json:"level"`
 }
 
 // InterfaceQosOutputScheduler struct
@@ -144,19 +144,19 @@ type InterfaceQosOutputUnicastQueueScheduling struct {
 
 // InterfaceQosOutputUnicastQueue struct
 type InterfaceQosOutputUnicastQueue struct {
+	Template    *string `json:"template,omitempty"`
+	VoqTemplate *string `json:"voq-template,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=7
-	QueueId     *uint8                                    `json:"queue-id"`
-	Scheduling  *InterfaceQosOutputUnicastQueueScheduling `json:"scheduling,omitempty"`
-	Template    *string                                   `json:"template,omitempty"`
-	VoqTemplate *string                                   `json:"voq-template,omitempty"`
+	QueueId    *uint8                                    `json:"queue-id"`
+	Scheduling *InterfaceQosOutputUnicastQueueScheduling `json:"scheduling,omitempty"`
 }
 
 // InterfaceQosOutput struct
 type InterfaceQosOutput struct {
-	UnicastQueue   []*InterfaceQosOutputUnicastQueue   `json:"unicast-queue,omitempty"`
 	MulticastQueue []*InterfaceQosOutputMulticastQueue `json:"multicast-queue,omitempty"`
 	Scheduler      *InterfaceQosOutputScheduler        `json:"scheduler,omitempty"`
+	UnicastQueue   []*InterfaceQosOutputUnicastQueue   `json:"unicast-queue,omitempty"`
 }
 
 // InterfaceQos struct
@@ -172,20 +172,15 @@ type InterfaceSflow struct {
 
 // InterfaceTransceiver struct
 type InterfaceTransceiver struct {
-	DdmEvents *bool `json:"ddm-events,omitempty"`
 	// +kubebuilder:validation:Enum=`base-r`;`disabled`;`rs-108`;`rs-528`;`rs-544`
 	// +kubebuilder:default:=disabled
 	ForwardErrorCorrection *string `json:"forward-error-correction,omitempty"`
 	TxLaser                *bool   `json:"tx-laser,omitempty"`
+	DdmEvents              *bool   `json:"ddm-events,omitempty"`
 }
 
 // Interface struct
 type Interface struct {
-	// +kubebuilder:validation:MinLength=3
-	// +kubebuilder:validation:MaxLength=20
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))`
-	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -193,12 +188,17 @@ type Interface struct {
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Description  *string               `json:"description,omitempty"`
-	Ethernet     *InterfaceEthernet    `json:"ethernet,omitempty"`
-	LoopbackMode *bool                 `json:"loopback-mode,omitempty"`
-	Sflow        *InterfaceSflow       `json:"sflow,omitempty"`
-	Transceiver  *InterfaceTransceiver `json:"transceiver,omitempty"`
-	Lag          *InterfaceLag         `json:"lag,omitempty"`
+	Description *string               `json:"description,omitempty"`
+	Sflow       *InterfaceSflow       `json:"sflow,omitempty"`
+	Transceiver *InterfaceTransceiver `json:"transceiver,omitempty"`
+	// +kubebuilder:validation:MinLength=3
+	// +kubebuilder:validation:MaxLength=20
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`(mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))`
+	Name         *string            `json:"name"`
+	Ethernet     *InterfaceEthernet `json:"ethernet,omitempty"`
+	Lag          *InterfaceLag      `json:"lag,omitempty"`
+	LoopbackMode *bool              `json:"loopback-mode,omitempty"`
 	// +kubebuilder:validation:Minimum=1500
 	// +kubebuilder:validation:Maximum=9500
 	Mtu         *uint16       `json:"mtu,omitempty"`

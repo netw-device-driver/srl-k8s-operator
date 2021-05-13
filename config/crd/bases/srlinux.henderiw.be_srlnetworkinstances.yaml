@@ -51,6 +51,7 @@ spec:
                       description: NetworkinstanceBridgeTable struct
                       properties:
                         discard-unknown-dest-mac:
+                          default: false
                           type: boolean
                         mac-duplication:
                           description: NetworkinstanceBridgeTableMacDuplication struct
@@ -129,6 +130,7 @@ spec:
                               type: integer
                           type: object
                         protect-anycast-gw-mac:
+                          default: false
                           type: boolean
                         static-mac:
                           description: NetworkinstanceBridgeTableStaticMac struct
@@ -444,6 +446,7 @@ spec:
                           description: NetworkinstanceBridgeTable struct
                           properties:
                             discard-unknown-dest-mac:
+                              default: false
                               type: boolean
                             mac-duplication:
                               description: NetworkinstanceBridgeTableMacDuplication
@@ -523,6 +526,7 @@ spec:
                                   type: integer
                               type: object
                             protect-anycast-gw-mac:
+                              default: false
                               type: boolean
                             static-mac:
                               description: NetworkinstanceBridgeTableStaticMac struct

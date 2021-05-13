@@ -17,6 +17,26 @@ rules:
 - apiGroups:
   - srlinux.henderiw.be
   resources:
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - srlinux.henderiw.be
+  resources:
   - srlbfds
   verbs:
   - create
