@@ -12576,15 +12576,7 @@ metadata:
   name: srl-k8s-operator-manager-role
 rules:
 - apiGroups:
-  - ndd.henderiw.be
-  resources:
-  - networkdevices
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - srlinux.henderiw.be
+  - ""
   resources:
   - events
   verbs:
@@ -12595,13 +12587,21 @@ rules:
   - update
   - watch
 - apiGroups:
-  - srlinux.henderiw.be
+  - ""
   resources:
   - secrets
   verbs:
   - get
   - list
   - update
+  - watch
+- apiGroups:
+  - ndd.henderiw.be
+  resources:
+  - networkdevices
+  verbs:
+  - get
+  - list
   - watch
 - apiGroups:
   - srlinux.henderiw.be
