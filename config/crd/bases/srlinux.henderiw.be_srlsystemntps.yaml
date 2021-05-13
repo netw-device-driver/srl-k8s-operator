@@ -70,7 +70,7 @@ spec:
           status:
             description: SrlSystemNtpStatus struct
             properties:
-              configurationDependencyTargetNotFound:
+              configurationDependencyTargetFound:
                 description: ConfigurationDependencyTargetNotFound identifies if the
                   target of the resource object is missing or not
                 enum:

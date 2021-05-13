@@ -20,3 +20,10 @@ type Target struct {
 	TargetName string
 	Target     string
 }
+
+func getTargets(t []*Target) (targets string) {
+	for _, target := range t {
+		targets += target.TargetName
+	}
+	return targets
+}

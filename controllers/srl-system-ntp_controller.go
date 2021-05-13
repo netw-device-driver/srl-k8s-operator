@@ -533,17 +533,22 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				// Stop reconciliation as the resource is deleted
 				return ctrl.Result{}, nil
 			}
-			// only publish events on status transition
-			if o.Status.ConfigurationDependencyTargetFound != nil && *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusFailed) {
+			// check status transitions in order to check if the status need to be updated and/or events need to be initialized
+			if o.Status.ConfigurationDependencyTargetFound == nil {
+				// publish event when the status was not yet initialized
+				o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
 				r.publishEvent(req, o.NewEvent("Target not found", "No valid target defined to apply the resource upon"))
+			} else {
+				// only publish events on status transition
+				if *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusFailed) {
+					r.publishEvent(req, o.NewEvent("Target not found", "No valid target defined to apply the resource upon"))
+				}
 			}
 			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
 			// save resource status since last target got deleted
-			if dirty {
-				if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
-					return ctrl.Result{}, errors.Wrap(err,
-						fmt.Sprintf("failed to save status"))
-				}
+			if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
+				return ctrl.Result{}, errors.Wrap(err,
+					fmt.Sprintf("failed to save status"))
 			}
 			// when no target is available requeue to retry after requetimer
 			return ctrl.Result{Requeue: true, RequeueAfter: targetNotFoundRetryDelay}, nil
@@ -551,13 +556,20 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			return ctrl.Result{}, err
 		}
 	}
-	if o.Status.ConfigurationDependencyTargetFound != nil && *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusSuccess) {
-		// target status transitioned
+
+	if o.Status.ConfigurationDependencyTargetFound == nil {
+		// target status does not exist
 		dirty = true
 		o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusSuccess)
-		r.publishEvent(req, o.NewEvent("Target found", ""))
+		targets := getTargets(t)
+		r.publishEvent(req, o.NewEvent("Target found", targets))
+	} else {
+		if *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusSuccess) {
+			dirty = true
+			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusSuccess)
+			r.publishEvent(req, o.NewEvent("Target found", ""))
+		}
 	}
-
 	// save resource status since items got deleted or the status transitioned
 	if dirty {
 		if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
@@ -639,7 +651,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			deletepaths:  &deletepaths,
 		}
 		if *initialState == srlinuxv1alpha1.ConfigStatusNone {
-			r.publishEvent(req, o.NewEvent("Update the device driver", "New Resource object or Resource Spec changed"))
+			r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s, Configuration status old: None -> new: Configuring", target.TargetName), "New Resource or Resource Spec changed"))
 			// update the cache through GRPC
 			err := info[target.TargetName].UpdateCache(path, deletepaths, dependencies)
 			if err != nil {
@@ -982,6 +994,8 @@ func (o *SrlSystemNtpStateMachine) updateSrlSystemNtpStateFrom(initialState *srl
 			"old", initialState,
 			"new", o.NextState)
 		o.Object.Status.Target[*o.TargetName].ConfigStatus = o.NextState
+
+		info.appendEvent(fmt.Sprintf("Target: %s, Configuration status old: %s -> new: %s", *o.TargetName, initialState.String(), o.NextState.String()), "")
 	}
 }
 

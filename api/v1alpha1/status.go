@@ -81,6 +81,26 @@ const (
 	ConfigStatusConfigureFailed ConfigStatus = "ConfigStatusConfigureFailed"
 )
 
+func (c *ConfigStatus) String() string {
+	switch *c {
+	case ConfigStatusNone:
+		return ""
+	case ConfigStatusDeleting:
+		return "Deleting"
+	case ConfigStatusDeleteFailed:
+		return "DeleteFailed"
+	case ConfigStatusDeleteSuccess:
+		return "DeleteSuccess"
+	case ConfigStatusConfiguring:
+		return "Configuring"
+	case ConfigStatusConfigureSuccess:
+		return "ConfiguredSuccess"
+	case ConfigStatusConfigureFailed:
+		return "ConfigStatusConfigureFailed"
+	}
+	return ""
+}
+
 func ConfigStatusPtr(c ConfigStatus) *ConfigStatus { return &c }
 
 // TargetStatus provides the status of the configuration applied on this particular device
