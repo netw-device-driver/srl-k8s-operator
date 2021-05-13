@@ -473,28 +473,36 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
 		}
 		validationSuccess := true
-		o.Status.ValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-		for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
+		o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+		for s, elementWithLeafRef := range SystemNtpIntraResourceleafRef {
 			if elementWithLeafRef.Exists {
 				if !elementWithLeafRef.DependencyCheckSuccess {
 					validationSuccess = false
 				}
-				o.Status.ValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+				o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
 					Values:        &elementWithLeafRef.Values,
 					LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
 					LeafRefValues: &elementWithLeafRef.LeafRefValues,
 				}
 			} else {
-				o.Status.ValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+				o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
 					LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
 				}
 			}
 		}
 
 		if validationSuccess {
-			o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
+			if *o.Status.ConfigurationDependencyValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+				r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+			}
+			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 		} else {
-			o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			// if the validation status did not change we dont have to publish a new event
+			if *o.Status.ConfigurationDependencyValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+				r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+			}
+			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		}
 
 		if err := r.saveSrlSystemNtpStatus(ctx, o); err != nil {
@@ -503,7 +511,6 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 
 		if !validationSuccess {
-			r.publishEvent(req, o.NewEvent("ValidationError", "local leafref dont match"))
 			return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
 		}
 	}
@@ -526,6 +533,11 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				// Stop reconciliation as the resource is deleted
 				return ctrl.Result{}, nil
 			}
+			// only publish events on status transition
+			if *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusFailed) {
+				r.publishEvent(req, o.NewEvent("Target not found", "No valid target defined to apply the resource upon"))
+			}
+			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
 			// save resource status since last target got deleted
 			if dirty {
 				if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
@@ -534,13 +546,19 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				}
 			}
 			// when no target is available requeue to retry after requetimer
-			r.publishEvent(req, o.NewEvent("Target Not found", "No target specified in the resource or therespective target does not exist"))
 			return ctrl.Result{Requeue: true, RequeueAfter: targetNotFoundRetryDelay}, nil
 		default:
 			return ctrl.Result{}, err
 		}
 	}
-	// save resource status since items got deleted
+	if *o.Status.ConfigurationDependencyTargetFound != srlinuxv1alpha1.TargetFoundStatus(srlinuxv1alpha1.TargetFoundStatusSuccess) {
+		// target status transitioned
+		dirty = true
+		o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusSuccess)
+		r.publishEvent(req, o.NewEvent("Target found", ""))
+	}
+
+	// save resource status since items got deleted or the status transitioned
 	if dirty {
 		if err = r.saveSrlSystemNtpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
@@ -850,6 +868,7 @@ func (r *SrlSystemNtpReconciler) FindTarget(ctx context.Context, o *srlinuxv1alp
 		// Target not found, return target not found error
 		return nil, dirty, &TargetNotFoundError{message: "The Target cannot be found, update label or discovery object"}
 	}
+
 	return targets, dirty, nil
 }
 

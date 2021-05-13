@@ -16,6 +16,19 @@ limitations under the License.
 
 package v1alpha1
 
+// TargetFoundStatus defines the status of the resource target
+type TargetFoundStatus string
+
+const (
+	// TargetFoundStatusSuccess means the target was found
+	TargetFoundStatusSuccess TargetFoundStatus = "Success"
+
+	// TargetFoundStatusFailed means the target was not found
+	TargetFoundStatusFailed TargetFoundStatus = "Failed"
+)
+
+func TargetFoundStatusPtr(s TargetFoundStatus) *TargetFoundStatus { return &s }
+
 // ValidationStatus defines the validation status of the resource object
 type ValidationStatus string
 
@@ -27,7 +40,7 @@ const (
 	ValidationStatusFailed ValidationStatus = "Failed"
 )
 
-func ValidationStatusPtr(v ValidationStatus) *ValidationStatus { return &v }
+func ValidationStatusPtr(s ValidationStatus) *ValidationStatus { return &s }
 
 // ValidationDetails provides the status of the configuration applied on this particular device
 type ValidationDetails struct {
