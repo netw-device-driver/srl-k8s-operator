@@ -29,7 +29,7 @@ rules:
 - apiGroups:
   - ndd.henderiw.be
   resources:
-  - networkdevices
+  - networknodes
   verbs:
   - get
   - list

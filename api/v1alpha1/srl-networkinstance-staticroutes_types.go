@@ -30,6 +30,10 @@ const (
 
 // NetworkinstanceStaticroutesRoute struct
 type NetworkinstanceStaticroutesRoute struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=5
+	Preference *uint8 `json:"preference,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
 	Prefix *string `json:"prefix"`
@@ -41,10 +45,6 @@ type NetworkinstanceStaticroutesRoute struct {
 	// +kubebuilder:default:=1
 	Metric       *uint32 `json:"metric,omitempty"`
 	NextHopGroup *string `json:"next-hop-group,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=5
-	Preference *uint8 `json:"preference,omitempty"`
 }
 
 // NetworkinstanceStaticroutes struct

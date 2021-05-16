@@ -41,23 +41,20 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEt
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct {
-	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16777215
-	Vni *uint32 `json:"vni,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
+	AdminState          *string                                                                                  `json:"admin-state,omitempty"`
+	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16777215
+	Vni *uint32 `json:"vni,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -67,6 +64,9 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                 `json:"admin-state,omitempty"`
 	Destination []*TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
@@ -97,13 +97,13 @@ type TunnelinterfaceVxlaninterfaceIngress struct {
 
 // TunnelinterfaceVxlaninterface struct
 type TunnelinterfaceVxlaninterface struct {
+	Type *string `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                   `json:"index"`
 	BridgeTable *TunnelinterfaceVxlaninterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *TunnelinterfaceVxlaninterfaceEgress      `json:"egress,omitempty"`
 	Ingress     *TunnelinterfaceVxlaninterfaceIngress     `json:"ingress,omitempty"`
-	Type        *string                                   `json:"type"`
 }
 
 // SrlTunnelinterfaceVxlaninterfaceSpec struct

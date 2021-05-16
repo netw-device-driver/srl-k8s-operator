@@ -97,7 +97,7 @@ type SrlNetworkinstanceProtocolsBgpevpnReconcileInfo struct {
 	log               logr.Logger
 }
 
-// +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networkdevices,verbs=get;list;watch
+// +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networknodes,verbs=get;list;watch
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsbgpevpns,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsbgpevpns/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsbgpevpns/finalizers,verbs=update
@@ -149,8 +149,8 @@ func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) SetupWithManager(ctx cont
 			}).
 		WithOptions(option).
 		Watches(
-			&source.Kind{Type: &nddv1.NetworkDevice{}},
-			handler.EnqueueRequestsFromMapFunc(r.NetworkDeviceMapFunc),
+			&source.Kind{Type: &nddv1.NetworkNode{}},
+			handler.EnqueueRequestsFromMapFunc(r.NetworkNodeMapFunc),
 		)
 
 	_, err := b.Build(r)
@@ -161,19 +161,19 @@ func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) SetupWithManager(ctx cont
 
 }
 
-// NetworkDeviceMapFunc is a handler.ToRequestsFunc to be used to enqeue
+// NetworkNodeMapFunc is a handler.ToRequestsFunc to be used to enqeue
 // request for reconciliation of SrlNetworkinstanceProtocolsBgpevpn.
-func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) NetworkDeviceMapFunc(o client.Object) []ctrl.Request {
+func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Request {
 	result := []ctrl.Request{}
 
-	nd, ok := o.(*nddv1.NetworkDevice)
+	nn, ok := o.(*nddv1.NetworkNode)
 	if !ok {
 		panic(fmt.Sprintf("Expected a NodeTopology but got a %T", o))
 	}
-	r.Log.WithValues(nd.GetName(), nd.GetNamespace()).Info("NetworkDevice MapFunction")
+	r.Log.WithValues(nn.GetName(), nn.GetNamespace()).Info("NetworkNode MapFunction")
 
 	selectors := []client.ListOption{
-		client.InNamespace(nd.Namespace),
+		client.InNamespace(nn.Namespace),
 		client.MatchingLabels{},
 	}
 	os := &srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpevpnList{}
@@ -186,7 +186,7 @@ func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) NetworkDeviceMapFunc(o cl
 			Namespace: o.GetNamespace(),
 			Name:      o.GetName(),
 		}
-		r.Log.WithValues(o.GetName(), o.GetNamespace()).Info("NetworkDevice MapFunction ReQueue")
+		r.Log.WithValues(o.GetName(), o.GetNamespace()).Info("NetworkNode MapFunction ReQueue")
 		result = append(result, ctrl.Request{NamespacedName: name})
 	}
 
@@ -817,28 +817,28 @@ func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) FindTarget(ctx context.Co
 	selectors := []client.ListOption{
 		client.MatchingLabels{},
 	}
-	ndl := &nddv1.NetworkDeviceList{}
-	if err := r.List(r.Ctx, ndl, selectors...); err != nil {
-		r.Log.Error(err, "Failed to get NetworkDevice List ")
+	nnl := &nddv1.NetworkNodeList{}
+	if err := r.List(r.Ctx, nnl, selectors...); err != nil {
+		r.Log.Error(err, "Failed to get NetworkNode List ")
 		return nil, dirty, err
 	}
 	var targets []*Target
 
-	for _, nd := range ndl.Items {
+	for _, nn := range nnl.Items {
 		// check if the network device has a target label and if it matches,
 		// append the target to the target list
 		//r.Log.WithValues("Network Device", nd).Info("Network Device info")
-		if k, ok := nd.Labels["target"]; ok {
+		if k, ok := nn.Labels["target"]; ok {
 			if k == targetName {
-				r.Log.WithValues("target", targetName).WithValues("DiscoveryStatus", nd.Status.DiscoveryStatus).Info("Target Label found")
+				r.Log.WithValues("target", targetName).WithValues("DiscoveryStatus", nn.Status.DiscoveryStatus).Info("Target Label found")
 				// the target matches and the network device driver is in ready state
-				if nd.Status.DiscoveryStatus != nil && *nd.Status.DiscoveryStatus == nddv1.DiscoveryStatusReady {
+				if nn.Status.DiscoveryStatus != nil && *nn.Status.DiscoveryStatus == nddv1.DiscoveryStatusReady {
 					target := &Target{
-						TargetName: nd.Name,
-						Target:     "nddriver-service-" + nd.Name + ".nddriver-system.svc.cluster.local:" + strconv.Itoa(*nd.Status.GrpcServer.Port),
+						TargetName: nn.Name,
+						Target:     "nddriver-service-" + nn.Name + ".nddriver-system.svc.cluster.local:" + strconv.Itoa(*nn.Status.GrpcServer.Port),
 					}
 					// check if the device was already provisioned
-					if t, ok := o.Status.Target[nd.Name]; ok {
+					if t, ok := o.Status.Target[nn.Name]; ok {
 						// target was already known to the resource and configured, so we exclude
 						if t.ConfigStatus != srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess) {
 							targets = append(targets, target)
@@ -852,16 +852,16 @@ func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) FindTarget(ctx context.Co
 		}
 		// check if the network device has a target-group label and if it matches,
 		// append the target to the target list
-		if k, ok := nd.Labels["target-group"]; ok {
+		if k, ok := nn.Labels["target-group"]; ok {
 			if k == targetName {
-				r.Log.WithValues("target", targetName).WithValues("DiscoveryStatus", nd.Status.DiscoveryStatus).Info("Target-group Label found")
-				if nd.Status.DiscoveryStatus != nil && *nd.Status.DiscoveryStatus == nddv1.DiscoveryStatusReady {
+				r.Log.WithValues("target", targetName).WithValues("DiscoveryStatus", nn.Status.DiscoveryStatus).Info("Target-group Label found")
+				if nn.Status.DiscoveryStatus != nil && *nn.Status.DiscoveryStatus == nddv1.DiscoveryStatusReady {
 					target := &Target{
-						TargetName: nd.Name,
-						Target:     "nddriver-service-" + nd.Name + ".nddriver-system.svc.cluster.local:" + strconv.Itoa(*nd.Status.GrpcServer.Port),
+						TargetName: nn.Name,
+						Target:     "nddriver-service-" + nn.Name + ".nddriver-system.svc.cluster.local:" + strconv.Itoa(*nn.Status.GrpcServer.Port),
 					}
 					// check if the device was already provisioned
-					if t, ok := o.Status.Target[nd.Name]; ok {
+					if t, ok := o.Status.Target[nn.Name]; ok {
 						// target was already known to the resource and configured, so we exclude
 						if t.ConfigStatus != srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess) {
 							targets = append(targets, target)

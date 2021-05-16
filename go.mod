@@ -6,7 +6,7 @@ require (
 	github.com/go-logr/logr v0.3.0
 	github.com/google/go-cmp v0.5.3
 	github.com/metal3-io/baremetal-operator v0.0.0-20210310165305-c74264a6ddcb
-	github.com/netw-device-driver/netw-device-controller v0.1.4
+	github.com/netw-device-driver/netw-device-controller v0.1.6
 	github.com/netw-device-driver/netwdevpb v0.1.15
 	github.com/onsi/ginkgo v1.14.1
 	github.com/onsi/gomega v1.10.2

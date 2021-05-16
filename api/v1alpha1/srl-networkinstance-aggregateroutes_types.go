@@ -30,12 +30,12 @@ const (
 
 // NetworkinstanceAggregateroutesRouteAggregator struct
 type NetworkinstanceAggregateroutesRouteAggregator struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	AsNumber *uint32 `json:"as-number,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	Address *string `json:"address,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	AsNumber *uint32 `json:"as-number,omitempty"`
 }
 
 // NetworkinstanceAggregateroutesRouteCommunities struct
@@ -47,17 +47,17 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState   *string                                         `json:"admin-state,omitempty"`
-	Aggregator   *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
-	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
-	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
+	GenerateIcmp *bool `json:"generate-icmp,omitempty"`
 	// +kubebuilder:default:=false
 	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
 	Prefix *string `json:"prefix"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState  *string                                         `json:"admin-state,omitempty"`
+	Aggregator  *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
+	Communities *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
 }
 
 // NetworkinstanceAggregateroutes struct
