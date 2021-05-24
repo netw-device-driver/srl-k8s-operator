@@ -17,13 +17,22 @@
 package controllers
 
 type ElementWithLeafRef struct {
+	REkvl                          []ElementKeyValue
+	RemoteLeafRefs                 []string
 	RelativePath2ObjectWithLeafRef string
 	AbsolutePath2LeafRef           string
 	RelativePath2LeafRef           string
 	ElementName                    string
 	KeyName                        string
-	Values                         []string
+	LocalLeafRefValues             []string
 	Exists                         bool
 	DependencyCheckSuccess         bool
 	LeafRefValues                  []string
+}
+
+// ElementKeyValue struct
+type ElementKeyValue struct {
+	Element  string
+	KeyName  string
+	KeyValue interface{}
 }

@@ -31,13 +31,13 @@ const (
 // SystemNetworkinstanceProtocolsEvpnEsisTimers struct
 type SystemNetworkinstanceProtocolsEvpnEsisTimers struct {
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=6000
-	// +kubebuilder:default:=10
-	BootTimer *uint32 `json:"boot-timer,omitempty"`
-	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=3
 	ActivationTimer *uint32 `json:"activation-timer,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=6000
+	// +kubebuilder:default:=10
+	BootTimer *uint32 `json:"boot-timer,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsis struct

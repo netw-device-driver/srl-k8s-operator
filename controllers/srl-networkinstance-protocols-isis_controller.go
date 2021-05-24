@@ -51,50 +51,90 @@ import (
 
 var NetworkinstanceProtocolsIsisIntraResourceleafRef = map[string]*ElementWithLeafRef{}
 
-var NetworkinstanceProtocolsIsisInterResourceleafRef = map[string]*ElementWithLeafRef{
-	"/network-instance/protocols/isis/instance/authentication/keychain": {
-		AbsolutePath2LeafRef:           "/system/authentication",
-		RelativePath2LeafRef:           "",
-		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "keychain",
-		KeyName:                        "name",
+/*
+	var NetworkinstanceProtocolsIsisIntraResourceleafRef= map[string]*ElementWithLeafRef{
+	}
+*/
+
+var NetworkinstanceProtocolsIsisInterResourceleafRef = map[string][]ElementKeyValue{
+	"/isis/instance[name=]/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
 	},
-	"/network-instance/protocols/isis/instance/export-policy": {
-		AbsolutePath2LeafRef:           "/routing-policy",
-		RelativePath2LeafRef:           "",
-		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "policy",
-		KeyName:                        "name",
+	"/isis/instance[name=]/export-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
 	},
-	"/network-instance/protocols/isis/instance/interface/authentication/keychain": {
-		AbsolutePath2LeafRef:           "/system/authentication",
-		RelativePath2LeafRef:           "",
-		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "keychain",
-		KeyName:                        "name",
+	"/isis/instance[name=]/interface[interface-name=]": []ElementKeyValue{
+		{"network-instance", "", ""},
+		{"name=current()", "", ""},
+		{"name]", "", ""},
+		{"interface", "name", "string"},
 	},
-	"/network-instance/protocols/isis/instance/interface/interface-name": {
-		AbsolutePath2LeafRef:           "/network-instance/name=current()/name]",
-		RelativePath2LeafRef:           "",
-		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "interface",
-		KeyName:                        "name",
+	"/isis/instance[name=]/interface[interface-name=]/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
 	},
-	"/network-instance/protocols/isis/instance/interface/level/authentication/keychain": {
-		AbsolutePath2LeafRef:           "/system/authentication",
-		RelativePath2LeafRef:           "",
-		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "keychain",
-		KeyName:                        "name",
+	"/isis/instance[name=]/interface[interface-name=]/level[level-number=]/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
 	},
-	"/network-instance/protocols/isis/instance/level/authentication/keychain": {
-		AbsolutePath2LeafRef:           "/system/authentication",
-		RelativePath2LeafRef:           "",
-		RelativePath2ObjectWithLeafRef: "",
-		ElementName:                    "keychain",
-		KeyName:                        "name",
+	"/isis/instance[name=]/level[level-number=]/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
 	},
 }
+
+/*
+	var NetworkinstanceProtocolsIsisInterResourceleafRef = map[string]*ElementWithLeafRef{
+		"/isis/instance[name=]/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+		"/isis/instance[name=]/export-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/isis/instance[name=]/interface[interface-name=]" : {
+			AbsolutePath2LeafRef: "/network-instance/name=current()/name]",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "interface",
+		    KeyName:             "name",
+		},
+		"/isis/instance[name=]/interface[interface-name=]/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+		"/isis/instance[name=]/interface[interface-name=]/level[level-number=]/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+		"/isis/instance[name=]/level[level-number=]/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+	}
+*/
 
 // SrlNetworkinstanceProtocolsIsisReconciler reconciles a SrlNetworkinstanceProtocolsIsis object
 type SrlNetworkinstanceProtocolsIsisReconciler struct {
@@ -111,18 +151,19 @@ type SrlNetworkinstanceProtocolsIsisTargetReconcileInfo struct {
 }
 
 type SrlNetworkinstanceProtocolsIsisReconcileInfo struct {
-	target            *string
-	resource          *string
-	o                 *srlinuxv1alpha1.SrlNetworkinstanceProtocolsIsis
-	level             *int32
-	dependencies      *[]string
-	deletepaths       *[]string
-	request           ctrl.Request
-	events            []corev1.Event
-	errorMessage      *string
-	postSaveCallbacks []func()
-	ctx               context.Context
-	log               logr.Logger
+	target              *string
+	resource            *string
+	o                   *srlinuxv1alpha1.SrlNetworkinstanceProtocolsIsis
+	level               *int32
+	dependencies        *[]string
+	leafRefDependencies *[]string
+	deletepaths         *[]string
+	request             ctrl.Request
+	events              []corev1.Event
+	errorMessage        *string
+	postSaveCallbacks   []func()
+	ctx                 context.Context
+	log                 logr.Logger
 }
 
 // +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networknodes,verbs=get;list;watch
@@ -224,248 +265,281 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) NetworkNodeMapFunc(o client.
 	return result
 }
 
-// last -> used to indicate in the validateObject the last element in the leafref. it is provided in the
-// validateObject function since you can have a list to walk through. As such we can supply the value direct
-// e -> element in the tree
-// x1 -> the data object
-// elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
-func (r *SrlNetworkinstanceProtocolsIsisReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
-	//xType := reflect.TypeOf(o)
-	//xValue := reflect.ValueOf(o)
-	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
-	switch x := o.(type) {
-	case map[string]interface{}:
-		//r.Log.Info("validateIfElementWithLeafRefExists map[string]interface{}")
-		if v, ok := x[elements[i]]; ok {
-			//r.Log.WithValues("Element", elements[i], "Object", v, "Last", i == (len(elements)-1)).Info("validateIfElementWithLeafRefExists found")
-			// if last
-			if i == (len(elements) - 1) {
-				switch val := v.(type) {
-				case string:
-					found := false
-					for _, leafrefValues := range elementWithleafref.Values {
-						if string(val) == leafrefValues {
-							found = true
+/*
+	// last -> used to indicate in the validateObject the last element in the leafref. it is provided in the
+	// validateObject function since you can have a list to walk through. As such we can supply the value direct
+	// e -> element in the tree
+	// x1 -> the data object
+	// elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
+	func (r *SrlNetworkinstanceProtocolsIsisReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+		//xType := reflect.TypeOf(o)
+		//xValue := reflect.ValueOf(o)
+		//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
+		switch x := o.(type) {
+		case map[string]interface{}:
+			//r.Log.Info("validateIfElementWithLeafRefExists map[string]interface{}")
+			if v, ok := x[elements[i]]; ok {
+				//r.Log.WithValues("Element", elements[i], "Object", v, "Last", i == (len(elements)-1)).Info("validateIfElementWithLeafRefExists found")
+				// if last
+				if i == (len(elements) - 1) {
+					switch val := v.(type) {
+					case string:
+						found := false
+						for _, leafrefValues := range elementWithleafref.Values {
+							if string(val) == leafrefValues {
+								found = true
+							}
+						}
+						if !found {
+							elementWithleafref.Exists = true
+							elementWithleafref.Values = append(elementWithleafref.Values, string(val))
 						}
 					}
-					if !found {
-						elementWithleafref.Exists = true
-						elementWithleafref.Values = append(elementWithleafref.Values, string(val))
-					}
+					return v, true
 				}
-				return v, true
-			}
-			i++
-			_, found := r.validateIfElementWithLeafRefExists(elements, i, v, elementWithleafref)
-			if !found {
+				i++
+				_, found := r.validateIfElementWithLeafRefExists(elements, i, v, elementWithleafref)
+				if !found {
+					return nil, false
+				}
+			} else {
+				//r.Log.WithValues("Element", elements[i]).Info("validateIfElementWithLeafRefExists not found")
 				return nil, false
 			}
-		} else {
-			//r.Log.WithValues("Element", elements[i]).Info("validateIfElementWithLeafRefExists not found")
+		case []interface{}:
+			//r.Log.Info("validateIfElementWithLeafRefExists []interface{}")
+			for _, v1 := range x {
+				switch x := v1.(type) {
+				case map[string]interface{}:
+					if v, ok := x[elements[i]]; ok {
+						//r.Log.WithValues("Element", elements[i], "Object", v, "Last", i == (len(elements)-1)).Info("validateIfElementWithLeafRefExists found")
+						// if last
+						if i == (len(elements) - 1) {
+							switch val := v.(type) {
+							case string:
+								found := false
+								for _, leafrefValues := range elementWithleafref.Values {
+									if string(val) == leafrefValues {
+										found = true
+									}
+								}
+								if !found {
+									elementWithleafref.Exists = true
+									elementWithleafref.Values = append(elementWithleafref.Values, string(val))
+								}
+							}
+							//return v, true
+						} else {
+							_, found := r.validateIfElementWithLeafRefExists(elements, i, v, elementWithleafref)
+							if !found {
+								return nil, false
+							}
+						}
+					} else {
+						//r.Log.WithValues("Element", elements[i]).Info("validateIfElementWithLeafRefExists not found")
+						return nil, false
+					}
+				}
+			}
+			if i == (len(elements) - 1) {
+				return nil, true
+			}
 			return nil, false
 		}
-	case []interface{}:
-		//r.Log.Info("validateIfElementWithLeafRefExists []interface{}")
-		for _, v1 := range x {
-			switch x := v1.(type) {
-			case map[string]interface{}:
-				if v, ok := x[elements[i]]; ok {
-					//r.Log.WithValues("Element", elements[i], "Object", v, "Last", i == (len(elements)-1)).Info("validateIfElementWithLeafRefExists found")
-					// if last
-					if i == (len(elements) - 1) {
-						switch val := v.(type) {
-						case string:
+		//r.Log.Info("validateIfElementWithLeafRefExists not map[string]interface{} or []interface{}")
+		return nil, true
+	}
+*/
+
+/*
+	func (r *SrlNetworkinstanceProtocolsIsisReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+		//xType := reflect.TypeOf(o)
+		//xValue := reflect.ValueOf(o)
+		//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
+		switch x := o.(type) {
+		case map[string]interface{}:
+			//r.Log.Info("validateLeafRefExists map[string]interface{}")
+			if v, ok := x[elements[i]]; ok {
+				//r.Log.WithValues("Element", elements[i], "LeafRefValue", leafrefValue, "Object", v, "Last", i == (len(elements)-1)).Info("validateLeafRefExists found")
+				if i == (len(elements) - 1) {
+					switch val := v.(type) {
+					case string:
+						if leafrefValue == val {
 							found := false
-							for _, leafrefValues := range elementWithleafref.Values {
+							for _, leafrefValues := range elementWithleafref.LeafRefValues {
 								if string(val) == leafrefValues {
 									found = true
 								}
 							}
 							if !found {
-								elementWithleafref.Exists = true
-								elementWithleafref.Values = append(elementWithleafref.Values, string(val))
+								elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+							}
+							return val, true
+						} else {
+							found := false
+							for _, leafrefValues := range elementWithleafref.LeafRefValues {
+								if string(val) == leafrefValues {
+									found = true
+								}
+							}
+							if !found {
+								elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+							}
+							return val, false
+						}
+					}
+				}
+				i++
+				_, found := r.validateLeafRefExists(elements, i, v, leafrefValue, elementWithleafref)
+				if !found {
+					return nil, false
+				}
+			} else {
+				//r.Log.WithValues("Element", elements[i]).Info("validateLeafRefExists not found")
+				return nil, false
+			}
+		case []interface{}:
+			r.Log.Info("validateLeafRefExists []interface{}")
+			f := false
+			for _, v1 := range x {
+				switch x := v1.(type) {
+				case map[string]interface{}:
+					if v, ok := x[elements[i]]; ok {
+						//r.Log.WithValues("Element", elements[i], "LeafRefValue", leafrefValue, "Object", v, "Last", i == (len(elements)-1)).Info("validateLeafRefExists found")
+						if i == (len(elements) - 1) {
+							switch val := v.(type) {
+							case string:
+								if leafrefValue == val {
+									found := false
+									for _, leafrefValues := range elementWithleafref.LeafRefValues {
+										if string(val) == leafrefValues {
+											found = true
+										}
+									}
+									if !found {
+										elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+									}
+									f = true
+									//return val, true
+								} else {
+									found := false
+									for _, leafrefValues := range elementWithleafref.LeafRefValues {
+										if string(val) == leafrefValues {
+											found = true
+										}
+									}
+									if !found {
+										elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
+									}
+									//return val, false
+								}
+							}
+						} else {
+							_, found := r.validateLeafRefExists(elements, i, v, leafrefValue, elementWithleafref)
+							if !found {
+								return nil, false
 							}
 						}
 						//return v, true
 					} else {
-						_, found := r.validateIfElementWithLeafRefExists(elements, i, v, elementWithleafref)
-						if !found {
-							return nil, false
-						}
-					}
-				} else {
-					//r.Log.WithValues("Element", elements[i]).Info("validateIfElementWithLeafRefExists not found")
-					return nil, false
-				}
-			}
-		}
-		if i == (len(elements) - 1) {
-			return nil, true
-		}
-		return nil, false
-	}
-	//r.Log.Info("validateIfElementWithLeafRefExists not map[string]interface{} or []interface{}")
-	return nil, true
-}
-
-func (r *SrlNetworkinstanceProtocolsIsisReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
-	//xType := reflect.TypeOf(o)
-	//xValue := reflect.ValueOf(o)
-	//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
-	switch x := o.(type) {
-	case map[string]interface{}:
-		//r.Log.Info("validateLeafRefExists map[string]interface{}")
-		if v, ok := x[elements[i]]; ok {
-			//r.Log.WithValues("Element", elements[i], "LeafRefValue", leafrefValue, "Object", v, "Last", i == (len(elements)-1)).Info("validateLeafRefExists found")
-			if i == (len(elements) - 1) {
-				switch val := v.(type) {
-				case string:
-					if leafrefValue == val {
-						found := false
-						for _, leafrefValues := range elementWithleafref.LeafRefValues {
-							if string(val) == leafrefValues {
-								found = true
-							}
-						}
-						if !found {
-							elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
-						}
-						return val, true
-					} else {
-						found := false
-						for _, leafrefValues := range elementWithleafref.LeafRefValues {
-							if string(val) == leafrefValues {
-								found = true
-							}
-						}
-						if !found {
-							elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
-						}
-						return val, false
+						//r.Log.WithValues("Element", elements[i]).Info("validateLeafRefExists not found")
+						return nil, false
 					}
 				}
 			}
-			i++
-			_, found := r.validateLeafRefExists(elements, i, v, leafrefValue, elementWithleafref)
-			if !found {
-				return nil, false
+			if i == (len(elements) - 1) && f {
+				return nil, true
 			}
-		} else {
-			//r.Log.WithValues("Element", elements[i]).Info("validateLeafRefExists not found")
 			return nil, false
 		}
-	case []interface{}:
-		r.Log.Info("validateLeafRefExists []interface{}")
-		f := false
-		for _, v1 := range x {
-			switch x := v1.(type) {
-			case map[string]interface{}:
-				if v, ok := x[elements[i]]; ok {
-					//r.Log.WithValues("Element", elements[i], "LeafRefValue", leafrefValue, "Object", v, "Last", i == (len(elements)-1)).Info("validateLeafRefExists found")
-					if i == (len(elements) - 1) {
-						switch val := v.(type) {
-						case string:
-							if leafrefValue == val {
-								found := false
-								for _, leafrefValues := range elementWithleafref.LeafRefValues {
-									if string(val) == leafrefValues {
-										found = true
-									}
-								}
-								if !found {
-									elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
-								}
-								f = true
-								//return val, true
-							} else {
-								found := false
-								for _, leafrefValues := range elementWithleafref.LeafRefValues {
-									if string(val) == leafrefValues {
-										found = true
-									}
-								}
-								if !found {
-									elementWithleafref.LeafRefValues = append(elementWithleafref.LeafRefValues, val)
-								}
-								//return val, false
-							}
-						}
-					} else {
-						_, found := r.validateLeafRefExists(elements, i, v, leafrefValue, elementWithleafref)
-						if !found {
-							return nil, false
-						}
-					}
-					//return v, true
-				} else {
-					//r.Log.WithValues("Element", elements[i]).Info("validateLeafRefExists not found")
-					return nil, false
-				}
-			}
-		}
-		if i == (len(elements)-1) && f {
-			return nil, true
-		}
-		return nil, false
+		//r.Log.Info("validateLeafRefExists not map[string]interface{} or []interface{}")
+		return nil, true
 	}
-	//r.Log.Info("validateLeafRefExists not map[string]interface{} or []interface{}")
-	return nil, true
-}
+*/
 
-func (r *SrlNetworkinstanceProtocolsIsisReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.NetworkinstanceProtocolsIsis) (err error) {
+func (r *SrlNetworkinstanceProtocolsIsisReconciler) ValidateLocalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsIsis) (err error) {
+	r.Log.Info("Validate Local LeafRef Dependencies ...")
+
 	// marshal data to json
 	dd := struct {
 		Isis *srlinuxv1alpha1.NetworkinstanceProtocolsIsis `json:"isis"`
 	}{
-		Isis: o,
+		Isis: o.Spec.SrlNetworkinstanceProtocolsIsis,
 	}
-	d, err := json.Marshal(dd)
+	d := make([][]byte, 0)
+	dj, err := json.Marshal(dd)
 	if err != nil {
 		return err
 	}
-	// unmarshal data to json
-	var x interface{}
-	err = json.Unmarshal(d, &x)
-	if err != nil {
-		return err
-	}
+	d = append(d, dj)
 
-	for elementWithleafrefPath, elementWithleafref := range NetworkinstanceProtocolsIsisIntraResourceleafRef {
-		elementWithleafref.Values = make([]string, 0)
-		elementWithleafref.LeafRefValues = make([]string, 0)
-		// validate if the element with leafref exist
-		elements := strings.Split(elementWithleafref.RelativePath2ObjectWithLeafRef, "/")
-		x1 := x
-		//r.Log.WithValues("X1", x1).Info("Data Input")
+	for localLeafRef, leafRefInfo := range NetworkinstanceProtocolsIsisIntraResourceleafRef {
+		// get the ekvl for the local leafref
+		ekvl := getHierarchicalElements(localLeafRef)
 
-		// first element should be initialized with the first resource element
-		elements[0] = "bgp"
-		_, found := r.validateIfElementWithLeafRefExists(elements, 0, x1, elementWithleafref)
-		if !found {
-			elementWithleafref.Exists = false
-		}
-
-		r.Log.WithValues("elementWithleafrefPath", elementWithleafrefPath, "leafref values", elementWithleafref.Values).Info("LeafRef Values")
-		elementWithleafref.DependencyCheckSuccess = true
-		for _, leafReafValue := range elementWithleafref.Values {
-			elements := strings.Split(elementWithleafref.RelativePath2LeafRef, "/")
-			x1 := x
-
-			// first element should be initialized with the first resource element
-			elements[0] = "bgp"
-
-			_, found = r.validateLeafRefExists(elements, 0, x1, leafReafValue, elementWithleafref)
-			if !found {
-				elementWithleafref.DependencyCheckSuccess = false
-				r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
-			} else {
-				r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
-			}
-		}
+		// check if the leafref is configured in the resource
+		// if not we dont have a leafref dependency in this resource
+		lrd := r.FindLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
+		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "leafref values", lrd).Info("Local LeafRef Values")
 	}
 	return nil
 }
 
+/*
+	func (r *SrlNetworkinstanceProtocolsIsisReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.NetworkinstanceProtocolsIsis) (err error) {
+		// marshal data to json
+		dd := struct {
+			Isis *srlinuxv1alpha1.NetworkinstanceProtocolsIsis `json:"isis"`
+		}{
+			Isis: o,
+		}
+		d, err := json.Marshal(dd)
+		if err != nil {
+			return err
+		}
+		// unmarshal data to json
+		var x interface{}
+		err = json.Unmarshal(d, &x)
+		if err != nil {
+			return err
+		}
+
+		for elementWithleafrefPath, elementWithleafref := range NetworkinstanceProtocolsIsisIntraResourceleafRef {
+			elementWithleafref.Values = make([]string, 0)
+			elementWithleafref.LeafRefValues = make([]string, 0)
+			// validate if the element with leafref exist
+			elements := strings.Split(elementWithleafref.RelativePath2ObjectWithLeafRef, "/")
+			x1 := x
+			//r.Log.WithValues("X1", x1).Info("Data Input")
+
+			// first element should be initialized with the first resource element
+			elements[0] = "bgp"
+			_, found := r.validateIfElementWithLeafRefExists(elements, 0, x1, elementWithleafref)
+			if !found {
+				elementWithleafref.Exists = false
+			}
+
+			r.Log.WithValues("elementWithleafrefPath", elementWithleafrefPath, "leafref values", elementWithleafref.Values).Info("LeafRef Values")
+			elementWithleafref.DependencyCheckSuccess = true
+			for _, leafReafValue := range elementWithleafref.Values {
+				elements := strings.Split(elementWithleafref.RelativePath2LeafRef, "/")
+				x1 := x
+
+				// first element should be initialized with the first resource element
+				elements[0] = "bgp"
+
+				_, found = r.validateLeafRefExists(elements, 0, x1, leafReafValue, elementWithleafref)
+				if !found {
+					elementWithleafref.DependencyCheckSuccess = false
+					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
+				} else {
+					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
+				}
+			}
+		}
+		return nil
+	}
+*/
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *SrlNetworkinstanceProtocolsIsisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
@@ -503,28 +577,35 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) Reconcile(ctx context.Contex
 
 	// validate local leaf refs if resource is not in deleting state
 	if o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsIsishasFinalizer(o) {
-		err := r.validateLocalLeafRefs(o.Spec.SrlNetworkinstanceProtocolsIsis)
+		err := r.ValidateLocalLeafRefs(ctx, o)
 		if err != nil {
-			return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
+			return ctrl.Result{}, errors.Wrap(err, "failed to validate local leafRef")
 		}
 		validationSuccess := true
-		o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-		for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
-			if elementWithLeafRef.Exists {
-				if !elementWithLeafRef.DependencyCheckSuccess {
-					validationSuccess = false
-				}
-				o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
-					Values:        &elementWithLeafRef.Values,
-					LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
-					LeafRefValues: &elementWithLeafRef.LeafRefValues,
-				}
-			} else {
-				o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
-					LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
+		/*
+			err := r.validateLocalLeafRefs(o)
+			if err != nil {
+				return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
+			}
+			validationSuccess := true
+			o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+			for s, elementWithLeafRef := range NetworkinstanceProtocolsIsisIntraResourceleafRef {
+				if elementWithLeafRef.Exists {
+					if !elementWithLeafRef.DependencyCheckSuccess {
+						validationSuccess = false
+					}
+					o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+						Values:        &elementWithLeafRef.Values,
+						LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
+						LeafRefValues: &elementWithLeafRef.LeafRefValues,
+					}
+				} else {
+					o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+						LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
+					}
 				}
 			}
-		}
+		*/
 
 		//if validationSuccess {
 		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
@@ -619,9 +700,10 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) Reconcile(ctx context.Contex
 	}
 	r.Log.WithValues("Targets", t).Info("Target Info")
 
-	// find object spec difference if resource is not in deleting state
+	// find object spec difference and interleafref dependencies if resource is not in deleting state
 	var diff bool
 	var dp *[]string
+	leafRefDependencies := make([]string, 0)
 	if o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsIsishasFinalizer(o) {
 		diff, dp, err = r.FindSpecDiff(ctx, o)
 		if err != nil {
@@ -633,6 +715,13 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) Reconcile(ctx context.Contex
 		}
 		r.Log.WithValues("Spec is different, update resource", diff, "Spec Delete Paths", *dp).Info("Spec Diff")
 		// the diff handling is handled in the state machine later
+
+		// find leafref dependencies
+		leafRefDependencies, err = r.FindInterLeafRefDependencies(ctx, o)
+		if err != nil {
+			r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to get leafRef dependencies ")
+		}
+		r.Log.WithValues("Dependencies", leafRefDependencies).Info("LeafRef Dependencies")
 	}
 
 	// initialize the resource parameters
@@ -683,20 +772,21 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) Reconcile(ctx context.Contex
 			"target", target.TargetName,
 			"status", initialState)
 		info[target.TargetName] = &SrlNetworkinstanceProtocolsIsisReconcileInfo{
-			ctx:          ctx,
-			target:       &target.Target,
-			log:          r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
-			o:            o,
-			request:      req,
-			level:        &level,
-			resource:     &resource,
-			dependencies: &dependencies,
-			deletepaths:  &deletepaths,
+			ctx:                 ctx,
+			target:              &target.Target,
+			log:                 r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
+			o:                   o,
+			request:             req,
+			level:               &level,
+			resource:            &resource,
+			dependencies:        &dependencies,
+			leafRefDependencies: &leafRefDependencies,
+			deletepaths:         &deletepaths,
 		}
 		if *initialState == srlinuxv1alpha1.ConfigStatusNone {
 			r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s, Configuration status old: None -> new: Configuring", target.TargetName), "New Resource or Resource Spec changed"))
 			// update the cache through GRPC
-			err := info[target.TargetName].UpdateCache(path, deletepaths, dependencies)
+			err := info[target.TargetName].UpdateCache(path)
 			if err != nil {
 				err = errors.Wrap(err, fmt.Sprintf("grpc update %q failed", *initialState))
 				return ctrl.Result{}, err
@@ -798,6 +888,178 @@ func (r *SrlNetworkinstanceProtocolsIsisReconciler) saveSrlNetworkinstanceProtoc
 		return err
 	}
 	return nil
+}
+
+func (r *SrlNetworkinstanceProtocolsIsisReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues []string) []string {
+	r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues).Info("findLeafRefInTree")
+
+	var tlrv []string
+	switch x := x1.(type) {
+	case map[string]interface{}:
+		for k, x2 := range x {
+			r.Log.WithValues("Key", k, "Value", x2, "leafRefValues", leafRefValues).Info("map[string]interface{}")
+			if k == ekvl[idx].Element {
+				if idx == len(ekvl)-1 {
+					// last element/index in ekv
+					if ekvl[idx].KeyName != "" {
+						r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Last Index")
+						tlrv = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues)
+						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
+						if len(tlrv) > len(leafRefValues) {
+							leafRefValues = tlrv
+						}
+						//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+					} else {
+						switch x3 := x2.(type) {
+						case string:
+							r.Log.WithValues("KeyName", "", "Value", x3, "Type", "string").Info("map[string]interface{} Last Index")
+							leafRefValues = append(leafRefValues, x3)
+							//return leafRefValuesPtr
+						case int:
+							x4 := strconv.Itoa(int(x3))
+							r.Log.WithValues("KeyName", "", "Value", x4, "Type", "int").Info("map[string]interface{} Last Index")
+							leafRefValues = append(leafRefValues, x4)
+							//return leafRefValuesPtr
+						default:
+							r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} Last Index")
+							//return leafRefValuesPtr
+						}
+					}
+				} else {
+					// not last element/index in ekv
+					if ekvl[idx].KeyName != "" {
+						r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Not Last Index")
+						tlrv = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues)
+						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
+						if len(tlrv) > len(leafRefValues) {
+							leafRefValues = tlrv
+						}
+						//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+					} else {
+						r.Log.WithValues("KeyName", "").Info("map[string]interface{} Not Last Index")
+						idx++
+						tlrv = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues)
+						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
+						if len(tlrv) > len(leafRefValues) {
+							leafRefValues = tlrv
+						}
+						//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+					}
+				}
+			}
+		}
+	case []interface{}:
+		for k, v := range x {
+			r.Log.WithValues("Key", k, "Value", v, "leafRefValues", leafRefValues).Info("[]interface{}")
+			switch x2 := v.(type) {
+			case map[string]interface{}:
+				for k3, x3 := range x2 {
+					if k3 == ekvl[idx].KeyName {
+						if idx == len(ekvl)-1 {
+							// return the value
+							switch x4 := x3.(type) {
+							case string:
+								r.Log.WithValues("KeyName", "", "Value", x4, "Type", "string").Info("map[string]interface{} in []interface{} Last Index")
+								leafRefValues = append(leafRefValues, x4)
+								//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
+
+							case int:
+								x5 := strconv.Itoa(int(x4))
+								r.Log.WithValues("KeyName", "", "Value", x5, "Type", "int").Info("map[string]interface{} in []interface{} Last Index")
+								leafRefValues = append(leafRefValues, x5)
+								//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
+								//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+								//return leafRefValues
+							default:
+								r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} in []interface{} Last Index")
+								//return leafRefValues
+							}
+						} else {
+							i := idx
+							i++
+							tlrv = r.findLeafRefInTree(x2, ekvl, i, leafRefValues)
+							//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
+							if len(tlrv) > len(leafRefValues) {
+								leafRefValues = tlrv
+							}
+							//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+						}
+					}
+				}
+			}
+		}
+		//return leafRefValuesPtr
+	case nil:
+		r.Log.WithValues("x1", x1).Info("nil")
+		//return leafRefValuesPtr
+	}
+	//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+	return leafRefValues
+}
+
+func (r *SrlNetworkinstanceProtocolsIsisReconciler) FindLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) []string {
+	r.Log.WithValues("ekvl", ekvl, "rekvl", rekvl).Info("find LeafRef")
+	leafRefDependencies := make([]string, 0)
+	for _, b := range d {
+		var x1 interface{}
+		json.Unmarshal(b, &x1)
+
+		leafRefValues := make([]string, 0)
+		leafRefValues = r.findLeafRefInTree(x1, ekvl, 0, leafRefValues)
+		r.Log.WithValues("LocalLeafRef", localLeafRef, "Values", leafRefValues).Info("find LeafRef Values")
+		if len(leafRefValues) != 0 {
+			//TODO parse value with rekvl
+			//TODO append the result of the previous action with leafRefDependencies
+		}
+		for _, leafRefValue := range leafRefValues {
+			split := strings.Split(leafRefValue, ".")
+			leafRefDep := ""
+			n := 0
+			for _, rekv := range rekvl {
+				if rekv.KeyName != "" {
+					leafRefDep += "/" + rekv.Element + "[" + rekv.KeyName + "=" + split[n] + "]"
+					n++
+				} else {
+					leafRefDep += "/" + rekv.Element
+				}
+			}
+			leafRefDependencies = append(leafRefDependencies, leafRefDep)
+		}
+	}
+	return leafRefDependencies
+}
+
+func (r *SrlNetworkinstanceProtocolsIsisReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsIsis) ([]string, error) {
+	r.Log.Info("Find LeafRef Dependencies ...")
+
+	leafRefDependencies := make([]string, 0)
+
+	// marshal data to json
+	dd := struct {
+		Isis *srlinuxv1alpha1.NetworkinstanceProtocolsIsis `json:"isis"`
+	}{
+		Isis: o.Spec.SrlNetworkinstanceProtocolsIsis,
+	}
+	d := make([][]byte, 0)
+	dj, err := json.Marshal(dd)
+	if err != nil {
+		return nil, err
+	}
+	d = append(d, dj)
+
+	for localLeafRef, rekvl := range NetworkinstanceProtocolsIsisInterResourceleafRef {
+		// get the ekvl for the local leafref
+		ekvl := getHierarchicalElements(localLeafRef)
+
+		// check if the leafref is configured in the resource
+		// if not we dont have a leafref dependency in this resource
+		lrd := r.FindLeafRef(localLeafRef, d, ekvl, rekvl)
+		if len(lrd) != 0 {
+			leafRefDependencies = append(leafRefDependencies, lrd...)
+		}
+	}
+	r.Log.WithValues("LeafRefDependencies", leafRefDependencies).Info("Final LeafRef Dependencies")
+	return leafRefDependencies, nil
 }
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec
@@ -931,7 +1193,7 @@ func SrlNetworkinstanceProtocolsIsishasFinalizer(o *srlinuxv1alpha1.SrlNetworkin
 	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlNetworkinstanceProtocolsIsisFinalizer)
 }
 
-func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) DeleteCache(deletepaths, dependencies *[]string) error {
+func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) DeleteCache() error {
 	if !info.o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsIsishasFinalizer(info.o) {
 
 		// prepare the grpc data
@@ -939,8 +1201,9 @@ func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) DeleteCache(deletepath
 			Resource:             *info.resource,
 			Level:                *info.level,
 			Action:               netwdevpb.CacheUpdateRequest_Delete,
-			IndividualActionPath: *deletepaths,
-			Dependencies:         *dependencies,
+			IndividualActionPath: *info.deletepaths,
+			Dependencies:         *info.dependencies,
+			LeafRefDependencies:  *info.leafRefDependencies,
 		}
 
 		updateCache(info.ctx, info.target, req)
@@ -954,10 +1217,9 @@ func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) DeleteCache(deletepath
 }
 
 // Update Cache
-func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) UpdateCache(path string, deletepaths, dependencies []string) error {
+func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) UpdateCache(path string) error {
 
 	// marshal data to json
-
 	dd := struct {
 		Isis *srlinuxv1alpha1.NetworkinstanceProtocolsIsis `json:"isis"`
 	}{
@@ -969,16 +1231,16 @@ func (info *SrlNetworkinstanceProtocolsIsisReconcileInfo) UpdateCache(path strin
 		return err
 	}
 	d = append(d, dj)
-
 	// update the cache
 	req := &netwdevpb.CacheUpdateRequest{
 		Resource:             *info.resource,
 		Level:                *info.level,
 		Action:               netwdevpb.CacheUpdateRequest_Update,
 		AggregateActionPath:  path,
-		IndividualActionPath: deletepaths,
+		IndividualActionPath: *info.deletepaths,
 		ConfigData:           d,
-		Dependencies:         dependencies,
+		Dependencies:         *info.dependencies,
+		LeafRefDependencies:  *info.leafRefDependencies,
 	}
 	updateCache(info.ctx, info.target, req)
 
@@ -1048,7 +1310,7 @@ func (o *SrlNetworkinstanceProtocolsIsisStateMachine) ReconcileState(info *SrlNe
 	if o.checkInitiateDelete() {
 		// initiate cache delete
 		info.log.Info("Initiating SrlNetworkinstanceProtocolsIsisStateMachine deletion")
-		info.DeleteCache(info.deletepaths, info.dependencies)
+		info.DeleteCache()
 		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
 		//time.Sleep(15 * time.Second)
 	}

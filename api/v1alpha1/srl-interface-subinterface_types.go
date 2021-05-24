@@ -93,11 +93,11 @@ type InterfaceSubinterfaceBridgeTableMacLimit struct {
 
 // InterfaceSubinterfaceBridgeTable struct
 type InterfaceSubinterfaceBridgeTable struct {
-	MacLimit *InterfaceSubinterfaceBridgeTableMacLimit `json:"mac-limit,omitempty"`
 	// +kubebuilder:default:=false
 	DiscardUnknownSrcMac *bool                                           `json:"discard-unknown-src-mac,omitempty"`
 	MacDuplication       *InterfaceSubinterfaceBridgeTableMacDuplication `json:"mac-duplication,omitempty"`
 	MacLearning          *InterfaceSubinterfaceBridgeTableMacLearning    `json:"mac-learning,omitempty"`
+	MacLimit             *InterfaceSubinterfaceBridgeTableMacLimit       `json:"mac-limit,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv4Address struct
@@ -150,6 +150,7 @@ type InterfaceSubinterfaceIpv4ArpNeighbor struct {
 
 // InterfaceSubinterfaceIpv4Arp struct
 type InterfaceSubinterfaceIpv4Arp struct {
+	HostRoute *InterfaceSubinterfaceIpv4ArpHostRoute `json:"host-route,omitempty"`
 	// +kubebuilder:default:=false
 	LearnUnsolicited *bool                                   `json:"learn-unsolicited,omitempty"`
 	Neighbor         []*InterfaceSubinterfaceIpv4ArpNeighbor `json:"neighbor,omitempty"`
@@ -160,9 +161,8 @@ type InterfaceSubinterfaceIpv4Arp struct {
 	// +kubebuilder:validation:Enum=`messages`
 	Debug *string `json:"debug,omitempty"`
 	// +kubebuilder:default:=true
-	DuplicateAddressDetection *bool                                  `json:"duplicate-address-detection,omitempty"`
-	Evpn                      *InterfaceSubinterfaceIpv4ArpEvpn      `json:"evpn,omitempty"`
-	HostRoute                 *InterfaceSubinterfaceIpv4ArpHostRoute `json:"host-route,omitempty"`
+	DuplicateAddressDetection *bool                             `json:"duplicate-address-detection,omitempty"`
+	Evpn                      *InterfaceSubinterfaceIpv4ArpEvpn `json:"evpn,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv4DhcpClientTraceOptions struct
@@ -207,10 +207,10 @@ type InterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication struct {
 
 // InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTrackingTrackInterface struct
 type InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTrackingTrackInterface struct {
-	Interface *string `json:"interface"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	PriorityDecrement *uint8 `json:"priority-decrement,omitempty"`
+	PriorityDecrement *uint8  `json:"priority-decrement,omitempty"`
+	Interface         *string `json:"interface"`
 }
 
 // InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking struct
@@ -224,43 +224,43 @@ type InterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics struct {
 
 // InterfaceSubinterfaceIpv4VrrpVrrpGroup struct
 type InterfaceSubinterfaceIpv4VrrpVrrpGroup struct {
-	Authentication    *InterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication    `json:"authentication,omitempty"`
-	InterfaceTracking *InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
-	Preempt           *bool                                                    `json:"preempt,omitempty"`
-	Statistics        *InterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics        `json:"statistics,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	VirtualAddress *string `json:"virtual-address,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string `json:"admin-state,omitempty"`
-	// +kubebuilder:default:=false
-	MasterInheritInterval *bool `json:"master-inherit-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	OperInterval *uint16 `json:"oper-interval,omitempty"`
-	AcceptMode   *bool   `json:"accept-mode,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	InitDelay *uint16 `json:"init-delay,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	VirtualRouterId *uint8 `json:"virtual-router-id"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	PreemptDelay *uint16 `json:"preempt-delay,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=100
-	Priority *uint8 `json:"priority,omitempty"`
+	Priority       *uint8                                                `json:"priority,omitempty"`
+	AcceptMode     *bool                                                 `json:"accept-mode,omitempty"`
+	Authentication *InterfaceSubinterfaceIpv4VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	InitDelay *uint16 `json:"init-delay,omitempty"`
+	Preempt   *bool   `json:"preempt,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=2
-	Version *uint8 `json:"version,omitempty"`
+	VirtualRouterId *uint8 `json:"virtual-router-id"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:default:=1000
 	AdvertiseInterval *uint16 `json:"advertise-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	OperInterval *uint16 `json:"oper-interval,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	VirtualAddress    *string                                                  `json:"virtual-address,omitempty"`
+	InterfaceTracking *InterfaceSubinterfaceIpv4VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
+	// +kubebuilder:default:=false
+	MasterInheritInterval *bool                                             `json:"master-inherit-interval,omitempty"`
+	Statistics            *InterfaceSubinterfaceIpv4VrrpVrrpGroupStatistics `json:"statistics,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=2
+	Version *uint8 `json:"version,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv4Vrrp struct
@@ -270,13 +270,13 @@ type InterfaceSubinterfaceIpv4Vrrp struct {
 
 // InterfaceSubinterfaceIpv4 struct
 type InterfaceSubinterfaceIpv4 struct {
-	DhcpRelay *InterfaceSubinterfaceIpv4DhcpRelay `json:"dhcp-relay,omitempty"`
-	Vrrp      *InterfaceSubinterfaceIpv4Vrrp      `json:"vrrp,omitempty"`
-	Address   []*InterfaceSubinterfaceIpv4Address `json:"address,omitempty"`
+	Arp        *InterfaceSubinterfaceIpv4Arp        `json:"arp,omitempty"`
+	DhcpClient *InterfaceSubinterfaceIpv4DhcpClient `json:"dhcp-client,omitempty"`
+	DhcpRelay  *InterfaceSubinterfaceIpv4DhcpRelay  `json:"dhcp-relay,omitempty"`
+	Vrrp       *InterfaceSubinterfaceIpv4Vrrp       `json:"vrrp,omitempty"`
+	Address    []*InterfaceSubinterfaceIpv4Address  `json:"address,omitempty"`
 	// +kubebuilder:default:=false
-	AllowDirectedBroadcast *bool                                `json:"allow-directed-broadcast,omitempty"`
-	Arp                    *InterfaceSubinterfaceIpv4Arp        `json:"arp,omitempty"`
-	DhcpClient             *InterfaceSubinterfaceIpv4DhcpClient `json:"dhcp-client,omitempty"`
+	AllowDirectedBroadcast *bool `json:"allow-directed-broadcast,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv6Address struct
@@ -307,7 +307,6 @@ type InterfaceSubinterfaceIpv6DhcpRelayTraceOptions struct {
 
 // InterfaceSubinterfaceIpv6DhcpRelay struct
 type InterfaceSubinterfaceIpv6DhcpRelay struct {
-	TraceOptions *InterfaceSubinterfaceIpv6DhcpRelayTraceOptions `json:"trace-options,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -318,7 +317,8 @@ type InterfaceSubinterfaceIpv6DhcpRelay struct {
 	Server *string `json:"server,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	SourceAddress *string `json:"source-address,omitempty"`
+	SourceAddress *string                                         `json:"source-address,omitempty"`
+	TraceOptions  *InterfaceSubinterfaceIpv6DhcpRelayTraceOptions `json:"trace-options,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv6NeighborDiscoveryEvpnAdvertise struct
@@ -353,15 +353,16 @@ type InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute struct {
 // InterfaceSubinterfaceIpv6NeighborDiscoveryNeighbor struct
 type InterfaceSubinterfaceIpv6NeighborDiscoveryNeighbor struct {
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	Ipv6Address *string `json:"ipv6-address"`
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}`
 	LinkLayerAddress *string `json:"link-layer-address"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	Ipv6Address *string `json:"ipv6-address"`
 }
 
 // InterfaceSubinterfaceIpv6NeighborDiscovery struct
 type InterfaceSubinterfaceIpv6NeighborDiscovery struct {
+	HostRoute *InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute `json:"host-route,omitempty"`
 	// +kubebuilder:validation:Enum=`both`;`global`;`link-local`;`none`
 	// +kubebuilder:default:=none
 	LearnUnsolicited *string                                               `json:"learn-unsolicited,omitempty"`
@@ -377,9 +378,8 @@ type InterfaceSubinterfaceIpv6NeighborDiscovery struct {
 	// +kubebuilder:validation:Enum=`messages`
 	Debug *string `json:"debug,omitempty"`
 	// +kubebuilder:default:=true
-	DuplicateAddressDetection *bool                                                `json:"duplicate-address-detection,omitempty"`
-	Evpn                      *InterfaceSubinterfaceIpv6NeighborDiscoveryEvpn      `json:"evpn,omitempty"`
-	HostRoute                 *InterfaceSubinterfaceIpv6NeighborDiscoveryHostRoute `json:"host-route,omitempty"`
+	DuplicateAddressDetection *bool                                           `json:"duplicate-address-detection,omitempty"`
+	Evpn                      *InterfaceSubinterfaceIpv6NeighborDiscoveryEvpn `json:"evpn,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix struct
@@ -399,15 +399,18 @@ type InterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix struct {
 
 // InterfaceSubinterfaceIpv6RouterAdvertisementRouterRole struct
 type InterfaceSubinterfaceIpv6RouterAdvertisementRouterRole struct {
-	Prefix []*InterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix `json:"prefix,omitempty"`
+	// +kubebuilder:validation:Minimum=4
+	// +kubebuilder:validation:Maximum=1800
+	// +kubebuilder:default:=600
+	MaxAdvertisementInterval *uint16 `json:"max-advertisement-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1800000
+	// +kubebuilder:default:=0
+	RetransmitTime *uint32 `json:"retransmit-time,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=9000
 	// +kubebuilder:default:=1800
 	RouterLifetime *uint16 `json:"router-lifetime,omitempty"`
-	// +kubebuilder:validation:Minimum=3
-	// +kubebuilder:validation:Maximum=1350
-	// +kubebuilder:default:=200
-	MinAdvertisementInterval *uint16 `json:"min-advertisement-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=64
@@ -415,24 +418,21 @@ type InterfaceSubinterfaceIpv6RouterAdvertisementRouterRole struct {
 	// +kubebuilder:validation:Minimum=1280
 	// +kubebuilder:validation:Maximum=9486
 	IpMtu *uint16 `json:"ip-mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=3
+	// +kubebuilder:validation:Maximum=1350
+	// +kubebuilder:default:=200
+	MinAdvertisementInterval *uint16 `json:"min-advertisement-interval,omitempty"`
 	// +kubebuilder:default:=false
-	ManagedConfigurationFlag *bool `json:"managed-configuration-flag,omitempty"`
-	// +kubebuilder:validation:Minimum=4
-	// +kubebuilder:validation:Maximum=1800
-	// +kubebuilder:default:=600
-	MaxAdvertisementInterval *uint16 `json:"max-advertisement-interval,omitempty"`
-	// +kubebuilder:default:=false
-	OtherConfigurationFlag *bool `json:"other-configuration-flag,omitempty"`
+	OtherConfigurationFlag *bool                                                           `json:"other-configuration-flag,omitempty"`
+	Prefix                 []*InterfaceSubinterfaceIpv6RouterAdvertisementRouterRolePrefix `json:"prefix,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=3600000
 	// +kubebuilder:default:=0
 	ReachableTime *uint32 `json:"reachable-time,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=1800000
-	// +kubebuilder:default:=0
-	RetransmitTime *uint32 `json:"retransmit-time,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	AdminState *string `json:"admin-state,omitempty"`
+	// +kubebuilder:default:=false
+	ManagedConfigurationFlag *bool `json:"managed-configuration-flag,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv6RouterAdvertisement struct
@@ -449,10 +449,10 @@ type InterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication struct {
 
 // InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface struct
 type InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTrackingTrackInterface struct {
+	Interface *string `json:"interface"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	PriorityDecrement *uint8  `json:"priority-decrement,omitempty"`
-	Interface         *string `json:"interface"`
+	PriorityDecrement *uint8 `json:"priority-decrement,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking struct
@@ -466,43 +466,43 @@ type InterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics struct {
 
 // InterfaceSubinterfaceIpv6VrrpVrrpGroup struct
 type InterfaceSubinterfaceIpv6VrrpVrrpGroup struct {
-	Preempt *bool `json:"preempt,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=100
-	Priority          *uint8                                                   `json:"priority,omitempty"`
-	AcceptMode        *bool                                                    `json:"accept-mode,omitempty"`
-	InterfaceTracking *InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
+	Statistics *InterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics `json:"statistics,omitempty"`
+	Preempt    *bool                                             `json:"preempt,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
-	OperInterval *uint16                                           `json:"oper-interval,omitempty"`
-	Statistics   *InterfaceSubinterfaceIpv6VrrpVrrpGroupStatistics `json:"statistics,omitempty"`
+	PreemptDelay *uint16 `json:"preempt-delay,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	VirtualAddress *string `json:"virtual-address,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState     *string                                               `json:"admin-state,omitempty"`
-	Authentication *InterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	VirtualRouterId *uint8 `json:"virtual-router-id"`
+	AcceptMode      *bool  `json:"accept-mode,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default:=1000
+	AdvertiseInterval *uint16                                               `json:"advertise-interval,omitempty"`
+	Authentication    *InterfaceSubinterfaceIpv6VrrpVrrpGroupAuthentication `json:"authentication,omitempty"`
 	// +kubebuilder:default:=false
 	MasterInheritInterval *bool `json:"master-inherit-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	OperInterval *uint16 `json:"oper-interval,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=100
+	Priority *uint8 `json:"priority,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	InitDelay         *uint16                                                  `json:"init-delay,omitempty"`
+	InterfaceTracking *InterfaceSubinterfaceIpv6VrrpVrrpGroupInterfaceTracking `json:"interface-tracking,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	// +kubebuilder:default:=3
 	Version *uint8 `json:"version,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=1000
-	AdvertiseInterval *uint16 `json:"advertise-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	InitDelay *uint16 `json:"init-delay,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	VirtualRouterId *uint8 `json:"virtual-router-id"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	PreemptDelay *uint16 `json:"preempt-delay,omitempty"`
 }
 
 // InterfaceSubinterfaceIpv6Vrrp struct
@@ -512,12 +512,12 @@ type InterfaceSubinterfaceIpv6Vrrp struct {
 
 // InterfaceSubinterfaceIpv6 struct
 type InterfaceSubinterfaceIpv6 struct {
-	Address             []*InterfaceSubinterfaceIpv6Address           `json:"address,omitempty"`
-	DhcpClient          *InterfaceSubinterfaceIpv6DhcpClient          `json:"dhcp-client,omitempty"`
 	DhcpRelay           *InterfaceSubinterfaceIpv6DhcpRelay           `json:"dhcp-relay,omitempty"`
 	NeighborDiscovery   *InterfaceSubinterfaceIpv6NeighborDiscovery   `json:"neighbor-discovery,omitempty"`
 	RouterAdvertisement *InterfaceSubinterfaceIpv6RouterAdvertisement `json:"router-advertisement,omitempty"`
 	Vrrp                *InterfaceSubinterfaceIpv6Vrrp                `json:"vrrp,omitempty"`
+	Address             []*InterfaceSubinterfaceIpv6Address           `json:"address,omitempty"`
+	DhcpClient          *InterfaceSubinterfaceIpv6DhcpClient          `json:"dhcp-client,omitempty"`
 }
 
 // InterfaceSubinterfaceLocalMirrorDestination struct
@@ -542,10 +542,10 @@ type InterfaceSubinterfaceQosInput struct {
 
 // InterfaceSubinterfaceQosOutputRewriteRules struct
 type InterfaceSubinterfaceQosOutputRewriteRules struct {
-	Dscp             *string `json:"dscp,omitempty"`
-	Ipv4Dscp         *string `json:"ipv4-dscp,omitempty"`
 	Ipv6Dscp         *string `json:"ipv6-dscp,omitempty"`
 	MplsTrafficClass *string `json:"mpls-traffic-class,omitempty"`
+	Dscp             *string `json:"dscp,omitempty"`
+	Ipv4Dscp         *string `json:"ipv4-dscp,omitempty"`
 }
 
 // InterfaceSubinterfaceQosOutput struct
@@ -581,32 +581,32 @@ type InterfaceSubinterfaceVlan struct {
 
 // InterfaceSubinterface struct
 type InterfaceSubinterface struct {
+	AnycastGw *InterfaceSubinterfaceAnycastGw `json:"anycast-gw,omitempty"`
+	// +kubebuilder:validation:Minimum=1280
+	// +kubebuilder:validation:Maximum=9486
+	IpMtu *uint16 `json:"ip-mtu,omitempty"`
 	// +kubebuilder:validation:Minimum=1500
 	// +kubebuilder:validation:Maximum=9500
 	L2Mtu *uint16                   `json:"l2-mtu,omitempty"`
-	Type  *string                   `json:"type,omitempty"`
+	Qos   *InterfaceSubinterfaceQos `json:"qos,omitempty"`
 	Acl   *InterfaceSubinterfaceAcl `json:"acl,omitempty"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState  *string                           `json:"admin-state,omitempty"`
-	BridgeTable *InterfaceSubinterfaceBridgeTable `json:"bridge-table,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Description            *string                                      `json:"description,omitempty"`
-	Ipv6                   *InterfaceSubinterfaceIpv6                   `json:"ipv6,omitempty"`
 	LocalMirrorDestination *InterfaceSubinterfaceLocalMirrorDestination `json:"local-mirror-destination,omitempty"`
-	Qos                    *InterfaceSubinterfaceQos                    `json:"qos,omitempty"`
-	AnycastGw              *InterfaceSubinterfaceAnycastGw              `json:"anycast-gw,omitempty"`
-	Ipv4                   *InterfaceSubinterfaceIpv4                   `json:"ipv4,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState  *string                           `json:"admin-state,omitempty"`
+	Ipv4        *InterfaceSubinterfaceIpv4        `json:"ipv4,omitempty"`
+	Ipv6        *InterfaceSubinterfaceIpv6        `json:"ipv6,omitempty"`
+	BridgeTable *InterfaceSubinterfaceBridgeTable `json:"bridge-table,omitempty"`
+	Type        *string                           `json:"type,omitempty"`
+	Vlan        *InterfaceSubinterfaceVlan        `json:"vlan,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=9999
 	Index *uint32 `json:"index"`
-	// +kubebuilder:validation:Minimum=1280
-	// +kubebuilder:validation:Maximum=9486
-	IpMtu *uint16                    `json:"ip-mtu,omitempty"`
-	Vlan  *InterfaceSubinterfaceVlan `json:"vlan,omitempty"`
 }
 
 // SrlInterfaceSubinterfaceSpec struct

@@ -287,19 +287,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -946,19 +942,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -2635,19 +2627,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -2869,19 +2857,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -3175,19 +3159,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -3498,19 +3478,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -4537,16 +4513,37 @@ spec:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
-                enum:
-                - Success
-                - Failed
-                type: string
               lastUpdated:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
+                type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
+                      items:
+                        type: string
+                      type: array
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
+              localLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
                 type: string
               targetStatus:
                 additionalProperties:
@@ -5551,31 +5548,6 @@ spec:
                 - bgp
                 - network-instance-name
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
-                      items:
-                        type: string
-                      type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -5778,19 +5750,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -7030,19 +6998,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -7200,19 +7164,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -8467,19 +8427,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -9304,19 +9260,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -9512,19 +9464,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -9684,19 +9632,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -9854,19 +9798,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -10525,19 +10465,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -10717,19 +10653,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -10902,19 +10834,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -11067,19 +10995,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -11255,19 +11179,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -11630,19 +11550,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -11791,19 +11707,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -11979,19 +11891,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -12172,19 +12080,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -12336,19 +12240,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array
@@ -12690,19 +12590,15 @@ spec:
                   description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
-                    leafRefParh:
-                      description: LeafRefPath points to the leafref object value
-                      type: string
-                    leafRefValues:
-                      description: LeafRefValues identifies the values assigned in
-                        the leaf ref
+                    localLeafRef:
+                      description: LocalLeafRef identifies the leafref value that
+                        should match the remote leafref if empty it means the object
+                        does not exist.
                       items:
                         type: string
                       type: array
-                    values:
-                      description: Values identifies the object value that should
-                        match the leafref value if empty it means the object does
-                        not exist.
+                    remoteLeafRef:
+                      description: RemoteLeafRef points to the remote leafref object
                       items:
                         type: string
                       type: array

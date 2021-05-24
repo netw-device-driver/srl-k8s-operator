@@ -47,7 +47,8 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
-	GenerateIcmp *bool `json:"generate-icmp,omitempty"`
+	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
+	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
 	// +kubebuilder:default:=false
 	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
@@ -55,9 +56,8 @@ type NetworkinstanceAggregateroutesRoute struct {
 	Prefix *string `json:"prefix"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState  *string                                         `json:"admin-state,omitempty"`
-	Aggregator  *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
-	Communities *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
+	AdminState *string                                        `json:"admin-state,omitempty"`
+	Aggregator *NetworkinstanceAggregateroutesRouteAggregator `json:"aggregator,omitempty"`
 }
 
 // NetworkinstanceAggregateroutes struct

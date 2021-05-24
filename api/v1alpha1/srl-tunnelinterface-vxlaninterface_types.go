@@ -55,6 +55,9 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -64,9 +67,6 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                 `json:"admin-state,omitempty"`
 	Destination []*TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
@@ -97,13 +97,13 @@ type TunnelinterfaceVxlaninterfaceIngress struct {
 
 // TunnelinterfaceVxlaninterface struct
 type TunnelinterfaceVxlaninterface struct {
-	Type *string `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                   `json:"index"`
 	BridgeTable *TunnelinterfaceVxlaninterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *TunnelinterfaceVxlaninterfaceEgress      `json:"egress,omitempty"`
 	Ingress     *TunnelinterfaceVxlaninterfaceIngress     `json:"ingress,omitempty"`
+	Type        *string                                   `json:"type"`
 }
 
 // SrlTunnelinterfaceVxlaninterfaceSpec struct

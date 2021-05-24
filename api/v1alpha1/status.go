@@ -44,15 +44,12 @@ func ValidationStatusPtr(s ValidationStatus) *ValidationStatus { return &s }
 
 // ValidationDetails provides the status of the configuration applied on this particular device
 type ValidationDetails struct {
-	// Values identifies the object value that should match the leafref value
+	// LocalLeafRef identifies the leafref value that should match the remote leafref
 	// if empty it means the object does not exist.
-	Values *[]string `json:"values,omitempty"`
+	LocalLeafRefs *[]string `json:"localLeafRef,omitempty"`
 
-	// LeafRefPath points to the leafref object value
-	LeafRefPath *string `json:"leafRefParh,omitempty"`
-
-	// LeafRefValues identifies the values assigned in the leaf ref
-	LeafRefValues *[]string `json:"leafRefValues,omitempty"`
+	// RemoteLeafRef points to the remote leafref object
+	RemoteLeafRefs *[]string `json:"remoteLeafRef,omitempty"`
 }
 
 // ConfigStatus defines the states the resource object is reporting

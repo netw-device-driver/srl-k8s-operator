@@ -16,7 +16,10 @@
 
 package controllers
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 const (
 	targetNotFoundRetryDelay  = time.Second * 60
@@ -56,3 +59,40 @@ func removeString(slice []string, s string) (result []string) {
 
 func stringPtr(s string) *string { return &s }
 func intPtr(i int) *int          { return &i }
+
+func getHierarchicalElements(p string) (ekv []ElementKeyValue) {
+	skipElement := false
+
+	s1 := strings.Split(p, "/")
+	for i, _ := range s1 {
+		if i > 0 && !skipElement {
+			if strings.Contains(s1[i], "[") {
+				s2 := strings.Split(s1[i], "[")
+				s3 := strings.Split(s2[1], "=")
+				var v string
+				if strings.Contains(s3[1], "]") {
+					v = strings.Trim(s3[1], "]")
+				} else {
+					v = s3[1] + "/" + strings.Trim(s1[i+1], "]")
+					skipElement = true
+				}
+				e := ElementKeyValue{
+					Element:  s2[0],
+					KeyName:  s3[0],
+					KeyValue: v,
+				}
+				ekv = append(ekv, e)
+			} else {
+				e := ElementKeyValue{
+					Element:  s1[i],
+					KeyName:  "",
+					KeyValue: "",
+				}
+				ekv = append(ekv, e)
+			}
+		} else {
+			skipElement = false
+		}
+	}
+	return ekv
+}
