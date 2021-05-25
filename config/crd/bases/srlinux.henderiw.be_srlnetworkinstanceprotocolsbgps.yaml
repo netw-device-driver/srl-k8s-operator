@@ -1029,7 +1029,6 @@ spec:
                             description: DependencyCheck validates if the remote leafref
                               is present or not
                             enum:
-                            - ""
                             - Success
                             - Failed
                             type: string
@@ -1037,6 +1036,9 @@ spec:
                             description: RemoteLeafRef provides the reference path
                               to the remote leafref
                             type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
                         type: object
                       description: LocalResolvedLeafRefInfo provides the status of
                         the remote leafref information

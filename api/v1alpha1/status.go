@@ -60,10 +60,10 @@ type ValidationDetails2 struct {
 
 type RemoteLeafRefInfo struct {
 	// RemoteLeafRef provides the reference path to the remote leafref
-	RemoteLeafRef *string `json:"remoteLeafRef,omitempty"`
+	RemoteLeafRef *string `json:"remoteLeafRef"`
 	// DependencyCheck validates if the remote leafref is present or not
-	// +kubebuilder:validation:Enum="";Success;Failed
-	DependencyCheck *DependencyCheck `json:"dependencyCheck,omitempty"`
+	// +kubebuilder:validation:Enum=Success;Failed
+	DependencyCheck *DependencyCheck `json:"dependencyCheck"`
 }
 
 // DependencyCheck defines the status of the leafref dependency

@@ -576,20 +576,23 @@ func (r *SrlNetworkinstanceProtocolsBgpReconciler) ValidateLocalLeafRefs(ctx con
 			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("Remote LeafRef Values")
 			found := false
 			//leafRefInfo.DependencyCheckSuccess = false
-			leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
-				RemoteLeafRef:   &remoteLeafRefPath,
-				DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed),
-			}
+
 			for _, values := range rlvs {
 				if values == rekvl[len(rekvl)-1].KeyValue {
 					found = true
 					//leafRefInfo.DependencyCheckSuccess = true
-					leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]].DependencyCheck = srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess)
+					leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+						RemoteLeafRef:   stringPtr(remoteLeafRefPath),
+						DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess),
+					}
 					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
 				}
 			}
 			if !found {
-				leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]].DependencyCheck = srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed)
+				leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+					RemoteLeafRef:   stringPtr(remoteLeafRefPath),
+					DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed),
+				}
 				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref NOT FOUND, missing leaf reference")
 			}
 		}
