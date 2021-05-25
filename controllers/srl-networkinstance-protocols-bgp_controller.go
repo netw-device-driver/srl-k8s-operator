@@ -558,32 +558,42 @@ func (r *SrlNetworkinstanceProtocolsBgpReconciler) ValidateLocalLeafRefs(ctx con
 
 		// check if the leafref is configured in the resource
 		// if not we dont have a leafref dependency in this resource
-		lrd, localLeafRefPaths := r.FindLocalLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
-		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "leafref values", lrd, "localLeafRefPaths", localLeafRefPaths).Info("Local LeafRef Values and Paths")
+		remoteLeafRefPaths, localLeafRefPaths := r.FindLocalLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
+		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("Local/Remote LeafRef Paths")
 
-		leafRefInfo.Exists = false
-		leafRefInfo.RemoteLeafRefs = make([]string, 0)
-		leafRefInfo.LocalLeafRefValues = localLeafRefPaths
-		for _, remoteLeafRef := range lrd {
-			leafRefInfo.Exists = true
+		//leafRefInfo.Exists = false
+		//leafRefInfo.RemoteLeafRefs = make([]string, 0)
+		//leafRefInfo.LocalLeafRefValues = localLeafRefPaths
+		leafRefInfo.LocalResolvedLeafRefInfo = make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo)
+
+		for i, remoteLeafRefPath := range remoteLeafRefPaths {
+			//leafRefInfo.Exists = true
 			//leafRefInfo.LocalLeafRefValues = append(leafRefInfo.LocalLeafRefValues, localLeafRefPaths[i])
-			leafRefInfo.RemoteLeafRefs = append(leafRefInfo.RemoteLeafRefs, remoteLeafRef)
-			rekvl := getHierarchicalElements(remoteLeafRef)
-			rlvs := r.FindRemoteLeafRef(remoteLeafRef, d, rekvl)
-			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRef, "remote leafref values", rlvs).Info("Remote LeafRef Values")
+			//leafRefInfo.RemoteLeafRefs = append(leafRefInfo.RemoteLeafRefs, remoteLeafRef)
+
+			rekvl := getHierarchicalElements(remoteLeafRefPath)
+			rlvs := r.FindRemoteLeafRef(remoteLeafRefPath, d, rekvl)
+			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("Remote LeafRef Values")
 			found := false
-			leafRefInfo.DependencyCheckSuccess = false
+			//leafRefInfo.DependencyCheckSuccess = false
+			leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+				RemoteLeafRef:          remoteLeafRefPath,
+				DependencyCheckSuccess: false,
+			}
 			for _, values := range rlvs {
 				if values == rekvl[len(rekvl)-1].KeyValue {
 					found = true
-					leafRefInfo.DependencyCheckSuccess = true
-					r.Log.WithValues("localLeafRef", localLeafRef).Info("remote Leafref FOUND, all good")
+					//leafRefInfo.DependencyCheckSuccess = true
+					leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]].DependencyCheckSuccess = true
+					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
 				}
 			}
 			if !found {
-				r.Log.WithValues("localLeafRef", localLeafRef).Info("remote Leafref NOT FOUND, missing leaf reference")
+				//leafRefInfo.DependencyCheckSuccess = false
+				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref NOT FOUND, missing leaf reference")
 			}
 		}
+		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
 	return nil
 }
@@ -685,18 +695,23 @@ func (r *SrlNetworkinstanceProtocolsBgpReconciler) Reconcile(ctx context.Context
 			return ctrl.Result{}, errors.Wrap(err, "failed to validate local leafRef")
 		}
 		validationSuccess := true
-		o.Status.ConfigurationDependencyLocalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+		o.Status.ConfigurationDependencyLocalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0)
 		for localLeafRef, leafRefInfo := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
-			if leafRefInfo.Exists {
-				if !leafRefInfo.DependencyCheckSuccess {
-					validationSuccess = false
+			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
+				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{
+					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
 				}
-				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
-					LocalLeafRefs:  &leafRefInfo.LocalLeafRefValues,
-					RemoteLeafRefs: &leafRefInfo.RemoteLeafRefs,
+				for localLeafRefPaths, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+					if !RemoteLeafRefInfo.DependencyCheckSuccess {
+						validationSuccess = false
+					}
+					o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPaths] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+						RemoteLeafRef:          RemoteLeafRefInfo.RemoteLeafRef,
+						DependencyCheckSuccess: RemoteLeafRefInfo.DependencyCheckSuccess,
+					}
 				}
 			} else {
-				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{}
+				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{}
 			}
 		}
 

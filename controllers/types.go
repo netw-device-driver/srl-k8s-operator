@@ -16,19 +16,29 @@
 
 package controllers
 
+import (
+	srlinuxv1alpha1 "github.com/srl-wim/srl-k8s-operator/api/v1alpha1"
+)
+
 type ElementWithLeafRef struct {
-	REkvl                          []ElementKeyValue
-	RemoteLeafRefs                 []string
-	RelativePath2ObjectWithLeafRef string
-	AbsolutePath2LeafRef           string
-	RelativePath2LeafRef           string
-	ElementName                    string
-	KeyName                        string
-	LocalLeafRefValues             []string
-	Exists                         bool
-	DependencyCheckSuccess         bool
-	LeafRefValues                  []string
+	REkvl []ElementKeyValue
+
+	LocalResolvedLeafRefInfo map[string]*srlinuxv1alpha1.RemoteLeafRefInfo
+
+	//RelativePath2ObjectWithLeafRef string
+	//AbsolutePath2LeafRef           string
+	//RelativePath2LeafRef           string
+	//ElementName                    string
+	//KeyName                        string
+	//DependencyCheckSuccess bool
+	//LeafRefValues                  []string
+	//Exists                         bool
 }
+
+//type RemoteLeafRefInfo struct {
+//	RemoteLeafRef          string
+//	DependencyCheckSuccess bool
+//}
 
 // ElementKeyValue struct
 type ElementKeyValue struct {

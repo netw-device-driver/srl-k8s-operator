@@ -745,7 +745,7 @@ type SrlNetworkinstanceProtocolsBgpStatus struct {
 	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
 	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails `json:"localLeafrefValidationDetails,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

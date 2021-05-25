@@ -4526,21 +4526,24 @@ spec:
                 type: string
               localLeafrefValidationDetails:
                 additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
+                  description: ValidationDetails2 provides the status of the configuration
                     applied on this particular device
                   properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheckSuccess:
+                            description: DependencyCheckSuccess validates if the remote
+                              leafref is present or not
+                            type: boolean
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
                   type: object
                 description: ConfigurationDependencyLocalLeafrefValidationDetails
                   defines the validation details of the resource object

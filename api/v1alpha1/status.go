@@ -52,6 +52,19 @@ type ValidationDetails struct {
 	RemoteLeafRefs *[]string `json:"remoteLeafRef,omitempty"`
 }
 
+// ValidationDetails2 provides the status of the configuration applied on this particular device
+type ValidationDetails2 struct {
+	// LocalResolvedLeafRefInfo provides the status of the remote leafref information
+	LocalResolvedLeafRefInfo map[string]*RemoteLeafRefInfo `json:"localResolvedLeafRefInfo,omitempty"`
+}
+
+type RemoteLeafRefInfo struct {
+	// RemoteLeafRef provides the reference path to the remote leafref
+	RemoteLeafRef string `json:"remoteLeafRef,omitempty"`
+	// DependencyCheckSuccess validates if the remote leafref is present or not
+	DependencyCheckSuccess bool `json:"dependencyCheckSuccess,omitempty"`
+}
+
 // ConfigStatus defines the states the resource object is reporting
 type ConfigStatus string
 
