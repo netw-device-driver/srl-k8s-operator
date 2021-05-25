@@ -1025,7 +1025,7 @@ spec:
                     localResolvedLeafRefInfo:
                       additionalProperties:
                         properties:
-                          dependencyCheckSuccess:
+                          dependencyCheck:
                             description: DependencyCheck validates if the remote leafref
                               is present or not
                             enum:
