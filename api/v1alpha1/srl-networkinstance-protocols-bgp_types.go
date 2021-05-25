@@ -742,7 +742,7 @@ type SrlNetworkinstanceProtocolsBgpStatus struct {
 
 	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"localLeafrefValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
 	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
 	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails `json:"localLeafrefValidationDetails,omitempty"`

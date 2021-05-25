@@ -999,6 +999,13 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpStatus struct
             properties:
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
+                enum:
+                - Success
+                - Failed
+                type: string
               configurationDependencyTargetFound:
                 description: ConfigurationDependencyTargetNotFound identifies if the
                   target of the resource object is missing or not
@@ -1031,13 +1038,6 @@ spec:
                 description: ConfigurationDependencyLocalLeafrefValidationDetails
                   defines the validation details of the resource object
                 type: object
-              localLeafrefValidationStatus:
-                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
-                  the status of the local LeafRef Validation of the resource object
-                enum:
-                - Success
-                - Failed
-                type: string
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
