@@ -577,24 +577,25 @@ func (r *SrlNetworkinstanceProtocolsBgpReconciler) ValidateLocalLeafRefs(ctx con
 			found := false
 			//leafRefInfo.DependencyCheckSuccess = false
 			leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
-				RemoteLeafRef:          remoteLeafRefPath,
-				DependencyCheckSuccess: false,
+				RemoteLeafRef:   &remoteLeafRefPath,
+				DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed),
 			}
 			for _, values := range rlvs {
 				if values == rekvl[len(rekvl)-1].KeyValue {
 					found = true
 					//leafRefInfo.DependencyCheckSuccess = true
-					leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]].DependencyCheckSuccess = true
+					leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]].DependencyCheck = srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess)
 					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
 				}
 			}
 			if !found {
-				//leafRefInfo.DependencyCheckSuccess = false
+				leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]].DependencyCheck = srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed)
 				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref NOT FOUND, missing leaf reference")
 			}
 		}
 		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
+	r.Log.WithValues("NetworkinstanceProtocolsBgpIntraResourceleafRef", NetworkinstanceProtocolsBgpIntraResourceleafRef).Info("leafref STATUS All")
 	return nil
 }
 
@@ -701,13 +702,13 @@ func (r *SrlNetworkinstanceProtocolsBgpReconciler) Reconcile(ctx context.Context
 				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{
 					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
 				}
-				for localLeafRefPaths, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
-					if !RemoteLeafRefInfo.DependencyCheckSuccess {
+				for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+					if *RemoteLeafRefInfo.DependencyCheck != srlinuxv1alpha1.DependencyCheckSuccess {
 						validationSuccess = false
 					}
-					o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPaths] = &srlinuxv1alpha1.RemoteLeafRefInfo{
-						RemoteLeafRef:          RemoteLeafRefInfo.RemoteLeafRef,
-						DependencyCheckSuccess: RemoteLeafRefInfo.DependencyCheckSuccess,
+					o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+						RemoteLeafRef:   RemoteLeafRefInfo.RemoteLeafRef,
+						DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
 					}
 				}
 			} else {

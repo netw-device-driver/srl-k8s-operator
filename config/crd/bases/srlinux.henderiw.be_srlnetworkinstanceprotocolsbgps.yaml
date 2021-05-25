@@ -1026,9 +1026,13 @@ spec:
                       additionalProperties:
                         properties:
                           dependencyCheckSuccess:
-                            description: DependencyCheckSuccess validates if the remote
-                              leafref is present or not
-                            type: boolean
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - ""
+                            - Success
+                            - Failed
+                            type: string
                           remoteLeafRef:
                             description: RemoteLeafRef provides the reference path
                               to the remote leafref
