@@ -30,13 +30,13 @@ const (
 
 // RoutingpolicyPrefixsetPrefix struct
 type RoutingpolicyPrefixsetPrefix struct {
-	IpPrefixMaskLengthRange *string `json:"ip-prefix-mask-length-range,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
 	IpPrefix *string `json:"ip-prefix,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`([0-9]+\.\.[0-9]+)|exact`
-	MaskLengthRange *string `json:"mask-length-range,omitempty"`
+	MaskLengthRange         *string `json:"mask-length-range,omitempty"`
+	IpPrefixMaskLengthRange *string `json:"ip-prefix-mask-length-range,omitempty"`
 }
 
 // RoutingpolicyPrefixset struct
@@ -60,12 +60,12 @@ type SrlRoutingpolicyPrefixsetStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

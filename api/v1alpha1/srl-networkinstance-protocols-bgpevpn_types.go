@@ -45,10 +45,10 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct {
+	// +kubebuilder:default:=use-system-ipv4-address
+	NextHop        *string                                                                    `json:"next-hop,omitempty"`
 	InclusiveMcast *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast `json:"inclusive-mcast,omitempty"`
 	MacIp          *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp          `json:"mac-ip,omitempty"`
-	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop *string `json:"next-hop,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp struct
@@ -64,18 +64,12 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
-	RouteTable  *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
 	BridgeTable *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
+	RouteTable  *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	// +kubebuilder:validation:Enum=`vxlan`
-	// +kubebuilder:default:=vxlan
-	EncapsulationType *string `json:"encapsulation-type,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	Evi            *uint32                                           `json:"evi"`
 	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
 	Id             *string                                           `json:"id"`
@@ -90,6 +84,12 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	// +kubebuilder:validation:Maximum=8
 	// +kubebuilder:default:=1
 	Ecmp *uint8 `json:"ecmp,omitempty"`
+	// +kubebuilder:validation:Enum=`vxlan`
+	// +kubebuilder:default:=vxlan
+	EncapsulationType *string `json:"encapsulation-type,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Evi *uint32 `json:"evi"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct
@@ -109,12 +109,12 @@ type SrlNetworkinstanceProtocolsBgpevpnStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

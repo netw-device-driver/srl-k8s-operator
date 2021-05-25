@@ -417,9 +417,47 @@ func (r *SrlSystemNtpReconciler) ValidateLocalLeafRefs(ctx context.Context, o *s
 
 		// check if the leafref is configured in the resource
 		// if not we dont have a leafref dependency in this resource
-		lrd := r.FindLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
-		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "leafref values", lrd).Info("Local LeafRef Values")
+		remoteLeafRefPaths, localLeafRefPaths := r.FindLocalLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
+		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("Local/Remote LeafRef Paths")
+
+		//leafRefInfo.Exists = false
+		//leafRefInfo.RemoteLeafRefs = make([]string, 0)
+		//leafRefInfo.LocalLeafRefValues = localLeafRefPaths
+		leafRefInfo.LocalResolvedLeafRefInfo = make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo)
+
+		for i, remoteLeafRefPath := range remoteLeafRefPaths {
+			//leafRefInfo.Exists = true
+			//leafRefInfo.LocalLeafRefValues = append(leafRefInfo.LocalLeafRefValues, localLeafRefPaths[i])
+			//leafRefInfo.RemoteLeafRefs = append(leafRefInfo.RemoteLeafRefs, remoteLeafRef)
+
+			rekvl := getHierarchicalElements(remoteLeafRefPath)
+			rlvs := r.FindRemoteLeafRef(remoteLeafRefPath, d, rekvl)
+			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("Remote LeafRef Values")
+			found := false
+			//leafRefInfo.DependencyCheckSuccess = false
+
+			for _, values := range rlvs {
+				if values == rekvl[len(rekvl)-1].KeyValue {
+					found = true
+					//leafRefInfo.DependencyCheckSuccess = true
+					leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+						RemoteLeafRef:   stringPtr(remoteLeafRefPath),
+						DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess),
+					}
+					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
+				}
+			}
+			if !found {
+				leafRefInfo.LocalResolvedLeafRefInfo[localLeafRefPaths[i]] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+					RemoteLeafRef:   stringPtr(remoteLeafRefPath),
+					DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed),
+				}
+				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref NOT FOUND, missing leaf reference")
+			}
+		}
+		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
+	r.Log.WithValues("SystemNtpIntraResourceleafRef", SystemNtpIntraResourceleafRef).Info("leafref STATUS All")
 	return nil
 }
 
@@ -520,6 +558,25 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			return ctrl.Result{}, errors.Wrap(err, "failed to validate local leafRef")
 		}
 		validationSuccess := true
+		o.Status.ConfigurationDependencyLocalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0)
+		for localLeafRef, leafRefInfo := range SystemNtpIntraResourceleafRef {
+			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
+				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{
+					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
+				}
+				for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+					if *RemoteLeafRefInfo.DependencyCheck != srlinuxv1alpha1.DependencyCheckSuccess {
+						validationSuccess = false
+					}
+					o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+						RemoteLeafRef:   RemoteLeafRefInfo.RemoteLeafRef,
+						DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
+					}
+				}
+			} else {
+				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{}
+			}
+		}
 		/*
 			err := r.validateLocalLeafRefs(o)
 			if err != nil {
@@ -553,16 +610,16 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 		if validationSuccess {
 			// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
-			if o.Status.ConfigurationDependencyValidationStatus != nil && *o.Status.ConfigurationDependencyValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+			if o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != nil && *o.Status.ConfigurationDependencyLocalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
 				r.publishEvent(req, o.NewEvent("Validation success", ""))
 			}
-			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 		} else {
 			// if the validation status did not change we dont have to publish a new event
-			if o.Status.ConfigurationDependencyValidationStatus != nil && *o.Status.ConfigurationDependencyValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+			if o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != nil && *o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
 				r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
 			}
-			o.Status.ConfigurationDependencyValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		}
 
 		if err := r.saveSrlSystemNtpStatus(ctx, o); err != nil {
@@ -642,6 +699,7 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	var diff bool
 	var dp *[]string
 	leafRefDependencies := make([]string, 0)
+	localLeafRefPaths := make([]string, 0)
 	if o.DeletionTimestamp.IsZero() && SrlSystemNtphasFinalizer(o) {
 		diff, dp, err = r.FindSpecDiff(ctx, o)
 		if err != nil {
@@ -655,11 +713,11 @@ func (r *SrlSystemNtpReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		// the diff handling is handled in the state machine later
 
 		// find leafref dependencies
-		leafRefDependencies, err = r.FindInterLeafRefDependencies(ctx, o)
+		leafRefDependencies, localLeafRefPaths, err = r.FindInterLeafRefDependencies(ctx, o)
 		if err != nil {
 			r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to get leafRef dependencies ")
 		}
-		r.Log.WithValues("Dependencies", leafRefDependencies).Info("LeafRef Dependencies")
+		r.Log.WithValues("leafRefDependencies", leafRefDependencies, "localLeafRefPaths", localLeafRefPaths).Info("LeafRef Dependencies")
 	}
 
 	// initialize the resource parameters
@@ -825,20 +883,20 @@ func (r *SrlSystemNtpReconciler) saveSrlSystemNtpStatus(ctx context.Context, o *
 	return nil
 }
 
-func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues []string) []string {
-	r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues).Info("findLeafRefInTree")
+func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues, localLeafRefPaths []string, lridx int) ([]string, []string) {
+	r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues, "localLeafRefPath", localLeafRefPaths).Info("findLeafRefInTree")
 
 	var tlrv []string
 	switch x := x1.(type) {
 	case map[string]interface{}:
 		for k, x2 := range x {
-			r.Log.WithValues("Key", k, "Value", x2, "leafRefValues", leafRefValues).Info("map[string]interface{}")
+			//r.Log.WithValues("Key", k, "Value", x2, "leafRefValues", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("map[string]interface{}")
 			if k == ekvl[idx].Element {
 				if idx == len(ekvl)-1 {
 					// last element/index in ekv
 					if ekvl[idx].KeyName != "" {
 						r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Last Index")
-						tlrv = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues)
+						tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues, localLeafRefPaths, lridx)
 						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 						if len(tlrv) > len(leafRefValues) {
 							leafRefValues = tlrv
@@ -849,11 +907,13 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 						case string:
 							r.Log.WithValues("KeyName", "", "Value", x3, "Type", "string").Info("map[string]interface{} Last Index")
 							leafRefValues = append(leafRefValues, x3)
+							localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "=" + x3
 							//return leafRefValuesPtr
 						case int:
 							x4 := strconv.Itoa(int(x3))
 							r.Log.WithValues("KeyName", "", "Value", x4, "Type", "int").Info("map[string]interface{} Last Index")
 							leafRefValues = append(leafRefValues, x4)
+							localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "=" + x4
 							//return leafRefValuesPtr
 						default:
 							r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} Last Index")
@@ -864,7 +924,7 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 					// not last element/index in ekv
 					if ekvl[idx].KeyName != "" {
 						r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Not Last Index")
-						tlrv = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues)
+						tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues, localLeafRefPaths, lridx)
 						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 						if len(tlrv) > len(leafRefValues) {
 							leafRefValues = tlrv
@@ -872,8 +932,9 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 						//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
 					} else {
 						r.Log.WithValues("KeyName", "").Info("map[string]interface{} Not Last Index")
+						localLeafRefPaths[lridx] += "/" + ekvl[idx].Element
 						idx++
-						tlrv = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues)
+						tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues, localLeafRefPaths, lridx)
 						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 						if len(tlrv) > len(leafRefValues) {
 							leafRefValues = tlrv
@@ -884,24 +945,31 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 			}
 		}
 	case []interface{}:
-		for k, v := range x {
-			r.Log.WithValues("Key", k, "Value", v, "leafRefValues", leafRefValues).Info("[]interface{}")
+		leafreforig := localLeafRefPaths[lridx]
+		for n, v := range x {
+			//r.Log.WithValues("Key", i, "Value", v, "leafRefValues", leafRefValues, "localLeafRefPath", localLeafRefPaths).Info("[]interface{}")
 			switch x2 := v.(type) {
 			case map[string]interface{}:
 				for k3, x3 := range x2 {
 					if k3 == ekvl[idx].KeyName {
+						if n > 0 {
+							localLeafRefPaths = append(localLeafRefPaths, leafreforig)
+							lridx++
+						}
 						if idx == len(ekvl)-1 {
 							// return the value
 							switch x4 := x3.(type) {
 							case string:
 								r.Log.WithValues("KeyName", "", "Value", x4, "Type", "string").Info("map[string]interface{} in []interface{} Last Index")
 								leafRefValues = append(leafRefValues, x4)
+								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + x4 + "]"
 								//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 
 							case int:
 								x5 := strconv.Itoa(int(x4))
 								r.Log.WithValues("KeyName", "", "Value", x5, "Type", "int").Info("map[string]interface{} in []interface{} Last Index")
 								leafRefValues = append(leafRefValues, x5)
+								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + x5 + "]"
 								//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 								//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
 								//return leafRefValues
@@ -910,9 +978,14 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 								//return leafRefValues
 							}
 						} else {
+							r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} in []interface{} Not Last Index")
+							switch x4 := x3.(type) {
+							case string:
+								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + x4 + "]"
+							}
 							i := idx
 							i++
-							tlrv = r.findLeafRefInTree(x2, ekvl, i, leafRefValues)
+							tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, i, leafRefValues, localLeafRefPaths, lridx)
 							//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 							if len(tlrv) > len(leafRefValues) {
 								leafRefValues = tlrv
@@ -920,6 +993,7 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 							//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
 						}
 					}
+					//i++
 				}
 			}
 		}
@@ -929,19 +1003,36 @@ func (r *SrlSystemNtpReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 		//return leafRefValuesPtr
 	}
 	//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
+	return leafRefValues, localLeafRefPaths
+}
+
+func (r *SrlSystemNtpReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]byte, rekvl []ElementKeyValue) []string {
+	r.Log.WithValues("remoteLeafRef", remoteLeafRef, "rekvl", rekvl).Info("Find Remote LeafRef")
+	leafRefValues := make([]string, 0)
+	localLeafRefPaths := make([]string, 0)
+	for _, b := range d {
+		var x1 interface{}
+		json.Unmarshal(b, &x1)
+
+		localLeafRefPaths = append(localLeafRefPaths, "")
+		leafRefValues, localLeafRefPaths = r.findLeafRefInTree(x1, rekvl, 0, leafRefValues, localLeafRefPaths, 0)
+		r.Log.WithValues("remoteLeafRef", remoteLeafRef, "Values", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("Find remote LeafRef Values")
+	}
 	return leafRefValues
 }
 
-func (r *SrlSystemNtpReconciler) FindLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) []string {
+func (r *SrlSystemNtpReconciler) FindLocalLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) ([]string, []string) {
 	r.Log.WithValues("ekvl", ekvl, "rekvl", rekvl).Info("find LeafRef")
 	leafRefDependencies := make([]string, 0)
+	localLeafRefPaths := make([]string, 0)
 	for _, b := range d {
 		var x1 interface{}
 		json.Unmarshal(b, &x1)
 
 		leafRefValues := make([]string, 0)
-		leafRefValues = r.findLeafRefInTree(x1, ekvl, 0, leafRefValues)
-		r.Log.WithValues("LocalLeafRef", localLeafRef, "Values", leafRefValues).Info("find LeafRef Values")
+		localLeafRefPaths = append(localLeafRefPaths, "")
+		leafRefValues, localLeafRefPaths = r.findLeafRefInTree(x1, ekvl, 0, leafRefValues, localLeafRefPaths, 0)
+		r.Log.WithValues("LocalLeafRef", localLeafRef, "Values", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("find LeafRef Values")
 		if len(leafRefValues) != 0 {
 			//TODO parse value with rekvl
 			//TODO append the result of the previous action with leafRefDependencies
@@ -961,13 +1052,11 @@ func (r *SrlSystemNtpReconciler) FindLeafRef(localLeafRef string, d [][]byte, ek
 			leafRefDependencies = append(leafRefDependencies, leafRefDep)
 		}
 	}
-	return leafRefDependencies
+	return leafRefDependencies, localLeafRefPaths
 }
 
-func (r *SrlSystemNtpReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlSystemNtp) ([]string, error) {
+func (r *SrlSystemNtpReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlSystemNtp) ([]string, []string, error) {
 	r.Log.Info("Find LeafRef Dependencies ...")
-
-	leafRefDependencies := make([]string, 0)
 
 	// marshal data to json
 	dd := struct {
@@ -978,23 +1067,26 @@ func (r *SrlSystemNtpReconciler) FindInterLeafRefDependencies(ctx context.Contex
 	d := make([][]byte, 0)
 	dj, err := json.Marshal(dd)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	d = append(d, dj)
 
-	for localLeafRef, rekvl := range SystemNtpInterResourceleafRef {
+	leafRefDependencies := make([]string, 0)
+	localLeafRefPaths := make([]string, 0)
+	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 
 		// check if the leafref is configured in the resource
 		// if not we dont have a leafref dependency in this resource
-		lrd := r.FindLeafRef(localLeafRef, d, ekvl, rekvl)
+		lrd, lrp := r.FindLocalLeafRef(localLeafRef, d, ekvl, rekvl)
 		if len(lrd) != 0 {
 			leafRefDependencies = append(leafRefDependencies, lrd...)
+			localLeafRefPaths = append(localLeafRefPaths, lrp...)
 		}
 	}
 	r.Log.WithValues("LeafRefDependencies", leafRefDependencies).Info("Final LeafRef Dependencies")
-	return leafRefDependencies, nil
+	return leafRefDependencies, localLeafRefPaths, nil
 }
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec

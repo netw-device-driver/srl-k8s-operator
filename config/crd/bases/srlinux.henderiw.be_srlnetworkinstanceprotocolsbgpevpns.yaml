@@ -135,16 +135,16 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpevpnStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -153,6 +153,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -284,27 +314,6 @@ spec:
                 required:
                 - bgp-evpn
                 - network-instance-name
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object

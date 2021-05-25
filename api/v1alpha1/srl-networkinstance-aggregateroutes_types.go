@@ -47,17 +47,17 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
-	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
-	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
-	// +kubebuilder:default:=false
-	SummaryOnly *bool `json:"summary-only,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
 	Prefix *string `json:"prefix"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState *string                                        `json:"admin-state,omitempty"`
-	Aggregator *NetworkinstanceAggregateroutesRouteAggregator `json:"aggregator,omitempty"`
+	AdminState   *string                                         `json:"admin-state,omitempty"`
+	Aggregator   *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
+	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
+	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
+	// +kubebuilder:default:=false
+	SummaryOnly *bool `json:"summary-only,omitempty"`
 }
 
 // NetworkinstanceAggregateroutes struct
@@ -77,12 +77,12 @@ type SrlNetworkinstanceAggregateroutesStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

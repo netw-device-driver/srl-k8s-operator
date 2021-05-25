@@ -136,16 +136,16 @@ spec:
           status:
             description: SrlBfdStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -154,6 +154,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -281,27 +311,6 @@ spec:
                     type: object
                 required:
                 - bfd
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -618,16 +627,16 @@ spec:
           status:
             description: SrlInterfaceStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -636,6 +645,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -936,27 +975,6 @@ spec:
                     type: array
                 required:
                 - interface
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -1788,16 +1806,16 @@ spec:
           status:
             description: SrlInterfaceSubinterfaceStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -1806,6 +1824,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -2622,27 +2670,6 @@ spec:
                 - interface-name
                 - subinterface
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -2747,16 +2774,16 @@ spec:
           status:
             description: SrlNetworkinstanceAggregateroutesStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -2765,6 +2792,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -2851,27 +2908,6 @@ spec:
                 required:
                 - aggregate-routes
                 - network-instance-name
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -3013,16 +3049,16 @@ spec:
           status:
             description: SrlNetworkinstanceNexthopgroupsStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -3031,6 +3067,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -3153,27 +3219,6 @@ spec:
                 required:
                 - network-instance-name
                 - next-hop-groups
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -3323,16 +3368,16 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpevpnStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -3341,6 +3386,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -3472,27 +3547,6 @@ spec:
                 required:
                 - bgp-evpn
                 - network-instance-name
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -5655,16 +5709,16 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsBgpvpnStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -5673,6 +5727,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -5753,27 +5837,6 @@ spec:
                 required:
                 - bgp-vpn
                 - network-instance-name
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -6388,16 +6451,16 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsIsisStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -6406,6 +6469,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -7002,27 +7095,6 @@ spec:
                 - isis
                 - network-instance-name
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -7095,16 +7167,16 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsLinuxStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -7113,6 +7185,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -7167,27 +7269,6 @@ spec:
                 required:
                 - linux
                 - network-instance-name
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -7809,16 +7890,16 @@ spec:
           status:
             description: SrlNetworkinstanceProtocolsOspfStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -7827,6 +7908,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -8431,27 +8542,6 @@ spec:
                 - network-instance-name
                 - ospf
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -8857,16 +8947,16 @@ spec:
           status:
             description: SrlNetworkinstanceStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -8875,6 +8965,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -9264,27 +9384,6 @@ spec:
                 required:
                 - network-instance
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -9376,16 +9475,16 @@ spec:
           status:
             description: SrlNetworkinstanceStaticroutesStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -9394,6 +9493,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -9468,27 +9597,6 @@ spec:
                 - network-instance-name
                 - static-routes
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -9562,16 +9670,16 @@ spec:
           status:
             description: SrlRoutingpolicyAspathsetStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -9580,6 +9688,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -9635,27 +9773,6 @@ spec:
                     type: array
                 required:
                 - as-path-set
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -9729,16 +9846,16 @@ spec:
           status:
             description: SrlRoutingpolicyCommunitysetStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -9747,6 +9864,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -9801,27 +9948,6 @@ spec:
                     type: array
                 required:
                 - community-set
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -10144,16 +10270,16 @@ spec:
           status:
             description: SrlRoutingpolicyPolicyStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -10162,6 +10288,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -10469,27 +10625,6 @@ spec:
                 required:
                 - policy
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -10573,16 +10708,16 @@ spec:
           status:
             description: SrlRoutingpolicyPrefixsetStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -10591,6 +10726,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -10656,27 +10821,6 @@ spec:
                     type: array
                 required:
                 - prefix-set
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -10757,16 +10901,16 @@ spec:
           status:
             description: SrlSystemMtuStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -10775,6 +10919,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -10837,27 +11011,6 @@ spec:
                     type: object
                 required:
                 - mtu
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -10928,16 +11081,16 @@ spec:
           status:
             description: SrlSystemNameStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -10946,6 +11099,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -10998,27 +11181,6 @@ spec:
                     type: object
                 required:
                 - name
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -11101,16 +11263,16 @@ spec:
           status:
             description: SrlSystemNetworkinstanceProtocolsBgpvpnStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -11119,6 +11281,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -11182,27 +11374,6 @@ spec:
                     type: object
                 required:
                 - bgp-vpn
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -11380,16 +11551,16 @@ spec:
             description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus
               struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -11398,6 +11569,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -11554,27 +11755,6 @@ spec:
                 - bgp-instance-id
                 - ethernet-segment
                 type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
-                type: object
             type: object
         type: object
     served: true
@@ -11643,16 +11823,16 @@ spec:
             description: SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceStatus
               struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -11661,6 +11841,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -11710,27 +11920,6 @@ spec:
                     type: array
                 required:
                 - bgp-instance
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -11813,16 +12002,16 @@ spec:
           status:
             description: SrlSystemNetworkinstanceProtocolsEvpnStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -11831,6 +12020,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -11894,27 +12113,6 @@ spec:
                     type: object
                 required:
                 - evpn
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -11999,16 +12197,16 @@ spec:
           status:
             description: SrlSystemNtpStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -12017,6 +12215,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -12083,27 +12311,6 @@ spec:
                     type: object
                 required:
                 - ntp
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -12174,16 +12381,16 @@ spec:
           status:
             description: SrlTunnelinterfaceStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -12192,6 +12399,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -12243,27 +12480,6 @@ spec:
                     type: array
                 required:
                 - tunnel-interface
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object
@@ -12429,16 +12645,16 @@ spec:
           status:
             description: SrlTunnelinterfaceVxlaninterfaceStatus struct
             properties:
-              configurationDependencyTargetFound:
-                description: ConfigurationDependencyTargetNotFound identifies if the
-                  target of the resource object is missing or not
+              configurationDependencyLocalLeafrefValidationStatus:
+                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
+                  the status of the local LeafRef Validation of the resource object
                 enum:
                 - Success
                 - Failed
                 type: string
-              configurationDependencyValidationStatus:
-                description: ConfigurationDependencyValidationStatus identifies the
-                  status of the LeafRef Validation of the resource object
+              configurationDependencyTargetFound:
+                description: ConfigurationDependencyTargetNotFound identifies if the
+                  target of the resource object is missing or not
                 enum:
                 - Success
                 - Failed
@@ -12447,6 +12663,36 @@ spec:
                 description: LastUpdated identifies when this status was last observed.
                 format: date-time
                 type: string
+              localLeafrefValidationDetails:
+                additionalProperties:
+                  description: ValidationDetails2 provides the status of the configuration
+                    applied on this particular device
+                  properties:
+                    localResolvedLeafRefInfo:
+                      additionalProperties:
+                        properties:
+                          dependencyCheck:
+                            description: DependencyCheck validates if the remote leafref
+                              is present or not
+                            enum:
+                            - Success
+                            - Failed
+                            type: string
+                          remoteLeafRef:
+                            description: RemoteLeafRef provides the reference path
+                              to the remote leafref
+                            type: string
+                        required:
+                        - dependencyCheck
+                        - remoteLeafRef
+                        type: object
+                      description: LocalResolvedLeafRefInfo provides the status of
+                        the remote leafref information
+                      type: object
+                  type: object
+                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                  defines the validation details of the resource object
+                type: object
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -12593,27 +12839,6 @@ spec:
                 required:
                 - tunnel-interface-name
                 - vxlan-interface
-                type: object
-              validationDetails:
-                additionalProperties:
-                  description: ValidationDetails provides the status of the configuration
-                    applied on this particular device
-                  properties:
-                    localLeafRef:
-                      description: LocalLeafRef identifies the leafref value that
-                        should match the remote leafref if empty it means the object
-                        does not exist.
-                      items:
-                        type: string
-                      type: array
-                    remoteLeafRef:
-                      description: RemoteLeafRef points to the remote leafref object
-                      items:
-                        type: string
-                      type: array
-                  type: object
-                description: ConfigurationDependencyValidationDetails defines the
-                  validation details of the resource object
                 type: object
             type: object
         type: object

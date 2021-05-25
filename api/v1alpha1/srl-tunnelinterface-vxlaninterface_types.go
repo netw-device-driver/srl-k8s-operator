@@ -55,9 +55,6 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -67,6 +64,9 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct {
 	// +kubebuilder:default:=enable
 	AdminState  *string                                                                 `json:"admin-state,omitempty"`
 	Destination []*TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination `json:"destination,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi *string `json:"esi,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroups struct
@@ -82,10 +82,10 @@ type TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader struct {
 
 // TunnelinterfaceVxlaninterfaceEgress struct
 type TunnelinterfaceVxlaninterfaceEgress struct {
-	DestinationGroups   *TunnelinterfaceVxlaninterfaceEgressDestinationGroups   `json:"destination-groups,omitempty"`
 	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
 	// +kubebuilder:default:=use-system-ipv4-address
-	SourceIp *string `json:"source-ip,omitempty"`
+	SourceIp          *string                                               `json:"source-ip,omitempty"`
+	DestinationGroups *TunnelinterfaceVxlaninterfaceEgressDestinationGroups `json:"destination-groups,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceIngress struct
@@ -97,13 +97,13 @@ type TunnelinterfaceVxlaninterfaceIngress struct {
 
 // TunnelinterfaceVxlaninterface struct
 type TunnelinterfaceVxlaninterface struct {
+	Ingress *TunnelinterfaceVxlaninterfaceIngress `json:"ingress,omitempty"`
+	Type    *string                               `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                   `json:"index"`
 	BridgeTable *TunnelinterfaceVxlaninterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *TunnelinterfaceVxlaninterfaceEgress      `json:"egress,omitempty"`
-	Ingress     *TunnelinterfaceVxlaninterfaceIngress     `json:"ingress,omitempty"`
-	Type        *string                                   `json:"type"`
 }
 
 // SrlTunnelinterfaceVxlaninterfaceSpec struct
@@ -118,12 +118,12 @@ type SrlTunnelinterfaceVxlaninterfaceStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

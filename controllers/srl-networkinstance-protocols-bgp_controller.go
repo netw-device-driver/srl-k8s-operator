@@ -718,6 +718,30 @@ func (r *SrlNetworkinstanceProtocolsBgpReconciler) Reconcile(ctx context.Context
 				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{}
 			}
 		}
+		/*
+			err := r.validateLocalLeafRefs(o)
+			if err != nil {
+				return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
+			}
+			validationSuccess := true
+			o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+			for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
+				if elementWithLeafRef.Exists {
+					if !elementWithLeafRef.DependencyCheckSuccess {
+						validationSuccess = false
+					}
+					o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+						Values:        &elementWithLeafRef.Values,
+						LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
+						LeafRefValues: &elementWithLeafRef.LeafRefValues,
+					}
+				} else {
+					o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+						LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
+					}
+				}
+			}
+		*/
 
 		//if validationSuccess {
 		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)

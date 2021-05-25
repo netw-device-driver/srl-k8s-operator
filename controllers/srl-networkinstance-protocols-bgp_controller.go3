@@ -49,22 +49,174 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var RoutingpolicyAspathsetIntraResourceleafRef = map[string]*ElementWithLeafRef{}
+var NetworkinstanceProtocolsBgpIntraResourceleafRef = map[string]*ElementWithLeafRef{
+	"/bgp/dynamic-neighbors/accept/match[prefix=]/peer-group": {
+		REkvl: []ElementKeyValue{
+			{"bgp", "", ""},
+			{"group", "group-name", "string"},
+		},
+	},
+	"/bgp/neighbor[peer-address=]/peer-group": {
+		REkvl: []ElementKeyValue{
+			{"bgp", "", ""},
+			{"group", "group-name", "string"},
+		},
+	},
+}
 
 /*
-	var RoutingpolicyAspathsetIntraResourceleafRef= map[string]*ElementWithLeafRef{
+	var NetworkinstanceProtocolsBgpIntraResourceleafRef= map[string]*ElementWithLeafRef{
+	    "/bgp/dynamic-neighbors/accept/match[prefix=]/peer-group" : {
+	        AbsolutePath2LeafRef: "/network-instance/protocols/bgp",
+			RelativePath2LeafRef: "/group/group-name",
+		    RelativePath2ObjectWithLeafRef: "/bgp/dynamic-neighbors/accept/match[prefix=]/peer-group",
+		    ElementName:         "group",
+		    KeyName:             "group-name",
+	    },
+	    "/bgp/neighbor[peer-address=]/peer-group" : {
+	        AbsolutePath2LeafRef: "/network-instance/protocols/bgp",
+			RelativePath2LeafRef: "/group/group-name",
+		    RelativePath2ObjectWithLeafRef: "/bgp/neighbor[peer-address=]/peer-group",
+		    ElementName:         "group",
+		    KeyName:             "group-name",
+	    },
 	}
 */
 
-var RoutingpolicyAspathsetInterResourceleafRef = map[string][]ElementKeyValue{}
+var NetworkinstanceProtocolsBgpInterResourceleafRef = map[string][]ElementKeyValue{
+	"/bgp/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
+	},
+	"/bgp/export-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/group[group-name=]/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
+	},
+	"/bgp/group[group-name=]/export-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/group[group-name=]/import-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/group[group-name=]/send-default-route/export-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/import-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/neighbor[peer-address=]/authentication/keychain": []ElementKeyValue{
+		{"system", "", ""},
+		{"authentication", "", ""},
+		{"keychain", "name", "string"},
+	},
+	"/bgp/neighbor[peer-address=]/export-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/neighbor[peer-address=]/import-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+	"/bgp/neighbor[peer-address=]/send-default-route/export-policy": []ElementKeyValue{
+		{"routing-policy", "", ""},
+		{"policy", "name", "string"},
+	},
+}
 
 /*
-	var RoutingpolicyAspathsetInterResourceleafRef = map[string]*ElementWithLeafRef{
+	var NetworkinstanceProtocolsBgpInterResourceleafRef = map[string]*ElementWithLeafRef{
+		"/bgp/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+		"/bgp/export-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/group[group-name=]/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+		"/bgp/group[group-name=]/export-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/group[group-name=]/import-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/group[group-name=]/send-default-route/export-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/import-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/neighbor[peer-address=]/authentication/keychain" : {
+			AbsolutePath2LeafRef: "/system/authentication",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "keychain",
+		    KeyName:             "name",
+		},
+		"/bgp/neighbor[peer-address=]/export-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/neighbor[peer-address=]/import-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
+		"/bgp/neighbor[peer-address=]/send-default-route/export-policy" : {
+			AbsolutePath2LeafRef: "/routing-policy",
+			RelativePath2LeafRef: "",
+		    RelativePath2ObjectWithLeafRef: "",
+		    ElementName:         "policy",
+		    KeyName:             "name",
+		},
 	}
 */
 
-// SrlRoutingpolicyAspathsetReconciler reconciles a SrlRoutingpolicyAspathset object
-type SrlRoutingpolicyAspathsetReconciler struct {
+// SrlNetworkinstanceProtocolsBgpReconciler reconciles a SrlNetworkinstanceProtocolsBgp object
+type SrlNetworkinstanceProtocolsBgpReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
@@ -73,14 +225,14 @@ type SrlRoutingpolicyAspathsetReconciler struct {
 
 // Instead of passing a zillion arguments to the action of a phase,
 // hold them in a context per device
-type SrlRoutingpolicyAspathsetTargetReconcileInfo struct {
-	Target map[string]*SrlRoutingpolicyAspathsetReconcileInfo
+type SrlNetworkinstanceProtocolsBgpTargetReconcileInfo struct {
+	Target map[string]*SrlNetworkinstanceProtocolsBgpReconcileInfo
 }
 
-type SrlRoutingpolicyAspathsetReconcileInfo struct {
+type SrlNetworkinstanceProtocolsBgpReconcileInfo struct {
 	target              *string
 	resource            *string
-	o                   *srlinuxv1alpha1.SrlRoutingpolicyAspathset
+	o                   *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp
 	level               *int32
 	dependencies        *[]string
 	leafRefDependencies *[]string
@@ -94,14 +246,14 @@ type SrlRoutingpolicyAspathsetReconcileInfo struct {
 }
 
 // +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networknodes,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlroutingpolicyaspathsets,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlroutingpolicyaspathsets/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlroutingpolicyaspathsets/finalizers,verbs=update
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsbgps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsbgps/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsbgps/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
 
-func (r *SrlRoutingpolicyAspathsetReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
-	reqLogger := r.Log.WithValues("SrlRoutingpolicyAspathset", request.NamespacedName)
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
+	reqLogger := r.Log.WithValues("SrlNetworkinstanceProtocolsBgp", request.NamespacedName)
 	reqLogger.Info("publishing event", "reason", event.Reason, "message", event.Message)
 	err := r.Create(r.Ctx, &event)
 	if err != nil {
@@ -111,9 +263,9 @@ func (r *SrlRoutingpolicyAspathsetReconciler) publishEvent(request ctrl.Request,
 	return
 }
 
-func (r *SrlRoutingpolicyAspathsetReconciler) updateEventHandler(e event.UpdateEvent) bool {
-	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlRoutingpolicyAspathset)
-	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlRoutingpolicyAspathset)
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) updateEventHandler(e event.UpdateEvent) bool {
+	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp)
+	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp)
 	if !(oldOK && newOK) {
 		// The thing that changed wasn't a host, so we
 		// need to assume that we must update. This
@@ -136,9 +288,9 @@ func (r *SrlRoutingpolicyAspathsetReconciler) updateEventHandler(e event.UpdateE
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *SrlRoutingpolicyAspathsetReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
-		For(&srlinuxv1alpha1.SrlRoutingpolicyAspathset{}).
+		For(&srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp{}).
 		WithEventFilter(
 			predicate.Funcs{
 				UpdateFunc: r.updateEventHandler,
@@ -158,8 +310,8 @@ func (r *SrlRoutingpolicyAspathsetReconciler) SetupWithManager(ctx context.Conte
 }
 
 // NetworkNodeMapFunc is a handler.ToRequestsFunc to be used to enqeue
-// request for reconciliation of SrlRoutingpolicyAspathset.
-func (r *SrlRoutingpolicyAspathsetReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Request {
+// request for reconciliation of SrlNetworkinstanceProtocolsBgp.
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Request {
 	result := []ctrl.Request{}
 
 	nn, ok := o.(*nddv1.NetworkNode)
@@ -172,7 +324,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) NetworkNodeMapFunc(o client.Object
 		client.InNamespace(nn.Namespace),
 		client.MatchingLabels{},
 	}
-	os := &srlinuxv1alpha1.SrlRoutingpolicyAspathsetList{}
+	os := &srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpList{}
 	if err := r.Client.List(context.TODO(), os, selectors...); err != nil {
 		return result
 	}
@@ -198,7 +350,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) NetworkNodeMapFunc(o client.Object
 	// e -> element in the tree
 	// x1 -> the data object
 	// elementWithleafref -> the element with leafreaf object on which the values are supplied that match the leafref element
-	func (r *SrlRoutingpolicyAspathsetReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+	func (r *SrlNetworkinstanceProtocolsBgpReconciler) validateIfElementWithLeafRefExists(elements []string, i int, o interface{}, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
 		//xType := reflect.TypeOf(o)
 		//xValue := reflect.ValueOf(o)
 		//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
@@ -279,7 +431,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) NetworkNodeMapFunc(o client.Object
 */
 
 /*
-	func (r *SrlRoutingpolicyAspathsetReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
+	func (r *SrlNetworkinstanceProtocolsBgpReconciler) validateLeafRefExists(elements []string, i int, o interface{}, leafrefValue string, elementWithleafref *ElementWithLeafRef) (interface{}, bool) {
 		//xType := reflect.TypeOf(o)
 		//xValue := reflect.ValueOf(o)
 		//r.Log.WithValues("xType", xType, "xValue", xValue).Info("validateObject")
@@ -384,27 +536,23 @@ func (r *SrlRoutingpolicyAspathsetReconciler) NetworkNodeMapFunc(o client.Object
 	}
 */
 
-func (r *SrlRoutingpolicyAspathsetReconciler) ValidateLocalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyAspathset) (err error) {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) ValidateLocalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp) (err error) {
 	r.Log.Info("Validate Local LeafRef Dependencies ...")
 
 	// marshal data to json
-	d := make([][]byte, 0)
-	for _, obj := range *o.Spec.SrlRoutingpolicyAspathset {
-		o := make([]srlinuxv1alpha1.RoutingpolicyAspathset, 0)
-		o = append(o, obj)
-		dd := struct {
-			AsPathSet *[]srlinuxv1alpha1.RoutingpolicyAspathset `json:"as-path-set"`
-		}{
-			AsPathSet: &o,
-		}
-		dj, err := json.Marshal(dd)
-		if err != nil {
-			return err
-		}
-		d = append(d, dj)
+	dd := struct {
+		Bgp *srlinuxv1alpha1.NetworkinstanceProtocolsBgp `json:"bgp"`
+	}{
+		Bgp: o.Spec.SrlNetworkinstanceProtocolsBgp,
 	}
+	d := make([][]byte, 0)
+	dj, err := json.Marshal(dd)
+	if err != nil {
+		return err
+	}
+	d = append(d, dj)
 
-	for localLeafRef, leafRefInfo := range RoutingpolicyAspathsetIntraResourceleafRef {
+	for localLeafRef, leafRefInfo := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 
@@ -450,17 +598,17 @@ func (r *SrlRoutingpolicyAspathsetReconciler) ValidateLocalLeafRefs(ctx context.
 		}
 		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
-	r.Log.WithValues("RoutingpolicyAspathsetIntraResourceleafRef", RoutingpolicyAspathsetIntraResourceleafRef).Info("leafref STATUS All")
+	r.Log.WithValues("NetworkinstanceProtocolsBgpIntraResourceleafRef", NetworkinstanceProtocolsBgpIntraResourceleafRef).Info("leafref STATUS All")
 	return nil
 }
 
 /*
-	func (r *SrlRoutingpolicyAspathsetReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.RoutingpolicyAspathset) (err error) {
+	func (r *SrlNetworkinstanceProtocolsBgpReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.NetworkinstanceProtocolsBgp) (err error) {
 		// marshal data to json
 		dd := struct {
-			AsPathSet *srlinuxv1alpha1.RoutingpolicyAspathset `json:"as-path-set"`
+			Bgp *srlinuxv1alpha1.NetworkinstanceProtocolsBgp `json:"bgp"`
 		}{
-			AsPathSet: o,
+			Bgp: o,
 		}
 		d, err := json.Marshal(dd)
 		if err != nil {
@@ -473,7 +621,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) ValidateLocalLeafRefs(ctx context.
 			return err
 		}
 
-		for elementWithleafrefPath, elementWithleafref := range RoutingpolicyAspathsetIntraResourceleafRef {
+		for elementWithleafrefPath, elementWithleafref := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
 			elementWithleafref.Values = make([]string, 0)
 			elementWithleafref.LeafRefValues = make([]string, 0)
 			// validate if the element with leafref exist
@@ -511,17 +659,17 @@ func (r *SrlRoutingpolicyAspathsetReconciler) ValidateLocalLeafRefs(ctx context.
 */
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = r.Log.WithValues("SrlRoutingpolicyAspathset", req.NamespacedName)
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = r.Log.WithValues("SrlNetworkinstanceProtocolsBgp", req.NamespacedName)
 
-	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlRoutingpolicyAspathset")
+	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlNetworkinstanceProtocolsBgp")
 
-	o := &srlinuxv1alpha1.SrlRoutingpolicyAspathset{}
+	o := &srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp{}
 	if err := r.Client.Get(ctx, req.NamespacedName, o); err != nil {
 		if apierrors.IsNotFound(err) {
 			return ctrl.Result{}, nil
 		}
-		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlRoutingpolicyAspathset config")
+		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlNetworkinstanceProtocolsBgp config")
 		return ctrl.Result{}, err
 	}
 	o.DeepCopy()
@@ -529,14 +677,14 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 	//r.Log.WithValues("Object", o).Info("Object Info")
 
 	// Add a finalizer to newly created objects.
-	if o.DeletionTimestamp.IsZero() && !SrlRoutingpolicyAspathsethasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && !SrlNetworkinstanceProtocolsBgphasFinalizer(o) {
 		r.Log.Info(
 			"adding finalizer",
 			"existingFinalizers", o.Finalizers,
-			"newValue", srlinuxv1alpha1.SrlRoutingpolicyAspathsetFinalizer,
+			"newValue", srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpFinalizer,
 		)
 		o.Finalizers = append(o.Finalizers,
-			srlinuxv1alpha1.SrlRoutingpolicyAspathsetFinalizer)
+			srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpFinalizer)
 		err := r.Update(context.TODO(), o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to add finalizer")
@@ -545,14 +693,14 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 	}
 
 	// validate local leaf refs if resource is not in deleting state
-	if o.DeletionTimestamp.IsZero() && SrlRoutingpolicyAspathsethasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsBgphasFinalizer(o) {
 		err := r.ValidateLocalLeafRefs(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to validate local leafRef")
 		}
 		validationSuccess := true
 		o.Status.ConfigurationDependencyLocalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0)
-		for localLeafRef, leafRefInfo := range RoutingpolicyAspathsetIntraResourceleafRef {
+		for localLeafRef, leafRefInfo := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
 			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
 				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{
 					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
@@ -570,32 +718,6 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 				o.Status.ConfigurationDependencyLocalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{}
 			}
 		}
-		/*
-			validationSuccess := true
-			for _, vo := range *o.Spec.SrlRoutingpolicyAspathset {
-				err := r.validateLocalLeafRefs(&vo)
-				if err != nil {
-					return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
-				}
-				o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-				for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
-					if elementWithLeafRef.Exists {
-						if !elementWithLeafRef.DependencyCheckSuccess {
-							validationSuccess = false
-						}
-						o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
-							Values:        &elementWithLeafRef.Values,
-							LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
-							LeafRefValues: &elementWithLeafRef.LeafRefValues,
-						}
-					} else {
-						o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
-							LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
-						}
-					}
-				}
-			}
-		*/
 
 		//if validationSuccess {
 		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
@@ -617,7 +739,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 			o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		}
 
-		if err := r.saveSrlRoutingpolicyAspathsetStatus(ctx, o); err != nil {
+		if err := r.saveSrlNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -633,9 +755,9 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 		case *TargetNotFoundError:
 			// delete the resource
 			// we can remove the finalizer w/o updating the device since no targets where found
-			if !o.DeletionTimestamp.IsZero() && SrlRoutingpolicyAspathsethasFinalizer(o) {
+			if !o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsBgphasFinalizer(o) {
 				// remove our finalizer from the list and update it.
-				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlRoutingpolicyAspathsetFinalizer)
+				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpFinalizer)
 				if err := r.Update(ctx, o); err != nil {
 					return ctrl.Result{}, errors.Wrap(err,
 						fmt.Sprintf("failed to remove finalizer"))
@@ -658,7 +780,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 			}
 			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
 			// save resource status since last target got deleted
-			if err = r.saveSrlRoutingpolicyAspathsetStatus(ctx, o); err != nil {
+			if err = r.saveSrlNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
@@ -683,7 +805,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 	}
 	// save resource status since items got deleted
 	if dirty {
-		if err = r.saveSrlRoutingpolicyAspathsetStatus(ctx, o); err != nil {
+		if err = r.saveSrlNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -695,7 +817,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 	var dp *[]string
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	if o.DeletionTimestamp.IsZero() && SrlRoutingpolicyAspathsethasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsBgphasFinalizer(o) {
 		diff, dp, err = r.FindSpecDiff(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
@@ -716,24 +838,21 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 	}
 
 	// initialize the resource parameters
-	level := int32(2)
-	resource := "srlinux.henderiw.be" + "." + "SrlRoutingpolicyAspathset" + "." + strcase.UpperCamelCase(o.Name)
-	hkeys0 := make([]string, 0)
-	for _, n := range *o.Spec.SrlRoutingpolicyAspathset {
-		hkeys0 = append(hkeys0, *n.Name)
-	}
+	level := int32(3)
+	resource := "srlinux.henderiw.be" + "." + "SrlNetworkinstanceProtocolsBgp" + "." + strcase.UpperCamelCase(o.Name)
+	hkey0 := *o.Spec.SrlNokiaNetworkInstanceName
 
 	dependencies := make([]string, 0)
+	dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
+	//dependencies = append(dependencies, fmt.Sprintf("/network-instance[name=%s]", hkey0))
 
 	deletepaths := make([]string, 0)
-	for _, hkey0 := range hkeys0 {
-		deletepaths = append(deletepaths, fmt.Sprintf("/routing-policy/as-path-set[name=%s]", hkey0))
-	}
+	deletepaths = append(deletepaths, fmt.Sprintf("/network-instance[name=%s]/protocols/bgp", hkey0))
 
 	// path to be used for this object
-	path := "/routing-policy"
+	path := fmt.Sprintf("/network-instance[name=%s]/protocols", hkey0)
 
-	info := make(map[string]*SrlRoutingpolicyAspathsetReconcileInfo)
+	info := make(map[string]*SrlNetworkinstanceProtocolsBgpReconcileInfo)
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
@@ -765,7 +884,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 		r.Log.Info("configuration status in reconcile",
 			"target", target.TargetName,
 			"status", initialState)
-		info[target.TargetName] = &SrlRoutingpolicyAspathsetReconcileInfo{
+		info[target.TargetName] = &SrlNetworkinstanceProtocolsBgpReconcileInfo{
 			ctx:                 ctx,
 			target:              &target.Target,
 			log:                 r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
@@ -793,7 +912,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 		r.Log.Info("object status",
 			"target", target.TargetName,
 			"status", o.Status.Target[target.TargetName])
-		stateMachine := newSrlRoutingpolicyAspathsetStateMachine(o, r, &target.TargetName, info[target.TargetName])
+		stateMachine := newSrlNetworkinstanceProtocolsBgpStateMachine(o, r, &target.TargetName, info[target.TargetName])
 		actResult[target.TargetName] = stateMachine.ReconcileState(info[target.TargetName])
 		result[target.TargetName], err = actResult[target.TargetName].Result()
 		if err != nil {
@@ -802,7 +921,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 		}
 	}
 
-	if !o.DeletionTimestamp.IsZero() && SrlRoutingpolicyAspathsethasFinalizer(o) {
+	if !o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsBgphasFinalizer(o) {
 		deleted := true
 		for _, target := range t {
 			if result[target.TargetName].RequeueAfter != 0 {
@@ -812,7 +931,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 		if deleted {
 			// delete complete
 			// remove our finalizer from the list and update it.
-			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlRoutingpolicyAspathsetFinalizer)
+			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpFinalizer)
 			if err := r.Update(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to remove finalizer"))
@@ -834,12 +953,12 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 			dirty = true
 		}
 		if dirty {
-			if err := r.saveSrlRoutingpolicyAspathsetStatus(ctx, o); err != nil {
+			if err := r.saveSrlNetworkinstanceProtocolsBgpStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
 		}
-		SrlRoutingpolicyAspathsetlogResult(info[target.TargetName], result[target.TargetName])
+		SrlNetworkinstanceProtocolsBgplogResult(info[target.TargetName], result[target.TargetName])
 
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
@@ -856,35 +975,35 @@ func (r *SrlRoutingpolicyAspathsetReconciler) Reconcile(ctx context.Context, req
 	return ctrl.Result{}, nil
 }
 
-func SrlRoutingpolicyAspathsetlogResult(info *SrlRoutingpolicyAspathsetReconcileInfo, result ctrl.Result) {
+func SrlNetworkinstanceProtocolsBgplogResult(info *SrlNetworkinstanceProtocolsBgpReconcileInfo, result ctrl.Result) {
 	if result.Requeue || result.RequeueAfter != 0 ||
 		!utils.StringInList(info.o.Finalizers,
-			srlinuxv1alpha1.SrlRoutingpolicyAspathsetFinalizer) {
+			srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpFinalizer) {
 		info.log.Info("done",
 			"requeue", result.Requeue,
 			"after", result.RequeueAfter)
 	} else {
-		info.log.Info("stopping on SrlRoutingpolicyAspathset",
+		info.log.Info("stopping on SrlNetworkinstanceProtocolsBgp",
 			"message", info.o.Status)
 	}
 }
 
-func (r *SrlRoutingpolicyAspathsetReconciler) saveSrlRoutingpolicyAspathsetStatus(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyAspathset) error {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) saveSrlNetworkinstanceProtocolsBgpStatus(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp) error {
 	t := metav1.Now()
 	o.Status.DeepCopy()
 	o.Status.LastUpdated = &t
 
-	r.Log.Info("SrlRoutingpolicyAspathset",
+	r.Log.Info("SrlNetworkinstanceProtocolsBgp",
 		"status", o.Status)
 
 	if err := r.Client.Status().Update(ctx, o); err != nil {
-		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlRoutingpolicyAspathset ")
+		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlNetworkinstanceProtocolsBgp ")
 		return err
 	}
 	return nil
 }
 
-func (r *SrlRoutingpolicyAspathsetReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues, localLeafRefPaths []string, lridx int) ([]string, []string) {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues, localLeafRefPaths []string, lridx int) ([]string, []string) {
 	r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues, "localLeafRefPath", localLeafRefPaths).Info("findLeafRefInTree")
 
 	var tlrv []string
@@ -1007,7 +1126,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) findLeafRefInTree(x1 interface{}, 
 	return leafRefValues, localLeafRefPaths
 }
 
-func (r *SrlRoutingpolicyAspathsetReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]byte, rekvl []ElementKeyValue) []string {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]byte, rekvl []ElementKeyValue) []string {
 	r.Log.WithValues("remoteLeafRef", remoteLeafRef, "rekvl", rekvl).Info("Find Remote LeafRef")
 	leafRefValues := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
@@ -1022,7 +1141,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) FindRemoteLeafRef(remoteLeafRef st
 	return leafRefValues
 }
 
-func (r *SrlRoutingpolicyAspathsetReconciler) FindLocalLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) ([]string, []string) {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) FindLocalLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) ([]string, []string) {
 	r.Log.WithValues("ekvl", ekvl, "rekvl", rekvl).Info("find LeafRef")
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
@@ -1056,25 +1175,21 @@ func (r *SrlRoutingpolicyAspathsetReconciler) FindLocalLeafRef(localLeafRef stri
 	return leafRefDependencies, localLeafRefPaths
 }
 
-func (r *SrlRoutingpolicyAspathsetReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyAspathset) ([]string, []string, error) {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp) ([]string, []string, error) {
 	r.Log.Info("Find LeafRef Dependencies ...")
 
 	// marshal data to json
-	d := make([][]byte, 0)
-	for _, obj := range *o.Spec.SrlRoutingpolicyAspathset {
-		o := make([]srlinuxv1alpha1.RoutingpolicyAspathset, 0)
-		o = append(o, obj)
-		dd := struct {
-			AsPathSet *[]srlinuxv1alpha1.RoutingpolicyAspathset `json:"as-path-set"`
-		}{
-			AsPathSet: &o,
-		}
-		dj, err := json.Marshal(dd)
-		if err != nil {
-			return nil, nil, err
-		}
-		d = append(d, dj)
+	dd := struct {
+		Bgp *srlinuxv1alpha1.NetworkinstanceProtocolsBgp `json:"bgp"`
+	}{
+		Bgp: o.Spec.SrlNetworkinstanceProtocolsBgp,
 	}
+	d := make([][]byte, 0)
+	dj, err := json.Marshal(dd)
+	if err != nil {
+		return nil, nil, err
+	}
+	d = append(d, dj)
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
@@ -1095,7 +1210,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) FindInterLeafRefDependencies(ctx c
 }
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec
-func (r *SrlRoutingpolicyAspathsetReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyAspathset) (bool, *[]string, error) {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp) (bool, *[]string, error) {
 	r.Log.Info("Find Spec Delta ...")
 
 	deletepaths := make([]string, 0)
@@ -1125,7 +1240,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) FindSpecDiff(ctx context.Context, 
 }
 
 // FindTarget finds the SRL target for Object
-func (r *SrlRoutingpolicyAspathsetReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyAspathset) ([]*Target, bool, error) {
+func (r *SrlNetworkinstanceProtocolsBgpReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp) ([]*Target, bool, error) {
 	r.Log.Info("Find target ...")
 
 	// get the target name the resource should get applied to
@@ -1220,13 +1335,13 @@ func (r *SrlRoutingpolicyAspathsetReconciler) FindTarget(ctx context.Context, o 
 	return targets, dirty, nil
 }
 
-// SrlRoutingpolicyAspathsethasFinalizer checks if object has finalizer
-func SrlRoutingpolicyAspathsethasFinalizer(o *srlinuxv1alpha1.SrlRoutingpolicyAspathset) bool {
-	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlRoutingpolicyAspathsetFinalizer)
+// SrlNetworkinstanceProtocolsBgphasFinalizer checks if object has finalizer
+func SrlNetworkinstanceProtocolsBgphasFinalizer(o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp) bool {
+	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgpFinalizer)
 }
 
-func (info *SrlRoutingpolicyAspathsetReconcileInfo) DeleteCache() error {
-	if !info.o.DeletionTimestamp.IsZero() && SrlRoutingpolicyAspathsethasFinalizer(info.o) {
+func (info *SrlNetworkinstanceProtocolsBgpReconcileInfo) DeleteCache() error {
+	if !info.o.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsBgphasFinalizer(info.o) {
 
 		// prepare the grpc data
 		req := &netwdevpb.CacheUpdateRequest{
@@ -1249,24 +1364,20 @@ func (info *SrlRoutingpolicyAspathsetReconcileInfo) DeleteCache() error {
 }
 
 // Update Cache
-func (info *SrlRoutingpolicyAspathsetReconcileInfo) UpdateCache(path string) error {
+func (info *SrlNetworkinstanceProtocolsBgpReconcileInfo) UpdateCache(path string) error {
 
 	// marshal data to json
-	d := make([][]byte, 0)
-	for _, obj := range *info.o.Spec.SrlRoutingpolicyAspathset {
-		o := make([]srlinuxv1alpha1.RoutingpolicyAspathset, 0)
-		o = append(o, obj)
-		dd := struct {
-			AsPathSet *[]srlinuxv1alpha1.RoutingpolicyAspathset `json:"as-path-set"`
-		}{
-			AsPathSet: &o,
-		}
-		dj, err := json.Marshal(dd)
-		if err != nil {
-			return err
-		}
-		d = append(d, dj)
+	dd := struct {
+		Bgp *srlinuxv1alpha1.NetworkinstanceProtocolsBgp `json:"bgp"`
+	}{
+		Bgp: info.o.Spec.SrlNetworkinstanceProtocolsBgp,
 	}
+	d := make([][]byte, 0)
+	dj, err := json.Marshal(dd)
+	if err != nil {
+		return err
+	}
+	d = append(d, dj)
 	// update the cache
 	req := &netwdevpb.CacheUpdateRequest{
 		Resource:             *info.resource,
@@ -1288,24 +1399,24 @@ func (info *SrlRoutingpolicyAspathsetReconcileInfo) UpdateCache(path string) err
 	return nil
 }
 
-type SrlRoutingpolicyAspathsetStateMachine struct {
-	Object     *srlinuxv1alpha1.SrlRoutingpolicyAspathset
-	Reconciler *SrlRoutingpolicyAspathsetReconciler
+type SrlNetworkinstanceProtocolsBgpStateMachine struct {
+	Object     *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp
+	Reconciler *SrlNetworkinstanceProtocolsBgpReconciler
 	Target     *string
 	TargetName *string
 	NextState  *srlinuxv1alpha1.ConfigStatus
 }
 
 // appendEvent
-func (info *SrlRoutingpolicyAspathsetReconcileInfo) appendEvent(reason, message string) {
+func (info *SrlNetworkinstanceProtocolsBgpReconcileInfo) appendEvent(reason, message string) {
 	info.events = append(info.events, info.o.NewEvent(reason, message))
 }
 
-func newSrlRoutingpolicyAspathsetStateMachine(o *srlinuxv1alpha1.SrlRoutingpolicyAspathset,
-	reconciler *SrlRoutingpolicyAspathsetReconciler, n *string,
-	info *SrlRoutingpolicyAspathsetReconcileInfo) *SrlRoutingpolicyAspathsetStateMachine {
+func newSrlNetworkinstanceProtocolsBgpStateMachine(o *srlinuxv1alpha1.SrlNetworkinstanceProtocolsBgp,
+	reconciler *SrlNetworkinstanceProtocolsBgpReconciler, n *string,
+	info *SrlNetworkinstanceProtocolsBgpReconcileInfo) *SrlNetworkinstanceProtocolsBgpStateMachine {
 	currentState := o.Status.Target[*n].ConfigStatus
-	r := SrlRoutingpolicyAspathsetStateMachine{
+	r := SrlNetworkinstanceProtocolsBgpStateMachine{
 		Object:     o,
 		NextState:  currentState, // Remain in current state by default
 		Reconciler: reconciler,
@@ -1315,10 +1426,10 @@ func newSrlRoutingpolicyAspathsetStateMachine(o *srlinuxv1alpha1.SrlRoutingpolic
 	return &r
 }
 
-type SrlRoutingpolicyAspathsetstateHandler func(*SrlRoutingpolicyAspathsetReconcileInfo) actionResult
+type SrlNetworkinstanceProtocolsBgpstateHandler func(*SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlRoutingpolicyAspathsetstateHandler {
-	return map[srlinuxv1alpha1.ConfigStatus]SrlRoutingpolicyAspathsetstateHandler{
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlNetworkinstanceProtocolsBgpstateHandler {
+	return map[srlinuxv1alpha1.ConfigStatus]SrlNetworkinstanceProtocolsBgpstateHandler{
 		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
 		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
 		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,
@@ -1327,8 +1438,8 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) handlers() map[srlinuxv1alpha1.C
 	}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) updateSrlRoutingpolicyAspathsetStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
-	info *SrlRoutingpolicyAspathsetReconcileInfo) {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) updateSrlNetworkinstanceProtocolsBgpStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
+	info *SrlNetworkinstanceProtocolsBgpReconcileInfo) {
 	if o.NextState != initialState {
 		info.log.Info("changing configuration state",
 			"old", initialState,
@@ -1339,13 +1450,13 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) updateSrlRoutingpolicyAspathsetS
 	}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) ReconcileState(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) ReconcileState(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	initialState := o.Object.Status.Target[*o.TargetName].ConfigStatus
-	defer o.updateSrlRoutingpolicyAspathsetStateFrom(initialState, info)
+	defer o.updateSrlNetworkinstanceProtocolsBgpStateFrom(initialState, info)
 
 	if o.checkInitiateDelete() {
 		// initiate cache delete
-		info.log.Info("Initiating SrlRoutingpolicyAspathsetStateMachine deletion")
+		info.log.Info("Initiating SrlNetworkinstanceProtocolsBgpStateMachine deletion")
 		info.DeleteCache()
 		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
 		//time.Sleep(15 * time.Second)
@@ -1359,8 +1470,8 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) ReconcileState(info *SrlRoutingp
 	return actionError{fmt.Errorf("No handler found for state \"%s\"", *initialState)}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) checkInitiateDelete() bool {
-	if !o.Object.DeletionTimestamp.IsZero() && SrlRoutingpolicyAspathsethasFinalizer(o.Object) {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) checkInitiateDelete() bool {
+	if !o.Object.DeletionTimestamp.IsZero() && SrlNetworkinstanceProtocolsBgphasFinalizer(o.Object) {
 		// Delete requested
 		switch o.NextState {
 		default:
@@ -1378,7 +1489,7 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) checkInitiateDelete() bool {
 	return false
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) handleNone(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) handleNone(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1415,7 +1526,7 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) handleNone(info *SrlRoutingpolic
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) handleConfiguring(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) handleConfiguring(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1458,7 +1569,7 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) handleConfiguring(info *SrlRouti
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) handleConfigStatusConfigureSuccess(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) handleConfigStatusConfigureSuccess(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1486,7 +1597,7 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) handleConfigStatusConfigureSucce
 	return actionComplete{}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) handleConfigStatusConfigureFailed(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) handleConfigStatusConfigureFailed(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1519,7 +1630,7 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) handleConfigStatusConfigureFaile
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) handleDeleting(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) handleDeleting(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1538,7 +1649,7 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) handleDeleting(info *SrlRoutingp
 
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) DeleteFailed(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) DeleteFailed(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1556,6 +1667,6 @@ func (o *SrlRoutingpolicyAspathsetStateMachine) DeleteFailed(info *SrlRoutingpol
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlRoutingpolicyAspathsetStateMachine) DeleteSuccess(info *SrlRoutingpolicyAspathsetReconcileInfo) actionResult {
+func (o *SrlNetworkinstanceProtocolsBgpStateMachine) DeleteSuccess(info *SrlNetworkinstanceProtocolsBgpReconcileInfo) actionResult {
 	return actionComplete{}
 }

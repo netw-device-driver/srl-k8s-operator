@@ -59,9 +59,9 @@ type NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTracePacket st
 
 // NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTrace struct
 type NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTrace struct {
-	Adjacencies *string                                                                   `json:"adjacencies,omitempty"`
 	Interfaces  *string                                                                   `json:"interfaces,omitempty"`
 	Packet      *NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptionsTracePacket `json:"packet,omitempty"`
+	Adjacencies *string                                                                   `json:"adjacencies,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptions struct
@@ -71,48 +71,48 @@ type NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptions struct {
 
 // NetworkinstanceProtocolsOspfInstanceAreaInterface struct
 type NetworkinstanceProtocolsOspfInstanceAreaInterface struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=10
-	HelloInterval *uint32 `json:"hello-interval,omitempty"`
 	// +kubebuilder:validation:Enum=`all`;`except-own-rtrlsa`;`except-own-rtrlsa-and-defaults`;`none`
 	// +kubebuilder:default:=none
 	LsaFilterOut *string `json:"lsa-filter-out,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=1
-	Priority *uint16 `json:"priority,omitempty"`
+	// +kubebuilder:validation:Minimum=512
+	// +kubebuilder:validation:Maximum=9486
+	Mtu *uint32 `json:"mtu,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	// +kubebuilder:default:=5
 	RetransmitInterval *uint32 `json:"retransmit-interval,omitempty"`
-	// +kubebuilder:validation:Minimum=2
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=40
-	DeadInterval *uint32 `json:"dead-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	// +kubebuilder:default:=1
-	TransitDelay  *uint32 `json:"transit-delay,omitempty"`
-	InterfaceName *string `json:"interface-name"`
+	TransitDelay *uint32 `json:"transit-delay,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:default:=true
-	AdvertiseSubnet  *bool                                                              `json:"advertise-subnet,omitempty"`
-	FailureDetection *NetworkinstanceProtocolsOspfInstanceAreaInterfaceFailureDetection `json:"failure-detection,omitempty"`
-	// +kubebuilder:validation:Minimum=512
-	// +kubebuilder:validation:Maximum=9486
-	Mtu *uint32 `json:"mtu,omitempty"`
-	// +kubebuilder:default:=true
-	AdvertiseRouterCapability *bool                                                            `json:"advertise-router-capability,omitempty"`
-	Authentication            *NetworkinstanceProtocolsOspfInstanceAreaInterfaceAuthentication `json:"authentication,omitempty"`
+	AdvertiseSubnet *bool                                                            `json:"advertise-subnet,omitempty"`
+	Authentication  *NetworkinstanceProtocolsOspfInstanceAreaInterfaceAuthentication `json:"authentication,omitempty"`
+	// +kubebuilder:validation:Minimum=2
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default:=40
+	DeadInterval *uint32 `json:"dead-interval,omitempty"`
 	// +kubebuilder:validation:Enum=`broadcast`;`point-to-point`
 	InterfaceType *string `json:"interface-type,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default:=10
+	HelloInterval *uint32 `json:"hello-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
-	Metric       *uint16                                                        `json:"metric,omitempty"`
-	Passive      *bool                                                          `json:"passive,omitempty"`
+	Metric        *uint16 `json:"metric,omitempty"`
+	Passive       *bool   `json:"passive,omitempty"`
+	InterfaceName *string `json:"interface-name"`
+	// +kubebuilder:default:=true
+	AdvertiseRouterCapability *bool                                                              `json:"advertise-router-capability,omitempty"`
+	FailureDetection          *NetworkinstanceProtocolsOspfInstanceAreaInterfaceFailureDetection `json:"failure-detection,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=1
+	Priority     *uint16                                                        `json:"priority,omitempty"`
 	TraceOptions *NetworkinstanceProtocolsOspfInstanceAreaInterfaceTraceOptions `json:"trace-options,omitempty"`
 }
 
@@ -151,19 +151,19 @@ type NetworkinstanceProtocolsOspfInstanceAreaStub struct {
 
 // NetworkinstanceProtocolsOspfInstanceArea struct
 type NetworkinstanceProtocolsOspfInstanceArea struct {
+	AreaRange []*NetworkinstanceProtocolsOspfInstanceAreaAreaRange `json:"area-range,omitempty"`
+	// +kubebuilder:default:=false
+	BgpLsExclude       *bool                                                `json:"bgp-ls-exclude,omitempty"`
+	BlackholeAggregate *bool                                                `json:"blackhole-aggregate,omitempty"`
+	ExportPolicy       *string                                              `json:"export-policy,omitempty"`
+	Interface          []*NetworkinstanceProtocolsOspfInstanceAreaInterface `json:"interface,omitempty"`
+	Nssa               *NetworkinstanceProtocolsOspfInstanceAreaNssa        `json:"nssa,omitempty"`
+	Stub               *NetworkinstanceProtocolsOspfInstanceAreaStub        `json:"stub,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|[0-9\.]*|(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])([\p{N}\p{L}]+)?`
-	AreaId             *string                                              `json:"area-id"`
-	BlackholeAggregate *bool                                                `json:"blackhole-aggregate,omitempty"`
-	Interface          []*NetworkinstanceProtocolsOspfInstanceAreaInterface `json:"interface,omitempty"`
+	AreaId *string `json:"area-id"`
 	// +kubebuilder:default:=true
-	AdvertiseRouterCapability *bool                                                `json:"advertise-router-capability,omitempty"`
-	AreaRange                 []*NetworkinstanceProtocolsOspfInstanceAreaAreaRange `json:"area-range,omitempty"`
-	// +kubebuilder:default:=false
-	BgpLsExclude *bool                                         `json:"bgp-ls-exclude,omitempty"`
-	ExportPolicy *string                                       `json:"export-policy,omitempty"`
-	Nssa         *NetworkinstanceProtocolsOspfInstanceAreaNssa `json:"nssa,omitempty"`
-	Stub         *NetworkinstanceProtocolsOspfInstanceAreaStub `json:"stub,omitempty"`
+	AdvertiseRouterCapability *bool `json:"advertise-router-capability,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceAsbr struct
@@ -212,6 +212,10 @@ type NetworkinstanceProtocolsOspfInstanceOverloadOverloadOnBoot struct {
 
 // NetworkinstanceProtocolsOspfInstanceOverloadRtrAdvLsaLimit struct
 type NetworkinstanceProtocolsOspfInstanceOverloadRtrAdvLsaLimit struct {
+	LogOnly *bool `json:"log-only,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	MaxLsaCount *uint32 `json:"max-lsa-count,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1800
 	OverloadTimeout *uint16 `json:"overload-timeout,omitempty"`
@@ -219,15 +223,10 @@ type NetworkinstanceProtocolsOspfInstanceOverloadRtrAdvLsaLimit struct {
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=0
 	WarningThreshold *uint8 `json:"warning-threshold,omitempty"`
-	LogOnly          *bool  `json:"log-only,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	MaxLsaCount *uint32 `json:"max-lsa-count,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceOverload struct
 type NetworkinstanceProtocolsOspfInstanceOverload struct {
-	RtrAdvLsaLimit *NetworkinstanceProtocolsOspfInstanceOverloadRtrAdvLsaLimit `json:"rtr-adv-lsa-limit,omitempty"`
 	// +kubebuilder:default:=false
 	Active *bool `json:"active,omitempty"`
 	// +kubebuilder:default:=false
@@ -237,6 +236,7 @@ type NetworkinstanceProtocolsOspfInstanceOverload struct {
 	// +kubebuilder:default:=false
 	OverloadIncludeExtStub *bool                                                       `json:"overload-include-ext-stub,omitempty"`
 	OverloadOnBoot         *NetworkinstanceProtocolsOspfInstanceOverloadOverloadOnBoot `json:"overload-on-boot,omitempty"`
+	RtrAdvLsaLimit         *NetworkinstanceProtocolsOspfInstanceOverloadRtrAdvLsaLimit `json:"rtr-adv-lsa-limit,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceTeDatabaseInstallBgpLs struct
@@ -259,15 +259,15 @@ type NetworkinstanceProtocolsOspfInstanceTimersLsaGenerate struct {
 	// +kubebuilder:validation:Minimum=10
 	// +kubebuilder:validation:Maximum=600000
 	// +kubebuilder:default:=5000
-	LsaInitialWait *uint32 `json:"lsa-initial-wait,omitempty"`
-	// +kubebuilder:validation:Minimum=10
-	// +kubebuilder:validation:Maximum=600000
-	// +kubebuilder:default:=5000
 	LsaSecondWait *uint32 `json:"lsa-second-wait,omitempty"`
 	// +kubebuilder:validation:Minimum=10
 	// +kubebuilder:validation:Maximum=600000
 	// +kubebuilder:default:=5000
 	MaxLsaWait *uint32 `json:"max-lsa-wait,omitempty"`
+	// +kubebuilder:validation:Minimum=10
+	// +kubebuilder:validation:Maximum=600000
+	// +kubebuilder:default:=5000
+	LsaInitialWait *uint32 `json:"lsa-initial-wait,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceTimersSpfWait struct
@@ -312,12 +312,12 @@ type NetworkinstanceProtocolsOspfInstanceTimers struct {
 type NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceLsdb struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
+	LinkStateId *string `json:"link-state-id,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	RouterId *string `json:"router-id,omitempty"`
 	// +kubebuilder:validation:Enum=`all`;`external`;`inter-area-prefix`;`inter-area-router`;`intra-area-prefix`;`network`;`nssa`;`opaque`;`router`;`summary`
 	Type *string `json:"type,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	LinkStateId *string `json:"link-state-id,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceTraceOptionsTracePacket struct
@@ -345,14 +345,14 @@ type NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceSpf struct {
 
 // NetworkinstanceProtocolsOspfInstanceTraceOptionsTrace struct
 type NetworkinstanceProtocolsOspfInstanceTraceOptionsTrace struct {
-	Routes          *NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceRoutes `json:"routes,omitempty"`
-	Spf             *NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceSpf    `json:"spf,omitempty"`
-	Adjacencies     *string                                                      `json:"adjacencies,omitempty"`
-	GracefulRestart *string                                                      `json:"graceful-restart,omitempty"`
 	Interfaces      *string                                                      `json:"interfaces,omitempty"`
 	Lsdb            *NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceLsdb   `json:"lsdb,omitempty"`
 	Misc            *string                                                      `json:"misc,omitempty"`
 	Packet          *NetworkinstanceProtocolsOspfInstanceTraceOptionsTracePacket `json:"packet,omitempty"`
+	Routes          *NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceRoutes `json:"routes,omitempty"`
+	Spf             *NetworkinstanceProtocolsOspfInstanceTraceOptionsTraceSpf    `json:"spf,omitempty"`
+	Adjacencies     *string                                                      `json:"adjacencies,omitempty"`
+	GracefulRestart *string                                                      `json:"graceful-restart,omitempty"`
 }
 
 // NetworkinstanceProtocolsOspfInstanceTraceOptions struct
@@ -370,51 +370,51 @@ type NetworkinstanceProtocolsOspfInstanceTrafficEngineering struct {
 
 // NetworkinstanceProtocolsOspfInstance struct
 type NetworkinstanceProtocolsOspfInstance struct {
-	AddressFamily *string `json:"address-family,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=10
-	Preference      *uint8                                               `json:"preference,omitempty"`
-	Version         *string                                              `json:"version"`
+	Asbr            *NetworkinstanceProtocolsOspfInstanceAsbr            `json:"asbr,omitempty"`
+	ExportLimit     *NetworkinstanceProtocolsOspfInstanceExportLimit     `json:"export-limit,omitempty"`
 	GracefulRestart *NetworkinstanceProtocolsOspfInstanceGracefulRestart `json:"graceful-restart,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	InstanceId   *uint32                                           `json:"instance-id,omitempty"`
-	Overload     *NetworkinstanceProtocolsOspfInstanceOverload     `json:"overload,omitempty"`
-	TraceOptions *NetworkinstanceProtocolsOspfInstanceTraceOptions `json:"trace-options,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState         *string                                                 `json:"admin-state,omitempty"`
-	ExportLimit        *NetworkinstanceProtocolsOspfInstanceExportLimit        `json:"export-limit,omitempty"`
-	ExportPolicy       *string                                                 `json:"export-policy,omitempty"`
-	TrafficEngineering *NetworkinstanceProtocolsOspfInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
-	TeDatabaseInstall  *NetworkinstanceProtocolsOspfInstanceTeDatabaseInstall  `json:"te-database-install,omitempty"`
-	Area               []*NetworkinstanceProtocolsOspfInstanceArea             `json:"area,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=150
-	ExternalPreference *uint8 `json:"external-preference,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=8000000000
-	// +kubebuilder:default:=400000000
-	ReferenceBandwidth *uint64 `json:"reference-bandwidth,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	RouterId *string                                     `json:"router-id,omitempty"`
-	Timers   *NetworkinstanceProtocolsOspfInstanceTimers `json:"timers,omitempty"`
-	// +kubebuilder:validation:Enum=`area`;`as`;`false`;`link`
-	AdvertiseRouterCapability *string                                                 `json:"advertise-router-capability,omitempty"`
-	Asbr                      *NetworkinstanceProtocolsOspfInstanceAsbr               `json:"asbr,omitempty"`
-	ExternalDbOverflow        *NetworkinstanceProtocolsOspfInstanceExternalDbOverflow `json:"external-db-overflow,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=64
 	// +kubebuilder:default:=1
 	MaxEcmpPaths *uint8 `json:"max-ecmp-paths,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
+	RouterId           *string                                                 `json:"router-id,omitempty"`
+	TrafficEngineering *NetworkinstanceProtocolsOspfInstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
+	AddressFamily      *string                                                 `json:"address-family,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState         *string                                                 `json:"admin-state,omitempty"`
+	ExternalDbOverflow *NetworkinstanceProtocolsOspfInstanceExternalDbOverflow `json:"external-db-overflow,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	InstanceId *uint32                                       `json:"instance-id,omitempty"`
+	Overload   *NetworkinstanceProtocolsOspfInstanceOverload `json:"overload,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=10
+	Preference *uint8 `json:"preference,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8000000000
+	// +kubebuilder:default:=400000000
+	ReferenceBandwidth *uint64 `json:"reference-bandwidth,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
+	Name         *string `json:"name"`
+	ExportPolicy *string `json:"export-policy,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default:=150
+	ExternalPreference *uint8                                            `json:"external-preference,omitempty"`
+	Timers             *NetworkinstanceProtocolsOspfInstanceTimers       `json:"timers,omitempty"`
+	TraceOptions       *NetworkinstanceProtocolsOspfInstanceTraceOptions `json:"trace-options,omitempty"`
+	// +kubebuilder:validation:Enum=`area`;`as`;`false`;`link`
+	AdvertiseRouterCapability *string                                                `json:"advertise-router-capability,omitempty"`
+	Area                      []*NetworkinstanceProtocolsOspfInstanceArea            `json:"area,omitempty"`
+	TeDatabaseInstall         *NetworkinstanceProtocolsOspfInstanceTeDatabaseInstall `json:"te-database-install,omitempty"`
+	Version                   *string                                                `json:"version"`
 }
 
 // NetworkinstanceProtocolsOspf struct
@@ -434,12 +434,12 @@ type SrlNetworkinstanceProtocolsOspfStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

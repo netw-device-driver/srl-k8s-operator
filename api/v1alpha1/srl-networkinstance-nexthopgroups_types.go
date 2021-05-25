@@ -36,15 +36,15 @@ type NetworkinstanceNexthopgroupsGroupBlackhole struct {
 
 // NetworkinstanceNexthopgroupsGroupNexthopFailureDetectionEnableBfd struct
 type NetworkinstanceNexthopgroupsGroupNexthopFailureDetectionEnableBfd struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16384
-	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	LocalAddress *string `json:"local-address"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16384
 	LocalDiscriminator *uint32 `json:"local-discriminator,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16384
+	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct
@@ -54,9 +54,6 @@ type NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct {
 
 // NetworkinstanceNexthopgroupsGroupNexthop struct
 type NetworkinstanceNexthopgroupsGroupNexthop struct {
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	IpAddress            *string `json:"ip-address,omitempty"`
 	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
 	// +kubebuilder:default:=true
 	Resolve *bool `json:"resolve,omitempty"`
@@ -67,20 +64,23 @@ type NetworkinstanceNexthopgroupsGroupNexthop struct {
 	// +kubebuilder:default:=enable
 	AdminState       *string                                                   `json:"admin-state,omitempty"`
 	FailureDetection *NetworkinstanceNexthopgroupsGroupNexthopFailureDetection `json:"failure-detection,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	IpAddress *string `json:"ip-address,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroup struct
 type NetworkinstanceNexthopgroupsGroup struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string                                     `json:"admin-state,omitempty"`
-	Blackhole  *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
-	Nexthop    []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string                                     `json:"admin-state,omitempty"`
+	Blackhole  *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
+	Nexthop    []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
 }
 
 // NetworkinstanceNexthopgroups struct
@@ -100,12 +100,12 @@ type SrlNetworkinstanceNexthopgroupsStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

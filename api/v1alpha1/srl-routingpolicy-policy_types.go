@@ -68,10 +68,10 @@ type RoutingpolicyPolicyDefaultActionAcceptBgpOrigin struct {
 
 // RoutingpolicyPolicyDefaultActionAcceptBgp struct
 type RoutingpolicyPolicyDefaultActionAcceptBgp struct {
-	AsPath          *RoutingpolicyPolicyDefaultActionAcceptBgpAsPath          `json:"as-path,omitempty"`
-	Communities     *RoutingpolicyPolicyDefaultActionAcceptBgpCommunities     `json:"communities,omitempty"`
 	LocalPreference *RoutingpolicyPolicyDefaultActionAcceptBgpLocalPreference `json:"local-preference,omitempty"`
 	Origin          *RoutingpolicyPolicyDefaultActionAcceptBgpOrigin          `json:"origin,omitempty"`
+	AsPath          *RoutingpolicyPolicyDefaultActionAcceptBgpAsPath          `json:"as-path,omitempty"`
+	Communities     *RoutingpolicyPolicyDefaultActionAcceptBgpCommunities     `json:"communities,omitempty"`
 }
 
 // RoutingpolicyPolicyDefaultActionAccept struct
@@ -93,10 +93,10 @@ type RoutingpolicyPolicyDefaultActionReject struct {
 
 // RoutingpolicyPolicyDefaultAction struct
 type RoutingpolicyPolicyDefaultAction struct {
-	Accept     *RoutingpolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
-	NextEntry  *RoutingpolicyPolicyDefaultActionNextEntry  `json:"next-entry,omitempty"`
 	NextPolicy *RoutingpolicyPolicyDefaultActionNextPolicy `json:"next-policy,omitempty"`
 	Reject     *RoutingpolicyPolicyDefaultActionReject     `json:"reject,omitempty"`
+	Accept     *RoutingpolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
+	NextEntry  *RoutingpolicyPolicyDefaultActionNextEntry  `json:"next-entry,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct
@@ -110,11 +110,11 @@ type RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct
 type RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	Replace *uint32                                                   `json:"replace,omitempty"`
 	Prepend *RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
 	Remove  *bool                                                     `json:"remove,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	Replace *uint32 `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpCommunities struct
@@ -139,10 +139,10 @@ type RoutingpolicyPolicyStatementActionAcceptBgpOrigin struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgp struct
 type RoutingpolicyPolicyStatementActionAcceptBgp struct {
+	AsPath          *RoutingpolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
 	Communities     *RoutingpolicyPolicyStatementActionAcceptBgpCommunities     `json:"communities,omitempty"`
 	LocalPreference *RoutingpolicyPolicyStatementActionAcceptBgpLocalPreference `json:"local-preference,omitempty"`
 	Origin          *RoutingpolicyPolicyStatementActionAcceptBgpOrigin          `json:"origin,omitempty"`
-	AsPath          *RoutingpolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAccept struct
@@ -191,10 +191,10 @@ type RoutingpolicyPolicyStatementMatchBgpEvpn struct {
 
 // RoutingpolicyPolicyStatementMatchBgp struct
 type RoutingpolicyPolicyStatementMatchBgp struct {
+	AsPathLength *RoutingpolicyPolicyStatementMatchBgpAsPathLength `json:"as-path-length,omitempty"`
 	AsPathSet    *string                                           `json:"as-path-set,omitempty"`
 	CommunitySet *string                                           `json:"community-set,omitempty"`
 	Evpn         *RoutingpolicyPolicyStatementMatchBgpEvpn         `json:"evpn,omitempty"`
-	AsPathLength *RoutingpolicyPolicyStatementMatchBgpAsPathLength `json:"as-path-length,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchIsis struct
@@ -219,12 +219,12 @@ type RoutingpolicyPolicyStatementMatchOspf struct {
 
 // RoutingpolicyPolicyStatementMatch struct
 type RoutingpolicyPolicyStatementMatch struct {
+	PrefixSet *string                                `json:"prefix-set,omitempty"`
 	Protocol  *string                                `json:"protocol,omitempty"`
 	Bgp       *RoutingpolicyPolicyStatementMatchBgp  `json:"bgp,omitempty"`
 	Family    *string                                `json:"family,omitempty"`
 	Isis      *RoutingpolicyPolicyStatementMatchIsis `json:"isis,omitempty"`
 	Ospf      *RoutingpolicyPolicyStatementMatchOspf `json:"ospf,omitempty"`
-	PrefixSet *string                                `json:"prefix-set,omitempty"`
 }
 
 // RoutingpolicyPolicyStatement struct
@@ -258,12 +258,12 @@ type SrlRoutingpolicyPolicyStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

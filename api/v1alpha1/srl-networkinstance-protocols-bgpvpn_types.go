@@ -47,13 +47,13 @@ type NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 
 // NetworkinstanceProtocolsBgpvpnBgpInstance struct
 type NetworkinstanceProtocolsBgpvpnBgpInstance struct {
+	RouteTarget *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Id                 *uint8                                                       `json:"id"`
 	ExportPolicy       *string                                                      `json:"export-policy,omitempty"`
 	ImportPolicy       *string                                                      `json:"import-policy,omitempty"`
 	RouteDistinguisher *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
-	RouteTarget        *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpvpn struct
@@ -73,12 +73,12 @@ type SrlNetworkinstanceProtocolsBgpvpnStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyValidationStatus identifies the status of the LeafRef Validation of the resource object
+	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyValidationStatus *ValidationStatus `json:"configurationDependencyValidationStatus,omitempty"`
+	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyValidationDetails map[string]*ValidationDetails `json:"validationDetails,omitempty"`
+	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
