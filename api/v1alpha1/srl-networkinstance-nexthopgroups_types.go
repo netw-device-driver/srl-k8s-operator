@@ -54,6 +54,10 @@ type NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct {
 
 // NetworkinstanceNexthopgroupsGroupNexthop struct
 type NetworkinstanceNexthopgroupsGroupNexthop struct {
+	FailureDetection *NetworkinstanceNexthopgroupsGroupNexthopFailureDetection `json:"failure-detection,omitempty"`
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	IpAddress            *string `json:"ip-address,omitempty"`
 	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
 	// +kubebuilder:default:=true
 	Resolve *bool `json:"resolve,omitempty"`
@@ -62,11 +66,7 @@ type NetworkinstanceNexthopgroupsGroupNexthop struct {
 	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
-	AdminState       *string                                                   `json:"admin-state,omitempty"`
-	FailureDetection *NetworkinstanceNexthopgroupsGroupNexthopFailureDetection `json:"failure-detection,omitempty"`
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	IpAddress *string `json:"ip-address,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroup struct

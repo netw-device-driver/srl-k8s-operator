@@ -47,13 +47,13 @@ type NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 
 // NetworkinstanceProtocolsBgpvpnBgpInstance struct
 type NetworkinstanceProtocolsBgpvpnBgpInstance struct {
-	RouteTarget *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Id                 *uint8                                                       `json:"id"`
 	ExportPolicy       *string                                                      `json:"export-policy,omitempty"`
 	ImportPolicy       *string                                                      `json:"import-policy,omitempty"`
 	RouteDistinguisher *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
+	RouteTarget        *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpvpn struct

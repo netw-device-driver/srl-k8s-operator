@@ -45,10 +45,10 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct {
-	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop        *string                                                                    `json:"next-hop,omitempty"`
 	InclusiveMcast *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast `json:"inclusive-mcast,omitempty"`
 	MacIp          *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp          `json:"mac-ip,omitempty"`
+	// +kubebuilder:default:=use-system-ipv4-address
+	NextHop *string `json:"next-hop,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp struct
@@ -70,6 +70,16 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8
+	// +kubebuilder:default:=1
+	Ecmp *uint8 `json:"ecmp,omitempty"`
+	// +kubebuilder:validation:Enum=`vxlan`
+	// +kubebuilder:default:=vxlan
+	EncapsulationType *string `json:"encapsulation-type,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Evi            *uint32                                           `json:"evi"`
 	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
 	Id             *string                                           `json:"id"`
@@ -80,16 +90,6 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	// +kubebuilder:validation:Maximum=4294967295
 	// +kubebuilder:default:=0
 	DefaultAdminTag *uint32 `json:"default-admin-tag,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=8
-	// +kubebuilder:default:=1
-	Ecmp *uint8 `json:"ecmp,omitempty"`
-	// +kubebuilder:validation:Enum=`vxlan`
-	// +kubebuilder:default:=vxlan
-	EncapsulationType *string `json:"encapsulation-type,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	Evi *uint32 `json:"evi"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct

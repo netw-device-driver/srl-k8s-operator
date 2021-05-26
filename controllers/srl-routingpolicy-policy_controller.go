@@ -703,18 +703,28 @@ func (r *SrlRoutingpolicyPolicyReconciler) Reconcile(ctx context.Context, req ct
 		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		//}
 
-		if validationSuccess {
-			// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
-			if o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != nil && *o.Status.ConfigurationDependencyLocalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+		if o.Status.ConfigurationDependencyLocalLeafrefValidationStatus == nil {
+			if validationSuccess {
 				r.publishEvent(req, o.NewEvent("Validation success", ""))
-			}
-			o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-		} else {
-			// if the validation status did not change we dont have to publish a new event
-			if o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != nil && *o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+				o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			} else {
 				r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+				o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 			}
-			o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+		} else {
+			if validationSuccess {
+				// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
+				if *o.Status.ConfigurationDependencyLocalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+					r.publishEvent(req, o.NewEvent("Validation success", ""))
+				}
+				o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			} else {
+				// if the validation status did not change we dont have to publish a new event
+				if *o.Status.ConfigurationDependencyLocalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+					r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+				}
+				o.Status.ConfigurationDependencyLocalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			}
 		}
 
 		if err := r.saveSrlRoutingpolicyPolicyStatus(ctx, o); err != nil {

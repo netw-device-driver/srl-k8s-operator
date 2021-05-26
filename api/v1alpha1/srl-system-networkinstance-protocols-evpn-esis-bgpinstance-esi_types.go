@@ -96,6 +96,10 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
+	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
+	Esi       *string `json:"esi,omitempty"`
 	Interface *string `json:"interface,omitempty"`
 	// +kubebuilder:validation:Enum=`all-active`;`single-active`
 	// +kubebuilder:default:=all-active
@@ -108,11 +112,7 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
-	AdminState *string                                                         `json:"admin-state,omitempty"`
-	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
-	Esi *string `json:"esi,omitempty"`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct
