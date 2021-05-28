@@ -1072,7 +1072,7 @@ func (r *SrlSystemNameReconciler) FindInterLeafRefDependencies(ctx context.Conte
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range SystemNameInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

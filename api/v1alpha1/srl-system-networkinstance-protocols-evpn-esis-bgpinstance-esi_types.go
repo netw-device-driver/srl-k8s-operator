@@ -41,10 +41,10 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefa
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities struct {
-	// +kubebuilder:default:=true
-	AcDf *bool `json:"ac-df,omitempty"`
 	// +kubebuilder:default:=false
 	NonRevertive *bool `json:"non-revertive,omitempty"`
+	// +kubebuilder:default:=true
+	AcDf *bool `json:"ac-df,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg struct
@@ -96,6 +96,9 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState *string                                                         `json:"admin-state,omitempty"`
 	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){9}`
@@ -110,9 +113,6 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct

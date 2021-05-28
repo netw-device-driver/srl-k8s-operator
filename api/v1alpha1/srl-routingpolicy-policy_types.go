@@ -30,27 +30,27 @@ const (
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend struct
 type RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend struct {
-	AsNumber *string `json:"as-number,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=50
 	// +kubebuilder:default:=1
-	RepeatN *uint8 `json:"repeat-n,omitempty"`
+	RepeatN  *uint8  `json:"repeat-n,omitempty"`
+	AsNumber *string `json:"as-number,omitempty"`
 }
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpAsPath struct
 type RoutingpolicyPolicyDefaultActionAcceptBgpAsPath struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	Replace *uint32                                                 `json:"replace,omitempty"`
 	Prepend *RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
 	Remove  *bool                                                   `json:"remove,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	Replace *uint32 `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpCommunities struct
 type RoutingpolicyPolicyDefaultActionAcceptBgpCommunities struct {
-	Replace *string `json:"replace,omitempty"`
 	Add     *string `json:"add,omitempty"`
 	Remove  *string `json:"remove,omitempty"`
+	Replace *string `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpLocalPreference struct
@@ -93,10 +93,10 @@ type RoutingpolicyPolicyDefaultActionReject struct {
 
 // RoutingpolicyPolicyDefaultAction struct
 type RoutingpolicyPolicyDefaultAction struct {
-	Accept     *RoutingpolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
 	NextEntry  *RoutingpolicyPolicyDefaultActionNextEntry  `json:"next-entry,omitempty"`
 	NextPolicy *RoutingpolicyPolicyDefaultActionNextPolicy `json:"next-policy,omitempty"`
 	Reject     *RoutingpolicyPolicyDefaultActionReject     `json:"reject,omitempty"`
+	Accept     *RoutingpolicyPolicyDefaultActionAccept     `json:"accept,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct
@@ -110,11 +110,11 @@ type RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct
 type RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct {
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4294967295
-	Replace *uint32                                                   `json:"replace,omitempty"`
 	Prepend *RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend `json:"prepend,omitempty"`
 	Remove  *bool                                                     `json:"remove,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	Replace *uint32 `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpCommunities struct
@@ -139,10 +139,10 @@ type RoutingpolicyPolicyStatementActionAcceptBgpOrigin struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgp struct
 type RoutingpolicyPolicyStatementActionAcceptBgp struct {
+	AsPath          *RoutingpolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
 	Communities     *RoutingpolicyPolicyStatementActionAcceptBgpCommunities     `json:"communities,omitempty"`
 	LocalPreference *RoutingpolicyPolicyStatementActionAcceptBgpLocalPreference `json:"local-preference,omitempty"`
 	Origin          *RoutingpolicyPolicyStatementActionAcceptBgpOrigin          `json:"origin,omitempty"`
-	AsPath          *RoutingpolicyPolicyStatementActionAcceptBgpAsPath          `json:"as-path,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAccept struct
@@ -164,10 +164,10 @@ type RoutingpolicyPolicyStatementActionReject struct {
 
 // RoutingpolicyPolicyStatementAction struct
 type RoutingpolicyPolicyStatementAction struct {
-	Reject     *RoutingpolicyPolicyStatementActionReject     `json:"reject,omitempty"`
 	Accept     *RoutingpolicyPolicyStatementActionAccept     `json:"accept,omitempty"`
 	NextEntry  *RoutingpolicyPolicyStatementActionNextEntry  `json:"next-entry,omitempty"`
 	NextPolicy *RoutingpolicyPolicyStatementActionNextPolicy `json:"next-policy,omitempty"`
+	Reject     *RoutingpolicyPolicyStatementActionReject     `json:"reject,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchBgpAsPathLength struct
@@ -191,10 +191,10 @@ type RoutingpolicyPolicyStatementMatchBgpEvpn struct {
 
 // RoutingpolicyPolicyStatementMatchBgp struct
 type RoutingpolicyPolicyStatementMatchBgp struct {
-	CommunitySet *string                                           `json:"community-set,omitempty"`
-	Evpn         *RoutingpolicyPolicyStatementMatchBgpEvpn         `json:"evpn,omitempty"`
 	AsPathLength *RoutingpolicyPolicyStatementMatchBgpAsPathLength `json:"as-path-length,omitempty"`
 	AsPathSet    *string                                           `json:"as-path-set,omitempty"`
+	CommunitySet *string                                           `json:"community-set,omitempty"`
+	Evpn         *RoutingpolicyPolicyStatementMatchBgpEvpn         `json:"evpn,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchIsis struct
@@ -219,12 +219,12 @@ type RoutingpolicyPolicyStatementMatchOspf struct {
 
 // RoutingpolicyPolicyStatementMatch struct
 type RoutingpolicyPolicyStatementMatch struct {
+	PrefixSet *string                                `json:"prefix-set,omitempty"`
+	Protocol  *string                                `json:"protocol,omitempty"`
 	Bgp       *RoutingpolicyPolicyStatementMatchBgp  `json:"bgp,omitempty"`
 	Family    *string                                `json:"family,omitempty"`
 	Isis      *RoutingpolicyPolicyStatementMatchIsis `json:"isis,omitempty"`
 	Ospf      *RoutingpolicyPolicyStatementMatchOspf `json:"ospf,omitempty"`
-	PrefixSet *string                                `json:"prefix-set,omitempty"`
-	Protocol  *string                                `json:"protocol,omitempty"`
 }
 
 // RoutingpolicyPolicyStatement struct

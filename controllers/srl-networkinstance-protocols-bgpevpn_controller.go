@@ -1100,7 +1100,7 @@ func (r *SrlNetworkinstanceProtocolsBgpevpnReconciler) FindInterLeafRefDependenc
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpevpnInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

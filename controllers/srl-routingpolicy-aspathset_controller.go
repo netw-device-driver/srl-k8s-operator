@@ -1088,7 +1088,7 @@ func (r *SrlRoutingpolicyAspathsetReconciler) FindInterLeafRefDependencies(ctx c
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range RoutingpolicyAspathsetInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

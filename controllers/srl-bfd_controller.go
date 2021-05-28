@@ -1083,7 +1083,7 @@ func (r *SrlBfdReconciler) FindInterLeafRefDependencies(ctx context.Context, o *
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range BfdInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

@@ -32,6 +32,7 @@ import (
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -166,6 +167,7 @@ type SrlNetworkinstanceReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstances/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
+// +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;update
 
 func (r *SrlNetworkinstanceReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
 	reqLogger := r.Log.WithValues("SrlNetworkinstance", request.NamespacedName)
@@ -814,6 +816,14 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
+
+		cm, err := r.getConfigMap(ctx, stringPtr(target.TargetName))
+		if err != nil {
+			return ctrl.Result{}, errors.Wrap(err,
+				fmt.Sprintf("failed to get configmap"))
+		}
+		r.Log.WithValues("Configmap", *cm).Info("Config Map Content")
+
 		initialState := new(srlinuxv1alpha1.ConfigStatus)
 		// the object was not processed on the target if len is 0
 		if len(o.Status.Target) == 0 {
@@ -944,6 +954,24 @@ func SrlNetworkinstancelogResult(info *SrlNetworkinstanceReconcileInfo, result c
 		info.log.Info("stopping on SrlNetworkinstance",
 			"message", info.o.Status)
 	}
+}
+
+func (r *SrlNetworkinstanceReconciler) getConfigMap(ctx context.Context, targetName *string) (*string, error) {
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
+	}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return nil, err
+	}
+
+	if _, ok := cm.Data["config.json"]; !ok {
+		r.Log.WithValues("targetName", targetName).Info("ConfigMap is empty")
+	}
+	r.Log.WithValues("targetName", targetName).Info("ConfigMap content")
+	return stringPtr(cm.Data["config.json"]), nil
 }
 
 func (r *SrlNetworkinstanceReconciler) saveSrlNetworkinstanceStatus(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance) error {
@@ -1155,7 +1183,7 @@ func (r *SrlNetworkinstanceReconciler) FindInterLeafRefDependencies(ctx context.
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range NetworkinstanceInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

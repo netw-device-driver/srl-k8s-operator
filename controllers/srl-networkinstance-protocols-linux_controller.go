@@ -1075,7 +1075,7 @@ func (r *SrlNetworkinstanceProtocolsLinuxReconciler) FindInterLeafRefDependencie
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range NetworkinstanceProtocolsLinuxInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

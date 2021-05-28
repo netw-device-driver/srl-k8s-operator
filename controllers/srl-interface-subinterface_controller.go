@@ -1276,7 +1276,7 @@ func (r *SrlInterfaceSubinterfaceReconciler) FindInterLeafRefDependencies(ctx co
 
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceProtocolsBgpInterResourceleafRef {
+	for localLeafRef, rekvl := range InterfaceSubinterfaceInterResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 

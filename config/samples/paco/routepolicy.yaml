@@ -1,0 +1,20 @@
+apiVersion: srlinux.henderiw.be/v1alpha1
+kind: SrlRoutingpolicyPolicy
+metadata:
+  name: routingpolicytest
+  labels:
+    target: leaf1
+spec:
+  policy:
+  - name: routingpolicytest
+    statement:
+    - action:
+        accept: {}
+      match:
+        prefix-set: system-v4
+      sequence-id: 10
+    - action:
+        accept: {}
+      match:
+        prefix-set: system-v6
+      sequence-id: 20
