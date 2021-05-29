@@ -57,32 +57,32 @@ var NetworkinstanceProtocolsIsisIntraResourceleafRef = map[string]*ElementWithLe
 */
 
 var NetworkinstanceProtocolsIsisInterResourceleafRef = map[string][]ElementKeyValue{
-	"/isis/instance[name=]/authentication/keychain": []ElementKeyValue{
+	"/isis/instance[name=]/authentication/keychain": {
 		{"system", "", ""},
 		{"authentication", "", ""},
 		{"keychain", "name", "string"},
 	},
-	"/isis/instance[name=]/export-policy": []ElementKeyValue{
+	"/isis/instance[name=]/export-policy": {
 		{"routing-policy", "", ""},
 		{"policy", "name", "string"},
 	},
-	"/isis/instance[name=]/interface[interface-name=]": []ElementKeyValue{
+	"/isis/instance[name=]/interface[interface-name=]": {
 		{"network-instance", "", ""},
 		{"name=current()", "", ""},
 		{"name]", "", ""},
 		{"interface", "name", "string"},
 	},
-	"/isis/instance[name=]/interface[interface-name=]/authentication/keychain": []ElementKeyValue{
+	"/isis/instance[name=]/interface[interface-name=]/authentication/keychain": {
 		{"system", "", ""},
 		{"authentication", "", ""},
 		{"keychain", "name", "string"},
 	},
-	"/isis/instance[name=]/interface[interface-name=]/level[level-number=]/authentication/keychain": []ElementKeyValue{
+	"/isis/instance[name=]/interface[interface-name=]/level[level-number=]/authentication/keychain": {
 		{"system", "", ""},
 		{"authentication", "", ""},
 		{"keychain", "name", "string"},
 	},
-	"/isis/instance[name=]/level[level-number=]/authentication/keychain": []ElementKeyValue{
+	"/isis/instance[name=]/level[level-number=]/authentication/keychain": {
 		{"system", "", ""},
 		{"authentication", "", ""},
 		{"keychain", "name", "string"},

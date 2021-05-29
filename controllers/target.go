@@ -17,8 +17,10 @@
 package controllers
 
 type Target struct {
-	TargetName string
-	Target     string
+	TargetName            string
+	Target                string
+	ParentDependencyFound bool
+	LeafrefDependency     bool
 }
 
 func getTargets(t []*Target) (targets string) {

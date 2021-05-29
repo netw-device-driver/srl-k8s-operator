@@ -229,11 +229,81 @@ spec:
                     configStatusDetails:
                       default: ""
                       type: string
+                    configurationDependencyExternalLeafrefValidationStatus:
+                      description: ConfigurationDependencyExternalLeafrefValidationStatus
+                        identifies the status of the External LeafRef Validation of
+                        the resource object
+                      enum:
+                      - Success
+                      - Failed
+                      type: string
+                    configurationDependencyParentValidationStatus:
+                      description: ConfigurationDependencyParentValidationStatus identifies
+                        the status of the parent of the resource object
+                      enum:
+                      - Success
+                      - Failed
+                      type: string
                     errorCount:
                       default: 0
                       description: ErrorCount records how many times the host has
                         encoutered an error since the last successful operation
                       type: integer
+                    externalLeafrefValidationDetails:
+                      additionalProperties:
+                        description: ValidationDetails2 provides the status of the
+                          configuration applied on this particular device
+                        properties:
+                          localResolvedLeafRefInfo:
+                            additionalProperties:
+                              properties:
+                                dependencyCheck:
+                                  description: DependencyCheck validates if the remote
+                                    leafref is present or not
+                                  enum:
+                                  - Success
+                                  - Failed
+                                  type: string
+                                remoteLeafRef:
+                                  description: RemoteLeafRef provides the reference
+                                    path to the remote leafref
+                                  type: string
+                              type: object
+                            description: LocalResolvedLeafRefInfo provides the status
+                              of the remote leafref information
+                            type: object
+                        type: object
+                      description: ConfigurationDependencyExternalLeafrefValidationDetails
+                        defines the validation details of the resource object
+                      type: object
+                    parentValidationDetails:
+                      additionalProperties:
+                        description: ValidationDetails2 provides the status of the
+                          configuration applied on this particular device
+                        properties:
+                          localResolvedLeafRefInfo:
+                            additionalProperties:
+                              properties:
+                                dependencyCheck:
+                                  description: DependencyCheck validates if the remote
+                                    leafref is present or not
+                                  enum:
+                                  - Success
+                                  - Failed
+                                  type: string
+                                remoteLeafRef:
+                                  description: RemoteLeafRef provides the reference
+                                    path to the remote leafref
+                                  type: string
+                              type: object
+                            description: LocalResolvedLeafRefInfo provides the status
+                              of the remote leafref information
+                            type: object
+                        type: object
+                      description: ConfigurationDependencyParentValidationDetails
+                        defines the validation details of the parent of the resource
+                        object
+                      type: object
                   required:
                   - configStatus
                   - errorCount

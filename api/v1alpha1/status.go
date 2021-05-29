@@ -137,4 +137,17 @@ type TargetStatus struct {
 	// ErrorCount records how many times the host has encoutered an error since the last successful operation
 	// +kubebuilder:default:=0
 	ErrorCount *int `json:"errorCount"`
+	// ConfigurationDependencyExternalLeafrefValidationStatus identifies the status of the External LeafRef Validation of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ConfigurationDependencyExternalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyExternalLeafrefValidationStatus,omitempty"`
+
+	// ConfigurationDependencyParentValidationStatus identifies the status of the parent of the resource object
+	// +kubebuilder:validation:Enum=Success;Failed
+	ConfigurationDependencyParentValidationStatus *ValidationStatus `json:"configurationDependencyParentValidationStatus,omitempty"`
+
+	// ConfigurationDependencyExternalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyExternalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"externalLeafrefValidationDetails,omitempty"`
+
+	// ConfigurationDependencyParentValidationDetails defines the validation details of the parent of the resource object
+	ConfigurationDependencyParentValidationDetails map[string]*ValidationDetails2 `json:"parentValidationDetails,omitempty"`
 }

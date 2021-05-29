@@ -11289,13 +11289,13 @@ func (in *SrlNetworkinstanceStatus) DeepCopyInto(out *SrlNetworkinstanceStatus) 
 		*out = new(TargetFoundStatus)
 		**out = **in
 	}
-	if in.ConfigurationDependencyLocalLeafrefValidationStatus != nil {
-		in, out := &in.ConfigurationDependencyLocalLeafrefValidationStatus, &out.ConfigurationDependencyLocalLeafrefValidationStatus
+	if in.ConfigurationDependencyInternalLeafrefValidationStatus != nil {
+		in, out := &in.ConfigurationDependencyInternalLeafrefValidationStatus, &out.ConfigurationDependencyInternalLeafrefValidationStatus
 		*out = new(ValidationStatus)
 		**out = **in
 	}
-	if in.ConfigurationDependencyLocalLeafrefValidationDetails != nil {
-		in, out := &in.ConfigurationDependencyLocalLeafrefValidationDetails, &out.ConfigurationDependencyLocalLeafrefValidationDetails
+	if in.ConfigurationDependencyInternalLeafrefValidationDetails != nil {
+		in, out := &in.ConfigurationDependencyInternalLeafrefValidationDetails, &out.ConfigurationDependencyInternalLeafrefValidationDetails
 		*out = make(map[string]*ValidationDetails2, len(*in))
 		for key, val := range *in {
 			var outVal *ValidationDetails2
@@ -13841,6 +13841,46 @@ func (in *TargetStatus) DeepCopyInto(out *TargetStatus) {
 		in, out := &in.ErrorCount, &out.ErrorCount
 		*out = new(int)
 		**out = **in
+	}
+	if in.ConfigurationDependencyExternalLeafrefValidationStatus != nil {
+		in, out := &in.ConfigurationDependencyExternalLeafrefValidationStatus, &out.ConfigurationDependencyExternalLeafrefValidationStatus
+		*out = new(ValidationStatus)
+		**out = **in
+	}
+	if in.ConfigurationDependencyParentValidationStatus != nil {
+		in, out := &in.ConfigurationDependencyParentValidationStatus, &out.ConfigurationDependencyParentValidationStatus
+		*out = new(ValidationStatus)
+		**out = **in
+	}
+	if in.ConfigurationDependencyExternalLeafrefValidationDetails != nil {
+		in, out := &in.ConfigurationDependencyExternalLeafrefValidationDetails, &out.ConfigurationDependencyExternalLeafrefValidationDetails
+		*out = make(map[string]*ValidationDetails2, len(*in))
+		for key, val := range *in {
+			var outVal *ValidationDetails2
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				in, out := &val, &outVal
+				*out = new(ValidationDetails2)
+				(*in).DeepCopyInto(*out)
+			}
+			(*out)[key] = outVal
+		}
+	}
+	if in.ConfigurationDependencyParentValidationDetails != nil {
+		in, out := &in.ConfigurationDependencyParentValidationDetails, &out.ConfigurationDependencyParentValidationDetails
+		*out = make(map[string]*ValidationDetails2, len(*in))
+		for key, val := range *in {
+			var outVal *ValidationDetails2
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				in, out := &val, &outVal
+				*out = new(ValidationDetails2)
+				(*in).DeepCopyInto(*out)
+			}
+			(*out)[key] = outVal
+		}
 	}
 }
 

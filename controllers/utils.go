@@ -57,8 +57,10 @@ func removeString(slice []string, s string) (result []string) {
 	return result
 }
 
-func stringPtr(s string) *string { return &s }
-func intPtr(i int) *int          { return &i }
+func stringPtr(s string) *string              { return &s }
+func intPtr(i int) *int                       { return &i }
+func stringSlicePtr(s []string) *[]string     { return &s }
+func interfacePtr(i interface{}) *interface{} { return &i }
 
 func getHierarchicalElements(p string) (ekv []ElementKeyValue) {
 	skipElement := false
