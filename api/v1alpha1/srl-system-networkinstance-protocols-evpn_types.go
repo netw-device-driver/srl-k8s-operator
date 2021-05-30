@@ -31,13 +31,13 @@ const (
 // SystemNetworkinstanceProtocolsEvpnEsisTimers struct
 type SystemNetworkinstanceProtocolsEvpnEsisTimers struct {
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=6000
-	// +kubebuilder:default:=10
-	BootTimer *uint32 `json:"boot-timer,omitempty"`
-	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:default:=3
 	ActivationTimer *uint32 `json:"activation-timer,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=6000
+	// +kubebuilder:default:=10
+	BootTimer *uint32 `json:"boot-timer,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsis struct
@@ -61,12 +61,12 @@ type SrlSystemNetworkinstanceProtocolsEvpnStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
+	// ConfigurationDependencyInternalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
+	ConfigurationDependencyInternalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyInternalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
+	// ConfigurationDependencyInternalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyInternalLeafrefValidationDetails map[string]*ValidationDetails `json:"internalLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

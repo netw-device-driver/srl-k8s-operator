@@ -50,7 +50,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var NetworkinstanceIntraResourceleafRef = map[string]*ElementWithLeafRef{
+var NetworkinstanceInternalResourceleafRef = map[string]*ElementWithLeafRef{
 	"/network-instance[name=]/mpls/static-mpls-entry[top-label=]/next-hop-group": {
 		REkvl: []ElementKeyValue{
 			{"network-instance", "", ""},
@@ -82,7 +82,7 @@ var NetworkinstanceIntraResourceleafRef = map[string]*ElementWithLeafRef{
 	},
 }
 
-var NetworkinstanceInterResourceleafRef = map[string]*ElementWithLeafRef{
+var NetworkinstanceExternalResourceleafRef = map[string]*ElementWithLeafRef{
 	"/network-instance[name=]/interface[name=]": {
 		REkvl: []ElementKeyValue{
 			{"interface", "name", "string"},
@@ -96,23 +96,6 @@ var NetworkinstanceInterResourceleafRef = map[string]*ElementWithLeafRef{
 		},
 	},
 }
-
-/*
-var NetworkinstanceInterResourceleafRef = map[string][]ElementKeyValue{
-	"/network-instance[name=]/interface[name=]": {
-		{"interface", "name", "string"},
-		{"subinterface", "index", "int"},
-	},
-	"/network-instance[name=]/vxlan-interface[name=]": {
-		{"tunnel-interface", "name", "string"},
-		{"vxlan-interface", "index", "int"},
-	},
-}
-
-/*
-	var NetworkinstanceInterResourceleafRef = map[string]*ElementWithLeafRef{
-	}
-*/
 
 // SrlNetworkinstanceReconciler reconciles a SrlNetworkinstance object
 type SrlNetworkinstanceReconciler struct {
@@ -150,7 +133,6 @@ type SrlNetworkinstanceReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstances/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
-// +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;update
 
 func (r *SrlNetworkinstanceReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
 	reqLogger := r.Log.WithValues("SrlNetworkinstance", request.NamespacedName)
@@ -250,6 +232,7 @@ func (r *SrlNetworkinstanceReconciler) ValidateParentDependency(ctx context.Cont
 
 	parentDependencyFound := true
 	for _, dep := range *dependencies {
+		r.Log.WithValues("Dependency", dep).Info("ValidateParentDependency")
 		ekvl := getHierarchicalElements(dep)
 		parentDependencyFound = r.findPathInTree(x1, ekvl, 0)
 		if !parentDependencyFound {
@@ -259,13 +242,30 @@ func (r *SrlNetworkinstanceReconciler) ValidateParentDependency(ctx context.Cont
 	return parentDependencyFound, nil
 }
 
-func (r *SrlNetworkinstanceReconciler) ValidateExternalLeafRefs(ctx context.Context, cm *string) (err error) {
+func (r *SrlNetworkinstanceReconciler) ValidateExternalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance, cm *string) (err error) {
 	r.Log.Info("Validate External LeafRef Dependencies ...")
 
+	// marshal data to json
 	d := make([][]byte, 0)
-	d = append(d, []byte(*cm))
+	for _, obj := range *o.Spec.SrlNetworkinstance {
+		o := make([]srlinuxv1alpha1.Networkinstance, 0)
+		o = append(o, obj)
+		dd := struct {
+			NetworkInstance *[]srlinuxv1alpha1.Networkinstance `json:"network-instance"`
+		}{
+			NetworkInstance: &o,
+		}
+		dj, err := json.Marshal(dd)
+		if err != nil {
+			return err
+		}
+		d = append(d, dj)
+	}
 
-	for localLeafRef, leafRefInfo := range NetworkinstanceInterResourceleafRef {
+	c := make([][]byte, 0)
+	c = append(d, []byte(*cm))
+
+	for localLeafRef, leafRefInfo := range NetworkinstanceExternalResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 
@@ -277,7 +277,7 @@ func (r *SrlNetworkinstanceReconciler) ValidateExternalLeafRefs(ctx context.Cont
 		leafRefInfo.LocalResolvedLeafRefInfo = make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo)
 		for i, remoteLeafRefPath := range remoteLeafRefPaths {
 			rekvl := getHierarchicalElements(remoteLeafRefPath)
-			rlvs := r.FindRemoteLeafRef(remoteLeafRefPath, d, rekvl)
+			rlvs := r.FindRemoteLeafRef(remoteLeafRefPath, c, rekvl)
 			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("External Remote LeafRef Values")
 			found := false
 
@@ -302,7 +302,7 @@ func (r *SrlNetworkinstanceReconciler) ValidateExternalLeafRefs(ctx context.Cont
 		}
 		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External leafref STATUS")
 	}
-	r.Log.WithValues("NetworkinstanceIntraResourceleafRef", NetworkinstanceIntraResourceleafRef).Info("External leafref STATUS All")
+	r.Log.WithValues("NetworkinstanceExternalResourceleafRef", NetworkinstanceExternalResourceleafRef).Info("External leafref STATUS All")
 
 	return nil
 }
@@ -327,16 +327,20 @@ func (r *SrlNetworkinstanceReconciler) ValidateLocalLeafRefs(ctx context.Context
 		d = append(d, dj)
 	}
 
-	for localLeafRef, leafRefInfo := range NetworkinstanceIntraResourceleafRef {
+	for localLeafRef, leafRefInfo := range NetworkinstanceInternalResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 
 		// check if the leafref is configured in the resource
 		// if not we dont have a leafref dependency in this resource
 		remoteLeafRefPaths, localLeafRefPaths := r.FindLocalLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
-		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("Internal Local/Remote LeafRef Paths")
+		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("Local/Remote LeafRef Paths")
 
+		//leafRefInfo.Exists = false
+		//leafRefInfo.RemoteLeafRefs = make([]string, 0)
+		//leafRefInfo.LocalLeafRefValues = localLeafRefPaths
 		leafRefInfo.LocalResolvedLeafRefInfo = make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo)
+
 		for i, remoteLeafRefPath := range remoteLeafRefPaths {
 			//leafRefInfo.Exists = true
 			//leafRefInfo.LocalLeafRefValues = append(leafRefInfo.LocalLeafRefValues, localLeafRefPaths[i])
@@ -344,7 +348,7 @@ func (r *SrlNetworkinstanceReconciler) ValidateLocalLeafRefs(ctx context.Context
 
 			rekvl := getHierarchicalElements(remoteLeafRefPath)
 			rlvs := r.FindRemoteLeafRef(remoteLeafRefPath, d, rekvl)
-			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("Internal Remote LeafRef Values")
+			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("Remote LeafRef Values")
 			found := false
 			//leafRefInfo.DependencyCheckSuccess = false
 
@@ -356,7 +360,7 @@ func (r *SrlNetworkinstanceReconciler) ValidateLocalLeafRefs(ctx context.Context
 						RemoteLeafRef:   stringPtr(remoteLeafRefPath),
 						DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess),
 					}
-					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("Internal Remote Leafref FOUND, all good")
+					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
 				}
 			}
 			if !found {
@@ -364,15 +368,70 @@ func (r *SrlNetworkinstanceReconciler) ValidateLocalLeafRefs(ctx context.Context
 					RemoteLeafRef:   stringPtr(remoteLeafRefPath),
 					DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckFailed),
 				}
-				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("Internal Remote Leafref NOT FOUND, missing leaf reference")
+				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref NOT FOUND, missing leaf reference")
 			}
 		}
-		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("Internal leafref STATUS")
+		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
-	r.Log.WithValues("NetworkinstanceIntraResourceleafRef", NetworkinstanceIntraResourceleafRef).Info("Internal leafref STATUS All")
+	r.Log.WithValues("NetworkinstanceInternalResourceleafRef", NetworkinstanceInternalResourceleafRef).Info("leafref STATUS All")
 	return nil
 }
 
+/*
+	func (r *SrlNetworkinstanceReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.Networkinstance) (err error) {
+		// marshal data to json
+		dd := struct {
+			NetworkInstance *srlinuxv1alpha1.Networkinstance `json:"network-instance"`
+		}{
+			NetworkInstance: o,
+		}
+		d, err := json.Marshal(dd)
+		if err != nil {
+			return err
+		}
+		// unmarshal data to json
+		var x interface{}
+		err = json.Unmarshal(d, &x)
+		if err != nil {
+			return err
+		}
+
+		for elementWithleafrefPath, elementWithleafref := range NetworkinstanceIntraResourceleafRef {
+			elementWithleafref.Values = make([]string, 0)
+			elementWithleafref.LeafRefValues = make([]string, 0)
+			// validate if the element with leafref exist
+			elements := strings.Split(elementWithleafref.RelativePath2ObjectWithLeafRef, "/")
+			x1 := x
+			//r.Log.WithValues("X1", x1).Info("Data Input")
+
+			// first element should be initialized with the first resource element
+			elements[0] = "bgp"
+			_, found := r.validateIfElementWithLeafRefExists(elements, 0, x1, elementWithleafref)
+			if !found {
+				elementWithleafref.Exists = false
+			}
+
+			r.Log.WithValues("elementWithleafrefPath", elementWithleafrefPath, "leafref values", elementWithleafref.Values).Info("LeafRef Values")
+			elementWithleafref.DependencyCheckSuccess = true
+			for _, leafReafValue := range elementWithleafref.Values {
+				elements := strings.Split(elementWithleafref.RelativePath2LeafRef, "/")
+				x1 := x
+
+				// first element should be initialized with the first resource element
+				elements[0] = "bgp"
+
+				_, found = r.validateLeafRefExists(elements, 0, x1, leafReafValue, elementWithleafref)
+				if !found {
+					elementWithleafref.DependencyCheckSuccess = false
+					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
+				} else {
+					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
+				}
+			}
+		}
+		return nil
+	}
+*/
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
@@ -415,10 +474,10 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 			return ctrl.Result{}, errors.Wrap(err, "failed to validate local leafRef")
 		}
 		validationSuccess := true
-		o.Status.ConfigurationDependencyInternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0)
-		for localLeafRef, leafRefInfo := range NetworkinstanceIntraResourceleafRef {
+		o.Status.ConfigurationDependencyInternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+		for localLeafRef, leafRefInfo := range NetworkinstanceInternalResourceleafRef {
 			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
-				o.Status.ConfigurationDependencyInternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{
+				o.Status.ConfigurationDependencyInternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
 					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
 				}
 				for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
@@ -431,9 +490,41 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 					}
 				}
 			} else {
-				o.Status.ConfigurationDependencyInternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{}
+				o.Status.ConfigurationDependencyInternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{}
 			}
 		}
+		/*
+			validationSuccess := true
+			for _, vo := range *o.Spec.SrlNetworkinstance {
+				err := r.validateLocalLeafRefs(&vo)
+				if err != nil {
+					return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
+				}
+				o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+				for s, elementWithLeafRef := range NetworkinstanceProtocolsBgpIntraResourceleafRef {
+					if elementWithLeafRef.Exists {
+						if !elementWithLeafRef.DependencyCheckSuccess {
+							validationSuccess = false
+						}
+						o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+							Values:        &elementWithLeafRef.Values,
+							LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
+							LeafRefValues: &elementWithLeafRef.LeafRefValues,
+						}
+					} else {
+						o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
+							LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
+						}
+					}
+				}
+			}
+		*/
+
+		//if validationSuccess {
+		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+		//} else {
+		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+		//}
 
 		if o.Status.ConfigurationDependencyInternalLeafrefValidationStatus == nil {
 			if validationSuccess {
@@ -580,12 +671,16 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 	// validate parent dependency and external leafref dependencies
 	for _, target := range t {
 		// initialize the status if not yet done
+		// the object was not processed on the target if len is 0
+		if len(o.Status.Target) == 0 {
+			o.Status.Target = make(map[string]*srlinuxv1alpha1.TargetStatus)
+		}
 		if _, ok := o.Status.Target[target.TargetName]; !ok {
 			o.Status.Target[target.TargetName] = &srlinuxv1alpha1.TargetStatus{
 				ConfigStatus: srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone),
 				ErrorCount:   intPtr(0),
-				ConfigurationDependencyParentValidationDetails:          make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0),
-				ConfigurationDependencyExternalLeafrefValidationDetails: make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0),
+				ConfigurationDependencyParentValidationDetails:          make(map[string]*srlinuxv1alpha1.ValidationDetails, 0),
+				ConfigurationDependencyExternalLeafrefValidationDetails: make(map[string]*srlinuxv1alpha1.ValidationDetails, 0),
 			}
 		}
 
@@ -599,23 +694,23 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 
 		// validate Parent Dependency
 		parentDependencyFound, err := r.ValidateParentDependency(ctx, cm, stringSlicePtr(dependencies))
-		r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", target.ParentDependencyFound).Info("Parent Dependency")
+		r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", parentDependencyFound).Info("Parent Dependency")
 		if parentDependencyFound {
 			o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 		} else {
 			o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 		}
 
-		err = r.ValidateExternalLeafRefs(ctx, cm)
+		err = r.ValidateExternalLeafRefs(ctx, o, cm)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to validate external leafRef")
 		}
 
 		validationSuccess := true
-		o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails2, 0)
-		for localLeafRef, leafRefInfo := range NetworkinstanceInterResourceleafRef {
+		o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+		for localLeafRef, leafRefInfo := range NetworkinstanceExternalResourceleafRef {
 			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{
+				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
 					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
 				}
 				for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
@@ -628,7 +723,7 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 					}
 				}
 			} else {
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails2{}
+				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{}
 			}
 		}
 
@@ -675,7 +770,6 @@ func (r *SrlNetworkinstanceReconciler) Reconcile(ctx context.Context, req ctrl.R
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
-
 		initialState := new(srlinuxv1alpha1.ConfigStatus)
 		// the object was not processed on the target if len is 0
 		if len(o.Status.Target) == 0 {
@@ -808,6 +902,21 @@ func SrlNetworkinstancelogResult(info *SrlNetworkinstanceReconcileInfo, result c
 	}
 }
 
+func (r *SrlNetworkinstanceReconciler) saveSrlNetworkinstanceStatus(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance) error {
+	t := metav1.Now()
+	o.Status.DeepCopy()
+	o.Status.LastUpdated = &t
+
+	r.Log.Info("SrlNetworkinstance",
+		"status", o.Status)
+
+	if err := r.Client.Status().Update(ctx, o); err != nil {
+		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlNetworkinstance ")
+		return err
+	}
+	return nil
+}
+
 func (r *SrlNetworkinstanceReconciler) getConfigMap(ctx context.Context, targetName *string) (*string, error) {
 	cmKey := types.NamespacedName{
 		Namespace: "nddriver-system",
@@ -824,21 +933,6 @@ func (r *SrlNetworkinstanceReconciler) getConfigMap(ctx context.Context, targetN
 	}
 	r.Log.WithValues("targetName", targetName).Info("ConfigMap content")
 	return stringPtr(cm.Data["config.json"]), nil
-}
-
-func (r *SrlNetworkinstanceReconciler) saveSrlNetworkinstanceStatus(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance) error {
-	t := metav1.Now()
-	o.Status.DeepCopy()
-	o.Status.LastUpdated = &t
-
-	r.Log.Info("SrlNetworkinstance",
-		"status", o.Status)
-
-	if err := r.Client.Status().Update(ctx, o); err != nil {
-		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlNetworkinstance ")
-		return err
-	}
-	return nil
 }
 
 func (r *SrlNetworkinstanceReconciler) findPathInTree(x1 interface{}, ekvl []ElementKeyValue, idx int) bool {
@@ -1068,43 +1162,45 @@ func (r *SrlNetworkinstanceReconciler) FindLocalLeafRef(localLeafRef string, d [
 	return leafRefDependencies, localLeafRefPaths
 }
 
-func (r *SrlNetworkinstanceReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance) ([]string, []string, error) {
-	r.Log.Info("Find LeafRef Dependencies ...")
+/*
+	func (r *SrlNetworkinstanceReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance) ([]string, []string, error) {
+		r.Log.Info("Find LeafRef Dependencies ...")
 
-	// marshal data to json
-	d := make([][]byte, 0)
-	for _, obj := range *o.Spec.SrlNetworkinstance {
-		o := make([]srlinuxv1alpha1.Networkinstance, 0)
-		o = append(o, obj)
-		dd := struct {
-			NetworkInstance *[]srlinuxv1alpha1.Networkinstance `json:"network-instance"`
-		}{
-			NetworkInstance: &o,
+		// marshal data to json
+		d := make([][]byte, 0)
+		for _, obj := range *o.Spec.SrlNetworkinstance {
+			o := make([]srlinuxv1alpha1.Networkinstance, 0)
+			o = append(o, obj)
+			dd := struct {
+				NetworkInstance *[]srlinuxv1alpha1.Networkinstance `json:"network-instance"`
+			}{
+				NetworkInstance: &o,
+			}
+			dj, err := json.Marshal(dd)
+			if err != nil {
+				return nil, nil, err
+			}
+			d = append(d, dj)
 		}
-		dj, err := json.Marshal(dd)
-		if err != nil {
-			return nil, nil, err
+
+		leafRefDependencies := make([]string, 0)
+		localLeafRefPaths := make([]string, 0)
+		for localLeafRef, rekvl := range NetworkinstanceInterResourceleafRef {
+			// get the ekvl for the local leafref
+			ekvl := getHierarchicalElements(localLeafRef)
+
+			// check if the leafref is configured in the resource
+			// if not we dont have a leafref dependency in this resource
+			lrd, lrp := r.FindLocalLeafRef(localLeafRef, d, ekvl, rekvl)
+			if len(lrd) != 0 {
+				leafRefDependencies = append(leafRefDependencies, lrd...)
+				localLeafRefPaths = append(localLeafRefPaths, lrp...)
+			}
 		}
-		d = append(d, dj)
+		r.Log.WithValues("LeafRefDependencies", leafRefDependencies).Info("Final LeafRef Dependencies")
+		return leafRefDependencies, localLeafRefPaths, nil
 	}
-
-	leafRefDependencies := make([]string, 0)
-	localLeafRefPaths := make([]string, 0)
-	for localLeafRef, rekvl := range NetworkinstanceInterResourceleafRef {
-		// get the ekvl for the local leafref
-		ekvl := getHierarchicalElements(localLeafRef)
-
-		// check if the leafref is configured in the resource
-		// if not we dont have a leafref dependency in this resource
-		lrd, lrp := r.FindLocalLeafRef(localLeafRef, d, ekvl, rekvl.REkvl)
-		if len(lrd) != 0 {
-			leafRefDependencies = append(leafRefDependencies, lrd...)
-			localLeafRefPaths = append(localLeafRefPaths, lrp...)
-		}
-	}
-	r.Log.WithValues("LeafRefDependencies", leafRefDependencies).Info("Final LeafRef Dependencies")
-	return leafRefDependencies, localLeafRefPaths, nil
-}
+*/
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec
 func (r *SrlNetworkinstanceReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstance) (bool, *[]string, error) {

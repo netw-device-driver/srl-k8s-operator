@@ -36,8 +36,6 @@ type InterfaceEthernetFlowControl struct {
 
 // InterfaceEthernet struct
 type InterfaceEthernet struct {
-	// +kubebuilder:validation:Enum=`100G`;`100M`;`10G`;`10M`;`1G`;`1T`;`200G`;`25G`;`400G`;`40G`;`50G`
-	PortSpeed     *string `json:"port-speed,omitempty"`
 	AggregateId   *string `json:"aggregate-id,omitempty"`
 	AutoNegotiate *bool   `json:"auto-negotiate,omitempty"`
 	// +kubebuilder:validation:Enum=`full`;`half`
@@ -46,6 +44,8 @@ type InterfaceEthernet struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=65535
 	LacpPortPriority *uint16 `json:"lacp-port-priority,omitempty"`
+	// +kubebuilder:validation:Enum=`100G`;`100M`;`10G`;`10M`;`1G`;`1T`;`200G`;`25G`;`400G`;`40G`;`50G`
+	PortSpeed *string `json:"port-speed,omitempty"`
 }
 
 // InterfaceLagLacp struct
@@ -105,14 +105,14 @@ type InterfaceQosOutputMulticastQueue struct {
 
 // InterfaceQosOutputSchedulerTierNode struct
 type InterfaceQosOutputSchedulerTierNode struct {
-	StrictPriority *bool `json:"strict-priority,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=11
+	NodeNumber     *uint8 `json:"node-number"`
+	StrictPriority *bool  `json:"strict-priority,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=127
 	// +kubebuilder:default:=1
 	Weight *uint8 `json:"weight,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=11
-	NodeNumber *uint8 `json:"node-number"`
 }
 
 // InterfaceQosOutputSchedulerTier struct
@@ -144,12 +144,12 @@ type InterfaceQosOutputUnicastQueueScheduling struct {
 
 // InterfaceQosOutputUnicastQueue struct
 type InterfaceQosOutputUnicastQueue struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=7
+	QueueId     *uint8                                    `json:"queue-id"`
 	Scheduling  *InterfaceQosOutputUnicastQueueScheduling `json:"scheduling,omitempty"`
 	Template    *string                                   `json:"template,omitempty"`
 	VoqTemplate *string                                   `json:"voq-template,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=7
-	QueueId *uint8 `json:"queue-id"`
 }
 
 // InterfaceQosOutput struct
@@ -181,29 +181,29 @@ type InterfaceTransceiver struct {
 
 // Interface struct
 type Interface struct {
-	Qos   *InterfaceQos   `json:"qos,omitempty"`
-	Sflow *InterfaceSflow `json:"sflow,omitempty"`
-	// +kubebuilder:validation:MinLength=3
-	// +kubebuilder:validation:MaxLength=20
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))`
-	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
-	AdminState *string       `json:"admin-state,omitempty"`
-	Lag        *InterfaceLag `json:"lag,omitempty"`
 	// +kubebuilder:validation:Minimum=1500
 	// +kubebuilder:validation:Maximum=9500
-	Mtu         *uint16               `json:"mtu,omitempty"`
-	Transceiver *InterfaceTransceiver `json:"transceiver,omitempty"`
-	VlanTagging *bool                 `json:"vlan-tagging,omitempty"`
+	Mtu         *uint16 `json:"mtu,omitempty"`
+	VlanTagging *bool   `json:"vlan-tagging,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=enable
+	AdminState *string `json:"admin-state,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Description  *string            `json:"description,omitempty"`
-	Ethernet     *InterfaceEthernet `json:"ethernet,omitempty"`
-	LoopbackMode *bool              `json:"loopback-mode,omitempty"`
+	Description *string               `json:"description,omitempty"`
+	Ethernet    *InterfaceEthernet    `json:"ethernet,omitempty"`
+	Lag         *InterfaceLag         `json:"lag,omitempty"`
+	Transceiver *InterfaceTransceiver `json:"transceiver,omitempty"`
+	// +kubebuilder:validation:MinLength=3
+	// +kubebuilder:validation:MaxLength=20
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`(mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))`
+	Name         *string         `json:"name"`
+	LoopbackMode *bool           `json:"loopback-mode,omitempty"`
+	Qos          *InterfaceQos   `json:"qos,omitempty"`
+	Sflow        *InterfaceSflow `json:"sflow,omitempty"`
 }
 
 // SrlInterfaceSpec struct
@@ -217,12 +217,12 @@ type SrlInterfaceStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
+	// ConfigurationDependencyInternalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
+	ConfigurationDependencyInternalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyInternalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
+	// ConfigurationDependencyInternalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyInternalLeafrefValidationDetails map[string]*ValidationDetails `json:"internalLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`

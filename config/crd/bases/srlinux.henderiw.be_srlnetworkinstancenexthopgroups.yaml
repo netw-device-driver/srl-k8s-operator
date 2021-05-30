@@ -127,9 +127,10 @@ spec:
           status:
             description: SrlNetworkinstanceNexthopgroupsStatus struct
             properties:
-              configurationDependencyLocalLeafrefValidationStatus:
-                description: ConfigurationDependencyLocalLeafrefValidationStatus identifies
-                  the status of the local LeafRef Validation of the resource object
+              configurationDependencyInternalLeafrefValidationStatus:
+                description: ConfigurationDependencyInternalLeafrefValidationStatus
+                  identifies the status of the local LeafRef Validation of the resource
+                  object
                 enum:
                 - Success
                 - Failed
@@ -141,13 +142,9 @@ spec:
                 - Success
                 - Failed
                 type: string
-              lastUpdated:
-                description: LastUpdated identifies when this status was last observed.
-                format: date-time
-                type: string
-              localLeafrefValidationDetails:
+              internalLeafrefValidationDetails:
                 additionalProperties:
-                  description: ValidationDetails2 provides the status of the configuration
+                  description: ValidationDetails provides the status of the configuration
                     applied on this particular device
                   properties:
                     localResolvedLeafRefInfo:
@@ -169,9 +166,13 @@ spec:
                         the remote leafref information
                       type: object
                   type: object
-                description: ConfigurationDependencyLocalLeafrefValidationDetails
+                description: ConfigurationDependencyInternalLeafrefValidationDetails
                   defines the validation details of the resource object
                 type: object
+              lastUpdated:
+                description: LastUpdated identifies when this status was last observed.
+                format: date-time
+                type: string
               targetStatus:
                 additionalProperties:
                   description: TargetStatus provides the status of the configuration
@@ -200,6 +201,7 @@ spec:
                       enum:
                       - Success
                       - Failed
+                      - NoDependency
                       type: string
                     configurationDependencyParentValidationStatus:
                       description: ConfigurationDependencyParentValidationStatus identifies
@@ -207,6 +209,7 @@ spec:
                       enum:
                       - Success
                       - Failed
+                      - NoDependency
                       type: string
                     errorCount:
                       default: 0
@@ -215,7 +218,7 @@ spec:
                       type: integer
                     externalLeafrefValidationDetails:
                       additionalProperties:
-                        description: ValidationDetails2 provides the status of the
+                        description: ValidationDetails provides the status of the
                           configuration applied on this particular device
                         properties:
                           localResolvedLeafRefInfo:
@@ -242,7 +245,7 @@ spec:
                       type: object
                     parentValidationDetails:
                       additionalProperties:
-                        description: ValidationDetails2 provides the status of the
+                        description: ValidationDetails provides the status of the
                           configuration applied on this particular device
                         properties:
                           localResolvedLeafRefInfo:

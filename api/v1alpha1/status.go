@@ -38,22 +38,15 @@ const (
 
 	// ValidationStatusSuccess means the validation was successfull
 	ValidationStatusFailed ValidationStatus = "Failed"
+
+	// ValidationStatusNoDependency means the validation did not found depdendencies
+	ValidationStatusNoDependency ValidationStatus = "NoDependency"
 )
 
 func ValidationStatusPtr(s ValidationStatus) *ValidationStatus { return &s }
 
 // ValidationDetails provides the status of the configuration applied on this particular device
 type ValidationDetails struct {
-	// LocalLeafRef identifies the leafref value that should match the remote leafref
-	// if empty it means the object does not exist.
-	LocalLeafRefs *[]string `json:"localLeafRef,omitempty"`
-
-	// RemoteLeafRef points to the remote leafref object
-	RemoteLeafRefs *[]string `json:"remoteLeafRef,omitempty"`
-}
-
-// ValidationDetails2 provides the status of the configuration applied on this particular device
-type ValidationDetails2 struct {
 	// LocalResolvedLeafRefInfo provides the status of the remote leafref information
 	LocalResolvedLeafRefInfo map[string]*RemoteLeafRefInfo `json:"localResolvedLeafRefInfo,omitempty"`
 }
@@ -138,16 +131,16 @@ type TargetStatus struct {
 	// +kubebuilder:default:=0
 	ErrorCount *int `json:"errorCount"`
 	// ConfigurationDependencyExternalLeafrefValidationStatus identifies the status of the External LeafRef Validation of the resource object
-	// +kubebuilder:validation:Enum=Success;Failed
+	// +kubebuilder:validation:Enum=Success;Failed;NoDependency
 	ConfigurationDependencyExternalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyExternalLeafrefValidationStatus,omitempty"`
 
 	// ConfigurationDependencyParentValidationStatus identifies the status of the parent of the resource object
-	// +kubebuilder:validation:Enum=Success;Failed
+	// +kubebuilder:validation:Enum=Success;Failed;NoDependency
 	ConfigurationDependencyParentValidationStatus *ValidationStatus `json:"configurationDependencyParentValidationStatus,omitempty"`
 
 	// ConfigurationDependencyExternalLeafrefValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyExternalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"externalLeafrefValidationDetails,omitempty"`
+	ConfigurationDependencyExternalLeafrefValidationDetails map[string]*ValidationDetails `json:"externalLeafrefValidationDetails,omitempty"`
 
 	// ConfigurationDependencyParentValidationDetails defines the validation details of the parent of the resource object
-	ConfigurationDependencyParentValidationDetails map[string]*ValidationDetails2 `json:"parentValidationDetails,omitempty"`
+	ConfigurationDependencyParentValidationDetails map[string]*ValidationDetails `json:"parentValidationDetails,omitempty"`
 }

@@ -30,7 +30,6 @@ const (
 
 // BfdMicroBfdSessionsLagInterface struct
 type BfdMicroBfdSessionsLagInterface struct {
-	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -52,6 +51,7 @@ type BfdMicroBfdSessionsLagInterface struct {
 	// +kubebuilder:validation:Maximum=100000000
 	// +kubebuilder:default:=1000000
 	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
+	Name                   *string `json:"name"`
 }
 
 // BfdMicroBfdSessions struct
@@ -89,8 +89,8 @@ type BfdSubinterface struct {
 
 // Bfd struct
 type Bfd struct {
-	Subinterface     []*BfdSubinterface   `json:"subinterface,omitempty"`
 	MicroBfdSessions *BfdMicroBfdSessions `json:"micro-bfd-sessions,omitempty"`
+	Subinterface     []*BfdSubinterface   `json:"subinterface,omitempty"`
 }
 
 // SrlBfdSpec struct
@@ -104,12 +104,12 @@ type SrlBfdStatus struct {
 	// +kubebuilder:validation:Enum=Success;Failed
 	ConfigurationDependencyTargetFound *TargetFoundStatus `json:"configurationDependencyTargetFound,omitempty"`
 
-	// ConfigurationDependencyLocalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
+	// ConfigurationDependencyInternalLeafrefValidationStatus identifies the status of the local LeafRef Validation of the resource object
 	// +kubebuilder:validation:Enum=Success;Failed
-	ConfigurationDependencyLocalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyLocalLeafrefValidationStatus,omitempty"`
+	ConfigurationDependencyInternalLeafrefValidationStatus *ValidationStatus `json:"configurationDependencyInternalLeafrefValidationStatus,omitempty"`
 
-	// ConfigurationDependencyLocalLeafrefValidationDetails defines the validation details of the resource object
-	ConfigurationDependencyLocalLeafrefValidationDetails map[string]*ValidationDetails2 `json:"localLeafrefValidationDetails,omitempty"`
+	// ConfigurationDependencyInternalLeafrefValidationDetails defines the validation details of the resource object
+	ConfigurationDependencyInternalLeafrefValidationDetails map[string]*ValidationDetails `json:"internalLeafrefValidationDetails,omitempty"`
 
 	// Target provides the status of the configuration on the device
 	Target map[string]*TargetStatus `json:"targetStatus,omitempty"`
