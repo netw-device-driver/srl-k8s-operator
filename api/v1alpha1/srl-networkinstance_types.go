@@ -30,6 +30,9 @@ const (
 
 // NetworkinstanceBridgeTableMacDuplication struct
 type NetworkinstanceBridgeTableMacDuplication struct {
+	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
+	// +kubebuilder:default:=stop-learning
+	Action *string `json:"action,omitempty"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -43,9 +46,6 @@ type NetworkinstanceBridgeTableMacDuplication struct {
 	// +kubebuilder:validation:Maximum=10
 	// +kubebuilder:default:=5
 	NumMoves *uint32 `json:"num-moves,omitempty"`
-	// +kubebuilder:validation:Enum=`blackhole`;`oper-down`;`stop-learning`
-	// +kubebuilder:default:=stop-learning
-	Action *string `json:"action,omitempty"`
 }
 
 // NetworkinstanceBridgeTableMacLearningAging struct
@@ -216,10 +216,6 @@ type NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember stru
 
 // NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct
 type NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct {
-	StaticMember []*NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember `json:"static-member,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=4294967295
-	Value *uint32 `json:"value,omitempty"`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
@@ -227,7 +223,11 @@ type NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup struct {
 	Name *string `json:"name"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=4294967295
-	Cost *uint32 `json:"cost,omitempty"`
+	Cost         *uint32                                                                   `json:"cost,omitempty"`
+	StaticMember []*NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember `json:"static-member,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	Value *uint32 `json:"value,omitempty"`
 }
 
 // NetworkinstanceTrafficEngineeringSharedRiskLinkGroups struct
@@ -237,7 +237,11 @@ type NetworkinstanceTrafficEngineeringSharedRiskLinkGroups struct {
 
 // NetworkinstanceTrafficEngineering struct
 type NetworkinstanceTrafficEngineering struct {
-	AdminGroups *NetworkinstanceTrafficEngineeringAdminGroups `json:"admin-groups,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
+	Ipv6TeRouterId       *string                                                `json:"ipv6-te-router-id,omitempty"`
+	SharedRiskLinkGroups *NetworkinstanceTrafficEngineeringSharedRiskLinkGroups `json:"shared-risk-link-groups,omitempty"`
+	AdminGroups          *NetworkinstanceTrafficEngineeringAdminGroups          `json:"admin-groups,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	AutonomousSystem *uint32                                       `json:"autonomous-system,omitempty"`
@@ -245,10 +249,6 @@ type NetworkinstanceTrafficEngineering struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
 	Ipv4TeRouterId *string `json:"ipv4-te-router-id,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	Ipv6TeRouterId       *string                                                `json:"ipv6-te-router-id,omitempty"`
-	SharedRiskLinkGroups *NetworkinstanceTrafficEngineeringSharedRiskLinkGroups `json:"shared-risk-link-groups,omitempty"`
 }
 
 // NetworkinstanceVxlanInterface struct
@@ -262,7 +262,18 @@ type NetworkinstanceVxlanInterface struct {
 
 // Networkinstance struct
 type Networkinstance struct {
-	VxlanInterface []*NetworkinstanceVxlanInterface `json:"vxlan-interface,omitempty"`
+	BridgeTable        *NetworkinstanceBridgeTable        `json:"bridge-table,omitempty"`
+	Interface          []*NetworkinstanceInterface        `json:"interface,omitempty"`
+	IpForwarding       *NetworkinstanceIpForwarding       `json:"ip-forwarding,omitempty"`
+	IpLoadBalancing    *NetworkinstanceIpLoadBalancing    `json:"ip-load-balancing,omitempty"`
+	TrafficEngineering *NetworkinstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
+	// +kubebuilder:default:=default
+	Type *string `json:"type,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
+	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -272,22 +283,11 @@ type Networkinstance struct {
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
 	Description *string              `json:"description,omitempty"`
 	Mpls        *NetworkinstanceMpls `json:"mpls,omitempty"`
+	Mtu         *NetworkinstanceMtu  `json:"mtu,omitempty"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])`
-	RouterId           *string                            `json:"router-id,omitempty"`
-	TrafficEngineering *NetworkinstanceTrafficEngineering `json:"traffic-engineering,omitempty"`
-	Mtu                *NetworkinstanceMtu                `json:"mtu,omitempty"`
-	// +kubebuilder:default:=default
-	Type *string `json:"type,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name            *string                         `json:"name"`
-	BridgeTable     *NetworkinstanceBridgeTable     `json:"bridge-table,omitempty"`
-	Interface       []*NetworkinstanceInterface     `json:"interface,omitempty"`
-	IpForwarding    *NetworkinstanceIpForwarding    `json:"ip-forwarding,omitempty"`
-	IpLoadBalancing *NetworkinstanceIpLoadBalancing `json:"ip-load-balancing,omitempty"`
+	RouterId       *string                          `json:"router-id,omitempty"`
+	VxlanInterface []*NetworkinstanceVxlanInterface `json:"vxlan-interface,omitempty"`
 }
 
 // SrlNetworkinstanceSpec struct

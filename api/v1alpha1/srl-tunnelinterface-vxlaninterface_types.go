@@ -41,6 +41,9 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestinationInnerEt
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=65535
+	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState          *string                                                                                  `json:"admin-state,omitempty"`
@@ -48,9 +51,6 @@ type TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroupDestination struct
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=16777215
 	Vni *uint32 `json:"vni,omitempty"`
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=65535
-	Index *uint16 `json:"index"`
 }
 
 // TunnelinterfaceVxlaninterfaceEgressDestinationGroupsGroup struct
@@ -82,10 +82,10 @@ type TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader struct {
 
 // TunnelinterfaceVxlaninterfaceEgress struct
 type TunnelinterfaceVxlaninterfaceEgress struct {
-	DestinationGroups   *TunnelinterfaceVxlaninterfaceEgressDestinationGroups   `json:"destination-groups,omitempty"`
 	InnerEthernetHeader *TunnelinterfaceVxlaninterfaceEgressInnerEthernetHeader `json:"inner-ethernet-header,omitempty"`
 	// +kubebuilder:default:=use-system-ipv4-address
-	SourceIp *string `json:"source-ip,omitempty"`
+	SourceIp          *string                                               `json:"source-ip,omitempty"`
+	DestinationGroups *TunnelinterfaceVxlaninterfaceEgressDestinationGroups `json:"destination-groups,omitempty"`
 }
 
 // TunnelinterfaceVxlaninterfaceIngress struct
@@ -97,13 +97,13 @@ type TunnelinterfaceVxlaninterfaceIngress struct {
 
 // TunnelinterfaceVxlaninterface struct
 type TunnelinterfaceVxlaninterface struct {
-	Ingress *TunnelinterfaceVxlaninterfaceIngress `json:"ingress,omitempty"`
-	Type    *string                               `json:"type"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=99999999
 	Index       *uint32                                   `json:"index"`
 	BridgeTable *TunnelinterfaceVxlaninterfaceBridgeTable `json:"bridge-table,omitempty"`
 	Egress      *TunnelinterfaceVxlaninterfaceEgress      `json:"egress,omitempty"`
+	Ingress     *TunnelinterfaceVxlaninterfaceIngress     `json:"ingress,omitempty"`
+	Type        *string                                   `json:"type"`
 }
 
 // SrlTunnelinterfaceVxlaninterfaceSpec struct

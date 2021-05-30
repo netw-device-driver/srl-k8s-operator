@@ -625,102 +625,104 @@ func (r *SrlTunnelinterfaceReconciler) Reconcile(ctx context.Context, req ctrl.R
 	// path to be used for this object
 	path := "/"
 
-	// validate parent dependency and external leafref dependencies
-	for _, target := range t {
-		// initialize the status if not yet done
-		// the object was not processed on the target if len is 0
-		if len(o.Status.Target) == 0 {
-			o.Status.Target = make(map[string]*srlinuxv1alpha1.TargetStatus)
-		}
-		if _, ok := o.Status.Target[target.TargetName]; !ok {
-			o.Status.Target[target.TargetName] = &srlinuxv1alpha1.TargetStatus{
-				ConfigStatus: srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone),
-				ErrorCount:   intPtr(0),
-				ConfigurationDependencyParentValidationDetails:          make(map[string]*srlinuxv1alpha1.ValidationDetails, 0),
-				ConfigurationDependencyExternalLeafrefValidationDetails: make(map[string]*srlinuxv1alpha1.ValidationDetails, 0),
+	// validate parent dependency and external leafref dependencies if not in deleteing status
+	if o.DeletionTimestamp.IsZero() && SrlTunnelinterfacehasFinalizer(o) {
+		for _, target := range t {
+			// initialize the status if not yet done
+			// the object was not processed on the target if len is 0
+			if len(o.Status.Target) == 0 {
+				o.Status.Target = make(map[string]*srlinuxv1alpha1.TargetStatus)
 			}
-		}
-
-		// get configmap
-		cm, err := r.getConfigMap(ctx, stringPtr(target.TargetName))
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		var x1 interface{}
-		json.Unmarshal([]byte(*cm), &x1)
-
-		// validate Parent Dependency
-		parentDependencyFound, err := r.ValidateParentDependency(ctx, cm, stringSlicePtr(dependencies))
-		r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", parentDependencyFound).Info("Parent Dependency")
-		if parentDependencyFound {
-			o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-		} else {
-			o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
-		}
-
-		err = r.ValidateExternalLeafRefs(ctx, o, cm)
-		if err != nil {
-			return ctrl.Result{}, errors.Wrap(err, "failed to validate external leafRef")
-		}
-
-		validationSuccess := true
-		o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-		for localLeafRef, leafRefInfo := range TunnelinterfaceExternalResourceleafRef {
-			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
-					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
+			if _, ok := o.Status.Target[target.TargetName]; !ok {
+				o.Status.Target[target.TargetName] = &srlinuxv1alpha1.TargetStatus{
+					ConfigStatus: srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone),
+					ErrorCount:   intPtr(0),
+					ConfigurationDependencyParentValidationDetails:          make(map[string]*srlinuxv1alpha1.ValidationDetails, 0),
+					ConfigurationDependencyExternalLeafrefValidationDetails: make(map[string]*srlinuxv1alpha1.ValidationDetails, 0),
 				}
-				for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
-					if *RemoteLeafRefInfo.DependencyCheck != srlinuxv1alpha1.DependencyCheckSuccess {
-						validationSuccess = false
-					}
-					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
-						RemoteLeafRef:   RemoteLeafRefInfo.RemoteLeafRef,
-						DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
-					}
-				}
-			} else {
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{}
 			}
-		}
 
-		if o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == nil {
-			if validationSuccess {
-				r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation success", target.TargetName), ""))
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-			} else {
-				r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation failed", target.TargetName), "Leaf Ref dependency missing"))
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			// get configmap
+			cm, err := r.getConfigMap(ctx, stringPtr(target.TargetName))
+			if err != nil {
+				return ctrl.Result{}, err
 			}
-		} else {
-			if validationSuccess {
-				// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
-				if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+			var x1 interface{}
+			json.Unmarshal([]byte(*cm), &x1)
+
+			// validate Parent Dependency
+			parentDependencyFound, err := r.ValidateParentDependency(ctx, cm, stringSlicePtr(dependencies))
+			r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", parentDependencyFound).Info("Parent Dependency")
+			if parentDependencyFound {
+				o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			} else {
+				o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			}
+
+			err = r.ValidateExternalLeafRefs(ctx, o, cm)
+			if err != nil {
+				return ctrl.Result{}, errors.Wrap(err, "failed to validate external leafRef")
+			}
+
+			validationSuccess := true
+			o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
+			for localLeafRef, leafRefInfo := range TunnelinterfaceExternalResourceleafRef {
+				if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
+					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
+						LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
+					}
+					for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+						if *RemoteLeafRefInfo.DependencyCheck != srlinuxv1alpha1.DependencyCheckSuccess {
+							validationSuccess = false
+						}
+						o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+							RemoteLeafRef:   RemoteLeafRefInfo.RemoteLeafRef,
+							DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
+						}
+					}
+				} else {
+					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{}
+				}
+			}
+
+			if o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == nil {
+				if validationSuccess {
 					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation success", target.TargetName), ""))
-				}
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-			} else {
-				// if the validation status did not change we dont have to publish a new event
-				if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+				} else {
 					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation failed", target.TargetName), "Leaf Ref dependency missing"))
+					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 				}
-				o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+			} else {
+				if validationSuccess {
+					// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
+					if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation success", target.TargetName), ""))
+					}
+					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+				} else {
+					// if the validation status did not change we dont have to publish a new event
+					if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation failed", target.TargetName), "Leaf Ref dependency missing"))
+					}
+					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+				}
 			}
 		}
-	}
-	if err := r.saveSrlTunnelinterfaceStatus(ctx, o); err != nil {
-		return ctrl.Result{}, errors.Wrap(err,
-			fmt.Sprintf("failed to save status"))
-	}
-	// check validation status and requeue if an validation error is reported
-	for _, target := range t {
-		if o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess) {
-			return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
+		if err := r.saveSrlTunnelinterfaceStatus(ctx, o); err != nil {
+			return ctrl.Result{}, errors.Wrap(err,
+				fmt.Sprintf("failed to save status"))
 		}
-		if o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess) {
-			return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
-		}
+		// check validation status and requeue if an validation error is reported
+		for _, target := range t {
+			if o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess) {
+				return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
+			}
+			if o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess) {
+				return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
+			}
 
+		}
 	}
 
 	info := make(map[string]*SrlTunnelinterfaceReconcileInfo)

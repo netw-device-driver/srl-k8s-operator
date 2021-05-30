@@ -45,10 +45,10 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct {
-	InclusiveMcast *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast `json:"inclusive-mcast,omitempty"`
-	MacIp          *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp          `json:"mac-ip,omitempty"`
+	MacIp *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp `json:"mac-ip,omitempty"`
 	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop *string `json:"next-hop,omitempty"`
+	NextHop        *string                                                                    `json:"next-hop,omitempty"`
+	InclusiveMcast *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast `json:"inclusive-mcast,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp struct
@@ -70,7 +70,12 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	Id *string `json:"id"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Evi            *uint32                                           `json:"evi"`
+	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
+	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
+	Id             *string                                           `json:"id"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -85,11 +90,6 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	// +kubebuilder:validation:Enum=`vxlan`
 	// +kubebuilder:default:=vxlan
 	EncapsulationType *string `json:"encapsulation-type,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	Evi            *uint32                                           `json:"evi"`
-	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
-	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct

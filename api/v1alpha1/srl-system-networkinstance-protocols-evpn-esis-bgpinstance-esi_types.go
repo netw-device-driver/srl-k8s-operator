@@ -74,9 +74,9 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers struct
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection struct {
-	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
 	InterfaceStandbySignalingOnNonDf *bool                                                                    `json:"interface-standby-signaling-on-non-df,omitempty"`
 	Timers                           *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers    `json:"timers,omitempty"`
+	Algorithm                        *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm `json:"algorithm,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEsi struct
@@ -96,6 +96,11 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
+	Name *string `json:"name"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
 	AdminState *string                                                         `json:"admin-state,omitempty"`
@@ -108,11 +113,6 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	// +kubebuilder:default:=all-active
 	MultiHomingMode *string                                                     `json:"multi-homing-mode,omitempty"`
 	Routes          *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes `json:"routes,omitempty"`
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name"`
 }
 
 // SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct
