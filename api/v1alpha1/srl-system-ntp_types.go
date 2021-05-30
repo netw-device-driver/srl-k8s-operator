@@ -41,10 +41,10 @@ type SystemNtpServer struct {
 
 // SystemNtp struct
 type SystemNtp struct {
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	AdminState      *string            `json:"admin-state,omitempty"`
 	NetworkInstance *string            `json:"network-instance"`
 	Server          []*SystemNtpServer `json:"server,omitempty"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	AdminState *string `json:"admin-state,omitempty"`
 }
 
 // SrlSystemNtpSpec struct

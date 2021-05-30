@@ -90,6 +90,7 @@ type SrlTunnelinterfaceReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srltunnelinterfaces/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
+// +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;update
 
 func (r *SrlTunnelinterfaceReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
 	reqLogger := r.Log.WithValues("SrlTunnelinterface", request.NamespacedName)

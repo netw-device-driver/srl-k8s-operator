@@ -48,9 +48,9 @@ type RoutingpolicyPolicyDefaultActionAcceptBgpAsPath struct {
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpCommunities struct
 type RoutingpolicyPolicyDefaultActionAcceptBgpCommunities struct {
-	Add     *string `json:"add,omitempty"`
 	Remove  *string `json:"remove,omitempty"`
 	Replace *string `json:"replace,omitempty"`
+	Add     *string `json:"add,omitempty"`
 }
 
 // RoutingpolicyPolicyDefaultActionAcceptBgpLocalPreference struct
@@ -101,11 +101,11 @@ type RoutingpolicyPolicyDefaultAction struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct
 type RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct {
-	AsNumber *string `json:"as-number,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=50
 	// +kubebuilder:default:=1
-	RepeatN *uint8 `json:"repeat-n,omitempty"`
+	RepeatN  *uint8  `json:"repeat-n,omitempty"`
+	AsNumber *string `json:"as-number,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct
@@ -119,9 +119,9 @@ type RoutingpolicyPolicyStatementActionAcceptBgpAsPath struct {
 
 // RoutingpolicyPolicyStatementActionAcceptBgpCommunities struct
 type RoutingpolicyPolicyStatementActionAcceptBgpCommunities struct {
+	Replace *string `json:"replace,omitempty"`
 	Add     *string `json:"add,omitempty"`
 	Remove  *string `json:"remove,omitempty"`
-	Replace *string `json:"replace,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementActionAcceptBgpLocalPreference struct
@@ -164,22 +164,22 @@ type RoutingpolicyPolicyStatementActionReject struct {
 
 // RoutingpolicyPolicyStatementAction struct
 type RoutingpolicyPolicyStatementAction struct {
+	Reject     *RoutingpolicyPolicyStatementActionReject     `json:"reject,omitempty"`
 	Accept     *RoutingpolicyPolicyStatementActionAccept     `json:"accept,omitempty"`
 	NextEntry  *RoutingpolicyPolicyStatementActionNextEntry  `json:"next-entry,omitempty"`
 	NextPolicy *RoutingpolicyPolicyStatementActionNextPolicy `json:"next-policy,omitempty"`
-	Reject     *RoutingpolicyPolicyStatementActionReject     `json:"reject,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatchBgpAsPathLength struct
 type RoutingpolicyPolicyStatementMatchBgpAsPathLength struct {
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	Value *uint8 `json:"value"`
 	// +kubebuilder:validation:Enum=`eq`;`ge`;`le`
 	// +kubebuilder:default:=eq
 	Operator *string `json:"operator,omitempty"`
 	// +kubebuilder:default:=false
 	Unique *bool `json:"unique,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	Value *uint8 `json:"value"`
 }
 
 // RoutingpolicyPolicyStatementMatchBgpEvpn struct
@@ -208,23 +208,23 @@ type RoutingpolicyPolicyStatementMatchIsis struct {
 
 // RoutingpolicyPolicyStatementMatchOspf struct
 type RoutingpolicyPolicyStatementMatchOspf struct {
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|[0-9\.]*|(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])([\p{N}\p{L}]+)?`
+	AreaId *string `json:"area-id,omitempty"`
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
 	InstanceId *uint32 `json:"instance-id,omitempty"`
 	RouteType  *string `json:"route-type,omitempty"`
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|[0-9\.]*|(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])([\p{N}\p{L}]+)?`
-	AreaId *string `json:"area-id,omitempty"`
 }
 
 // RoutingpolicyPolicyStatementMatch struct
 type RoutingpolicyPolicyStatementMatch struct {
-	Ospf      *RoutingpolicyPolicyStatementMatchOspf `json:"ospf,omitempty"`
 	PrefixSet *string                                `json:"prefix-set,omitempty"`
 	Protocol  *string                                `json:"protocol,omitempty"`
 	Bgp       *RoutingpolicyPolicyStatementMatchBgp  `json:"bgp,omitempty"`
 	Family    *string                                `json:"family,omitempty"`
 	Isis      *RoutingpolicyPolicyStatementMatchIsis `json:"isis,omitempty"`
+	Ospf      *RoutingpolicyPolicyStatementMatchOspf `json:"ospf,omitempty"`
 }
 
 // RoutingpolicyPolicyStatement struct

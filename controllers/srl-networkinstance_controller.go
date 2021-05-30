@@ -133,6 +133,7 @@ type SrlNetworkinstanceReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstances/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
+// +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;update
 
 func (r *SrlNetworkinstanceReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
 	reqLogger := r.Log.WithValues("SrlNetworkinstance", request.NamespacedName)

@@ -133,6 +133,7 @@ type SrlNetworkinstanceProtocolsIsisReconcileInfo struct {
 // +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlnetworkinstanceprotocolsises/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
+// +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;update
 
 func (r *SrlNetworkinstanceProtocolsIsisReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
 	reqLogger := r.Log.WithValues("SrlNetworkinstanceProtocolsIsis", request.NamespacedName)
