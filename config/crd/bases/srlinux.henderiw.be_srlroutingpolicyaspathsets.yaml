@@ -94,6 +94,10 @@ spec:
                             description: RemoteLeafRef provides the reference path
                               to the remote leafref
                             type: string
+                          remoteResourceObject:
+                            description: RemoteResourceObject provides the reference
+                              to the resource the leafref is dependent upon
+                            type: string
                         type: object
                       description: LocalResolvedLeafRefInfo provides the status of
                         the remote leafref information
@@ -168,6 +172,10 @@ spec:
                                   description: RemoteLeafRef provides the reference
                                     path to the remote leafref
                                   type: string
+                                remoteResourceObject:
+                                  description: RemoteResourceObject provides the reference
+                                    to the resource the leafref is dependent upon
+                                  type: string
                               type: object
                             description: LocalResolvedLeafRefInfo provides the status
                               of the remote leafref information
@@ -194,6 +202,10 @@ spec:
                                 remoteLeafRef:
                                   description: RemoteLeafRef provides the reference
                                     path to the remote leafref
+                                  type: string
+                                remoteResourceObject:
+                                  description: RemoteResourceObject provides the reference
+                                    to the resource the leafref is dependent upon
                                   type: string
                               type: object
                             description: LocalResolvedLeafRefInfo provides the status

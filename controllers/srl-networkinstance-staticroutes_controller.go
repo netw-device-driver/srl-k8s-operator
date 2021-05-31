@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	//"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -335,61 +336,6 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) ValidateLocalLeafRefs(ctx con
 	return nil
 }
 
-/*
-	func (r *SrlNetworkinstanceStaticroutesReconciler) validateLocalLeafRefs(o *srlinuxv1alpha1.NetworkinstanceStaticroutes) (err error) {
-		// marshal data to json
-		dd := struct {
-			StaticRoutes *srlinuxv1alpha1.NetworkinstanceStaticroutes `json:"static-routes"`
-		}{
-			StaticRoutes: o,
-		}
-		d, err := json.Marshal(dd)
-		if err != nil {
-			return err
-		}
-		// unmarshal data to json
-		var x interface{}
-		err = json.Unmarshal(d, &x)
-		if err != nil {
-			return err
-		}
-
-		for elementWithleafrefPath, elementWithleafref := range NetworkinstanceStaticroutesIntraResourceleafRef {
-			elementWithleafref.Values = make([]string, 0)
-			elementWithleafref.LeafRefValues = make([]string, 0)
-			// validate if the element with leafref exist
-			elements := strings.Split(elementWithleafref.RelativePath2ObjectWithLeafRef, "/")
-			x1 := x
-			//r.Log.WithValues("X1", x1).Info("Data Input")
-
-			// first element should be initialized with the first resource element
-			elements[0] = "bgp"
-			_, found := r.validateIfElementWithLeafRefExists(elements, 0, x1, elementWithleafref)
-			if !found {
-				elementWithleafref.Exists = false
-			}
-
-			r.Log.WithValues("elementWithleafrefPath", elementWithleafrefPath, "leafref values", elementWithleafref.Values).Info("LeafRef Values")
-			elementWithleafref.DependencyCheckSuccess = true
-			for _, leafReafValue := range elementWithleafref.Values {
-				elements := strings.Split(elementWithleafref.RelativePath2LeafRef, "/")
-				x1 := x
-
-				// first element should be initialized with the first resource element
-				elements[0] = "bgp"
-
-				_, found = r.validateLeafRefExists(elements, 0, x1, leafReafValue, elementWithleafref)
-				if !found {
-					elementWithleafref.DependencyCheckSuccess = false
-					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref NOT FOUND, Object has missing leafs")
-				} else {
-					r.Log.WithValues("ElementWithLeafref", elementWithleafref).Info("Leafref FOUND, all good")
-				}
-			}
-		}
-		return nil
-	}
-*/
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
@@ -418,11 +364,20 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 		)
 		o.Finalizers = append(o.Finalizers,
 			srlinuxv1alpha1.SrlNetworkinstanceStaticroutesFinalizer)
-		err := r.Update(context.TODO(), o)
+		err := r.Update(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to add finalizer")
 		}
 		return ctrl.Result{Requeue: true}, nil
+	}
+
+	// check other dependencies, if so we cannot delete the object
+	if !o.DeletionTimestamp.IsZero() && SrlNetworkinstanceStaticrouteshasFinalizer(o) {
+		if SrlNetworkinstanceStaticrouteshasOtherFinalizer(o) {
+			// other dependencies block the deletion, requeue the request
+			return ctrl.Result{Requeue: true, RequeueAfter: deleteDependencyRetryDelay}, nil
+		}
+
 	}
 
 	// validate local leaf refs if resource is not in deleting state
@@ -451,56 +406,26 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 				o.Status.ConfigurationDependencyInternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{}
 			}
 		}
-		/*
-			err := r.validateLocalLeafRefs(o)
-			if err != nil {
-				return ctrl.Result{}, errors.Wrap(err, "Marshal/Unmarshal errors")
-			}
-			validationSuccess := true
-			o.Status.ConfigurationDependencyValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-			for s, elementWithLeafRef := range NetworkinstanceStaticroutesIntraResourceleafRef {
-				if elementWithLeafRef.Exists {
-					if !elementWithLeafRef.DependencyCheckSuccess {
-						validationSuccess = false
-					}
-					o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
-						Values:        &elementWithLeafRef.Values,
-						LeafRefPath:   &elementWithLeafRef.RelativePath2LeafRef,
-						LeafRefValues: &elementWithLeafRef.LeafRefValues,
-					}
-				} else {
-					o.Status.ConfigurationDependencyValidationDetails[s] = &srlinuxv1alpha1.ValidationDetails{
-						LeafRefPath: &elementWithLeafRef.RelativePath2LeafRef,
-					}
-				}
-			}
-		*/
-
-		//if validationSuccess {
-		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-		//} else {
-		//	o.Status.ValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
-		//}
 
 		if o.Status.ConfigurationDependencyInternalLeafrefValidationStatus == nil {
 			if validationSuccess {
-				r.publishEvent(req, o.NewEvent("Validation success", ""))
+				r.publishEvent(req, o.NewEvent("Internal Leafref Validation success", ""))
 				o.Status.ConfigurationDependencyInternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 			} else {
-				r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+				r.publishEvent(req, o.NewEvent("Internal Leafref Validation failed", "Leaf Ref dependency missing"))
 				o.Status.ConfigurationDependencyInternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 			}
 		} else {
 			if validationSuccess {
 				// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
 				if *o.Status.ConfigurationDependencyInternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
-					r.publishEvent(req, o.NewEvent("Validation success", ""))
+					r.publishEvent(req, o.NewEvent("Internal Leafref Validation success", ""))
 				}
 				o.Status.ConfigurationDependencyInternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 			} else {
 				// if the validation status did not change we dont have to publish a new event
 				if *o.Status.ConfigurationDependencyInternalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
-					r.publishEvent(req, o.NewEvent("Validation failed", "Leaf Ref dependency missing"))
+					r.publishEvent(req, o.NewEvent("Internal Leafref Validation failed", "Leaf Ref dependency missing"))
 				}
 				o.Status.ConfigurationDependencyInternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 			}
@@ -512,7 +437,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 		}
 
 		if !validationSuccess {
-			return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
+			return ctrl.Result{Requeue: true, RequeueAfter: internalLeafRefvalidationErrorretryDelay}, nil
 		}
 	}
 
@@ -643,16 +568,46 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 			if err != nil {
 				return ctrl.Result{}, err
 			}
+			// update configmap with deletepaths
+			if err := r.addEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
+				return ctrl.Result{}, err
+			}
 			var x1 interface{}
 			json.Unmarshal([]byte(*cm), &x1)
 
 			// validate Parent Dependency
 			parentDependencyFound, err := r.ValidateParentDependency(ctx, cm, stringSlicePtr(dependencies))
 			r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", parentDependencyFound).Info("Parent Dependency")
-			if parentDependencyFound {
-				o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+			/*
+				if parentDependencyFound {
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+				} else {
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+				}
+			*/
+
+			if o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == nil {
+				if parentDependencyFound {
+					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Parent Dependency Found", target.TargetName), fmt.Sprintf("Dependency %v", dependencies)))
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+				} else {
+					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Parent Dependency Not Found", target.TargetName), fmt.Sprintf("Dependency %v", dependencies)))
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+				}
 			} else {
-				o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+				if parentDependencyFound {
+					// if the parentDependencyFound status was found we want to update the event to indicate the success on the transition from failed -> success
+					if *o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Parent Dependency Found", target.TargetName), fmt.Sprintf("Dependency %v", dependencies)))
+					}
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+				} else {
+					// if the validation status did not change we dont have to publish a new event
+					if *o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
+						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Parent Dependency Not Found", target.TargetName), fmt.Sprintf("Dependency %v", dependencies)))
+					}
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+				}
 			}
 
 			err = r.ValidateExternalLeafRefs(ctx, o, cm)
@@ -670,10 +625,41 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 					for localLeafRefPath, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
 						if *RemoteLeafRefInfo.DependencyCheck != srlinuxv1alpha1.DependencyCheckSuccess {
 							validationSuccess = false
-						}
-						o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
-							RemoteLeafRef:   RemoteLeafRefInfo.RemoteLeafRef,
-							DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
+
+							o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+								RemoteLeafRef:   RemoteLeafRefInfo.RemoteLeafRef,
+								DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
+							}
+						} else {
+							res, err := r.GetRemoteleafRefResource(ctx, stringPtr(target.TargetName), RemoteLeafRefInfo)
+							if err != nil {
+								return ctrl.Result{}, errors.Wrap(err,
+									fmt.Sprintf("failed to get remote leaf ref resource"))
+							}
+							r.Log.WithValues("Resource", *res).Info("Remote LeafRef resource")
+
+							if *res != "" {
+								// first part of split, split[0] is the resource, 2nd part is the resourceName, split[1]
+								split := strings.Split(*res, ".")
+								lrr := &LeafRefResource{
+									ctx:                       ctx,
+									client:                    r.Client,
+									nameSpace:                 o.GetNamespace(),
+									resourceName:              "StaticRoutes",
+									resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
+									leafRefResourceName:       split[0],
+									leafRefResourceObjectName: split[1],
+									target:                    target.TargetName,
+								}
+								addFinalizer2Resource(lrr)
+							} else {
+								r.Log.Info("Remote LeafRef dependency is empty, somethign went wrong")
+							}
+							o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef].LocalResolvedLeafRefInfo[localLeafRefPath] = &srlinuxv1alpha1.RemoteLeafRefInfo{
+								RemoteLeafRef:        RemoteLeafRefInfo.RemoteLeafRef,
+								DependencyCheck:      RemoteLeafRefInfo.DependencyCheck,
+								RemoteResourceObject: res,
+							}
 						}
 					}
 				} else {
@@ -683,23 +669,23 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 
 			if o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == nil {
 				if validationSuccess {
-					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation success", target.TargetName), ""))
+					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s External Leafref Validation success", target.TargetName), ""))
 					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 				} else {
-					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation failed", target.TargetName), "Leaf Ref dependency missing"))
+					r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s External Leafref Validation failed", target.TargetName), "Leaf Ref dependency missing"))
 					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 				}
 			} else {
 				if validationSuccess {
 					// if the validation status was failed we want to update the event to indicate the success on the transition from failed -> success
 					if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
-						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation success", target.TargetName), ""))
+						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s External Leafref Validation success", target.TargetName), ""))
 					}
 					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
 				} else {
 					// if the validation status did not change we dont have to publish a new event
 					if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus != srlinuxv1alpha1.ValidationStatusFailed {
-						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s Validation failed", target.TargetName), "Leaf Ref dependency missing"))
+						r.publishEvent(req, o.NewEvent(fmt.Sprintf("Target: %s External Leafref Validation failed", target.TargetName), "Leaf Ref dependency missing"))
 					}
 					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
 				}
@@ -709,15 +695,14 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
-		// check validation status and requeue if an validation error is reported
+		// check validation status and requeue if a validation error is reported
 		for _, target := range t {
-			if o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess) {
-				return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
+			if *o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+				return ctrl.Result{Requeue: true, RequeueAfter: parentDependencyRetyrDelay}, nil
 			}
-			if o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess) {
-				return ctrl.Result{Requeue: true, RequeueAfter: validationErrorRetyrDelay}, nil
+			if *o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationStatus == srlinuxv1alpha1.ValidationStatusFailed {
+				return ctrl.Result{Requeue: true, RequeueAfter: externalLeafRefvalidationErrorretryDelay}, nil
 			}
-
 		}
 	}
 
@@ -793,6 +778,10 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) Reconcile(ctx context.Context
 	if !o.DeletionTimestamp.IsZero() && SrlNetworkinstanceStaticrouteshasFinalizer(o) {
 		deleted := true
 		for _, target := range t {
+			//Remove configmap entry
+			if err := r.deleteEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name)); err != nil {
+				return ctrl.Result{}, err
+			}
 			if result[target.TargetName].RequeueAfter != 0 {
 				deleted = false
 			}
@@ -890,8 +879,103 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) getConfigMap(ctx context.Cont
 	return stringPtr(cm.Data["config.json"]), nil
 }
 
+func (r *SrlNetworkinstanceStaticroutesReconciler) addEntryConfigMap(ctx context.Context, targetName, oName *string, deletepaths *[]string) error {
+	/*
+		dp := make([]DeletePaths, 0)
+		for _, dep := range *deletepaths {
+			ekvl := getHierarchicalElements(dep)
+			dpath := DeletePaths{
+				ObjectName:  oName,
+				DeletePaths: &ekvl,
+			}
+			dp = append(dp, dpath)
+		}
+	*/
+	dp := &DeletePaths{
+		DeletePaths: deletepaths,
+	}
+
+	d, err := json.Marshal(dp)
+	if err != nil {
+		r.Log.Error(err, "Failed to marshal data")
+		return err
+	}
+
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
+	}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return err
+	}
+
+	//cm.Data["SrlNetworkinstanceStaticroutes"] = string(d)
+	cm.Data[fmt.Sprintf("SrlNetworkinstanceStaticroutes.%s", *oName)] = string(d)
+
+	if err := r.Update(ctx, cm); err != nil {
+		r.Log.Error(err, "Failed to update configmap")
+		return err
+	}
+
+	return nil
+}
+
+func (r *SrlNetworkinstanceStaticroutesReconciler) deleteEntryConfigMap(ctx context.Context, targetName, oName *string) error {
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
+	}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return err
+	}
+
+	if _, ok := cm.Data[fmt.Sprintf("SrlNetworkinstanceStaticroutes.%s", *oName)]; ok {
+		delete(cm.Data, fmt.Sprintf("SrlNetworkinstanceStaticroutes.%s", *oName))
+		if err := r.Update(ctx, cm); err != nil {
+			r.Log.Error(err, "Failed to update configmap")
+			return err
+		}
+	}
+	return nil
+}
+
+func (r *SrlNetworkinstanceStaticroutesReconciler) GetRemoteleafRefResource(ctx context.Context, targetName *string, remoteleafRef *srlinuxv1alpha1.RemoteLeafRefInfo) (*string, error) {
+	// get configmap
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
+	}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return nil, err
+	}
+	resource := new(string)
+	p := new(string)
+	for res, dps := range cm.Data {
+		if strings.HasPrefix(res, "Srl") {
+			//r.Log.WithValues("DeletePaths", dps, "Remote Leafref", *remoteleafRef.RemoteLeafRef).Info("GetRemoteleafRefResource info")
+			var x1 interface{}
+			json.Unmarshal([]byte(dps), &x1)
+			f, dp := matchDeletePath(x1, remoteleafRef.RemoteLeafRef)
+			if f {
+				//r.Log.WithValues("DeletePath", *dp).Info("Path Found")
+				if len(*dp) > len(*p) {
+					resource = stringPtr(res)
+					*p = *dp
+				}
+			}
+		}
+	}
+	return resource, nil
+}
+
 func (r *SrlNetworkinstanceStaticroutesReconciler) findPathInTree(x1 interface{}, ekvl []ElementKeyValue, idx int) bool {
-	r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1).Info("findLfindParentInTreeeafRefInTree")
+	//r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1).Info("findPathInTree")
 
 	switch x := x1.(type) {
 	case map[string]interface{}:
@@ -900,19 +984,19 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findPathInTree(x1 interface{}
 				if idx == len(ekvl)-1 {
 					// last element/index in ekv
 					if ekvl[idx].KeyName != "" {
-						r.Log.WithValues("ElementName", k, "KeyName", ekvl[idx].KeyName).Info("findPathInTree map[string]interface{} Last Index")
+						//r.Log.WithValues("ElementName", k, "KeyName", ekvl[idx].KeyName).Info("findPathInTree map[string]interface{} Last Index")
 						return r.findPathInTree(x2, ekvl, idx)
 					} else {
-						r.Log.WithValues("ElementName", k, "KeyName", "").Info("findPathInTree map[string]interface{} Last Index")
+						//r.Log.WithValues("ElementName", k, "KeyName", "").Info("findPathInTree map[string]interface{} Last Index")
 						return true
 					}
 				} else {
 					// not last element/index in ekv
 					if ekvl[idx].KeyName != "" {
-						r.Log.WithValues("ElementName", k, "KeyName", ekvl[idx].KeyName).Info("findPathInTree map[string]interface{} Not Last Index")
+						//r.Log.WithValues("ElementName", k, "KeyName", ekvl[idx].KeyName).Info("findPathInTree map[string]interface{} Not Last Index")
 						return r.findPathInTree(x2, ekvl, idx)
 					} else {
-						r.Log.WithValues("ElementName", k, "KeyName", "").Info("findPathInTree map[string]interface{} Not Last Index")
+						//r.Log.WithValues("ElementName", k, "KeyName", "").Info("findPathInTree map[string]interface{} Not Last Index")
 						idx++
 						return r.findPathInTree(x2, ekvl, idx)
 					}
@@ -926,10 +1010,17 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findPathInTree(x1 interface{}
 				for k3, x3 := range x2 {
 					if k3 == ekvl[idx].KeyName {
 						if idx == len(ekvl)-1 {
-							r.Log.WithValues("ElementName", k3, "KeyName", "").Info("findPathInTree map[string]interface{} in []interface{} Last Index")
-							return true
+							switch x3.(type) {
+							case string, uint32:
+								if x3 == ekvl[idx].KeyValue {
+									//r.Log.WithValues("ElementName", k3, "KeyName", "").Info("findPathInTree map[string]interface{} in []interface{} Last Index found")
+									return true
+								} else {
+									//r.Log.WithValues("ElementName", k3, "KeyName", "").Info("findPathInTree map[string]interface{} in []interface{} Last Index not found")
+								}
+							}
 						} else {
-							r.Log.WithValues("ElementName", k3, "KeyName", "").Info("findPathInTree map[string]interface{} in []interface{} Not Last Index")
+							//r.Log.WithValues("ElementName", k3, "KeyName", "").Info("findPathInTree map[string]interface{} in []interface{} Not Last Index")
 							idx++
 							return r.findPathInTree(x3, ekvl, idx)
 						}
@@ -938,7 +1029,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findPathInTree(x1 interface{}
 			}
 		}
 	case nil:
-		r.Log.WithValues("x1", x1).Info("findPathInTree nil")
+		//r.Log.WithValues("x1", x1).Info("findPathInTree nil")
 		return false
 	}
 	r.Log.Info("findPathInTree end")
@@ -946,7 +1037,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findPathInTree(x1 interface{}
 }
 
 func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues, localLeafRefPaths []string, lridx int) ([]string, []string) {
-	r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues, "localLeafRefPath", localLeafRefPaths).Info("findLeafRefInTree")
+	//r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues, "localLeafRefPath", localLeafRefPaths).Info("findLeafRefInTree")
 
 	var tlrv []string
 	switch x := x1.(type) {
@@ -957,7 +1048,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interfac
 				if idx == len(ekvl)-1 {
 					// last element/index in ekv
 					if ekvl[idx].KeyName != "" {
-						r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Last Index")
+						//r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Last Index")
 						tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues, localLeafRefPaths, lridx)
 						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 						if len(tlrv) > len(leafRefValues) {
@@ -967,25 +1058,31 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interfac
 					} else {
 						switch x3 := x2.(type) {
 						case string:
-							r.Log.WithValues("KeyName", "", "Value", x3, "Type", "string").Info("map[string]interface{} Last Index")
+							//r.Log.WithValues("KeyName", "", "Value", x3, "Type", "string").Info("map[string]interface{} Last Index")
 							leafRefValues = append(leafRefValues, x3)
 							localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "=" + x3
 							//return leafRefValuesPtr
 						case int:
 							x4 := strconv.Itoa(int(x3))
-							r.Log.WithValues("KeyName", "", "Value", x4, "Type", "int").Info("map[string]interface{} Last Index")
+							//r.Log.WithValues("KeyName", "", "Value", x4, "Type", "int").Info("map[string]interface{} Last Index")
 							leafRefValues = append(leafRefValues, x4)
 							localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "=" + x4
 							//return leafRefValuesPtr
+						case float64:
+							//r.Log.WithValues("KeyName", "", "Value", x3, "Type", "float64").Info("map[string]interface{} Last Index")
+							leafRefValues = append(leafRefValues, fmt.Sprintf("%.0f", x3))
+							localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "=" + fmt.Sprintf("%f", x3)
+
 						default:
-							r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} Last Index")
+							//r.Log.WithValues("Type", reflect.TypeOf(x3)).Info("Default type")
+							//r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} Last Index")
 							//return leafRefValuesPtr
 						}
 					}
 				} else {
 					// not last element/index in ekv
 					if ekvl[idx].KeyName != "" {
-						r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Not Last Index")
+						//r.Log.WithValues("KeyName", ekvl[idx].KeyName).Info("map[string]interface{} Not Last Index")
 						tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues, localLeafRefPaths, lridx)
 						//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 						if len(tlrv) > len(leafRefValues) {
@@ -993,7 +1090,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interfac
 						}
 						//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
 					} else {
-						r.Log.WithValues("KeyName", "").Info("map[string]interface{} Not Last Index")
+						//r.Log.WithValues("KeyName", "").Info("map[string]interface{} Not Last Index")
 						localLeafRefPaths[lridx] += "/" + ekvl[idx].Element
 						idx++
 						tlrv, localLeafRefPaths = r.findLeafRefInTree(x2, ekvl, idx, leafRefValues, localLeafRefPaths, lridx)
@@ -1022,25 +1119,30 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interfac
 							// return the value
 							switch x4 := x3.(type) {
 							case string:
-								r.Log.WithValues("KeyName", "", "Value", x4, "Type", "string").Info("map[string]interface{} in []interface{} Last Index")
+								//r.Log.WithValues("KeyName", "", "Value", x4, "Type", "string").Info("map[string]interface{} in []interface{} Last Index")
 								leafRefValues = append(leafRefValues, x4)
 								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + x4 + "]"
 								//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 
 							case int:
 								x5 := strconv.Itoa(int(x4))
-								r.Log.WithValues("KeyName", "", "Value", x5, "Type", "int").Info("map[string]interface{} in []interface{} Last Index")
+								//r.Log.WithValues("KeyName", "", "Value", x5, "Type", "int").Info("map[string]interface{} in []interface{} Last Index")
 								leafRefValues = append(leafRefValues, x5)
 								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + x5 + "]"
 								//r.Log.WithValues("leafRefValues", tlrv).Info("findLeafRefInTree return")
 								//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
 								//return leafRefValues
+							case float64:
+								//r.Log.WithValues("KeyName", "", "Value", x4, "Type", "float64").Info("map[string]interface{} in []interface{} Last Index")
+								leafRefValues = append(leafRefValues, fmt.Sprintf("%.0f", x4))
+								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + fmt.Sprintf("%f", x4) + "]"
 							default:
-								r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} in []interface{} Last Index")
+								//r.Log.WithValues("Type", reflect.TypeOf(x4)).Info("Default type")
+								//r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} in []interface{} Last Index")
 								//return leafRefValues
 							}
 						} else {
-							r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} in []interface{} Not Last Index")
+							//r.Log.WithValues("KeyName", "", "Value", nil, "Type", "Default").Info("map[string]interface{} in []interface{} Not Last Index")
 							switch x4 := x3.(type) {
 							case string:
 								localLeafRefPaths[lridx] += "/" + ekvl[idx].Element + "[" + ekvl[idx].KeyName + "=" + x4 + "]"
@@ -1061,7 +1163,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interfac
 		}
 		//return leafRefValuesPtr
 	case nil:
-		r.Log.WithValues("x1", x1).Info("nil")
+		//r.Log.WithValues("x1", x1).Info("nil")
 		//return leafRefValuesPtr
 	}
 	//r.Log.WithValues("leafRefValues", leafRefValues).Info("findLeafRefInTree return")
@@ -1069,7 +1171,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) findLeafRefInTree(x1 interfac
 }
 
 func (r *SrlNetworkinstanceStaticroutesReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]byte, rekvl []ElementKeyValue) []string {
-	r.Log.WithValues("remoteLeafRef", remoteLeafRef, "rekvl", rekvl).Info("Find Remote LeafRef")
+	//r.Log.WithValues("remoteLeafRef", remoteLeafRef, "rekvl", rekvl).Info("Find Remote LeafRef")
 	leafRefValues := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
 	for _, b := range d {
@@ -1078,13 +1180,13 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) FindRemoteLeafRef(remoteLeafR
 
 		localLeafRefPaths = append(localLeafRefPaths, "")
 		leafRefValues, localLeafRefPaths = r.findLeafRefInTree(x1, rekvl, 0, leafRefValues, localLeafRefPaths, 0)
-		r.Log.WithValues("remoteLeafRef", remoteLeafRef, "Values", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("Find remote LeafRef Values")
+		//r.Log.WithValues("remoteLeafRef", remoteLeafRef, "Values", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("Find remote LeafRef Values")
 	}
 	return leafRefValues
 }
 
 func (r *SrlNetworkinstanceStaticroutesReconciler) FindLocalLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) ([]string, []string) {
-	r.Log.WithValues("ekvl", ekvl, "rekvl", rekvl).Info("find LeafRef")
+	//r.Log.WithValues("ekvl", ekvl, "rekvl", rekvl).Info("find LeafRef")
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
 	for _, b := range d {
@@ -1094,7 +1196,7 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) FindLocalLeafRef(localLeafRef
 		leafRefValues := make([]string, 0)
 		localLeafRefPaths = append(localLeafRefPaths, "")
 		leafRefValues, localLeafRefPaths = r.findLeafRefInTree(x1, ekvl, 0, leafRefValues, localLeafRefPaths, 0)
-		r.Log.WithValues("LocalLeafRef", localLeafRef, "Values", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("find LeafRef Values")
+		//r.Log.WithValues("LocalLeafRef", localLeafRef, "Values", leafRefValues, "localLeafRefPaths", localLeafRefPaths).Info("find LeafRef Values")
 		if len(leafRefValues) != 0 {
 			//TODO parse value with rekvl
 			//TODO append the result of the previous action with leafRefDependencies
@@ -1116,42 +1218,6 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) FindLocalLeafRef(localLeafRef
 	}
 	return leafRefDependencies, localLeafRefPaths
 }
-
-/*
-	func (r *SrlNetworkinstanceStaticroutesReconciler) FindInterLeafRefDependencies(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceStaticroutes) ([]string, []string, error) {
-		r.Log.Info("Find LeafRef Dependencies ...")
-
-		// marshal data to json
-		dd := struct {
-			StaticRoutes *srlinuxv1alpha1.NetworkinstanceStaticroutes `json:"static-routes"`
-		}{
-			StaticRoutes: o.Spec.SrlNetworkinstanceStaticroutes,
-		}
-		d := make([][]byte, 0)
-		dj, err := json.Marshal(dd)
-		if err != nil {
-			return nil, nil, err
-		}
-		d = append(d, dj)
-
-		leafRefDependencies := make([]string, 0)
-		localLeafRefPaths := make([]string, 0)
-		for localLeafRef, rekvl := range NetworkinstanceStaticroutesInterResourceleafRef {
-			// get the ekvl for the local leafref
-			ekvl := getHierarchicalElements(localLeafRef)
-
-			// check if the leafref is configured in the resource
-			// if not we dont have a leafref dependency in this resource
-			lrd, lrp := r.FindLocalLeafRef(localLeafRef, d, ekvl, rekvl)
-			if len(lrd) != 0 {
-				leafRefDependencies = append(leafRefDependencies, lrd...)
-				localLeafRefPaths = append(localLeafRefPaths, lrp...)
-			}
-		}
-		r.Log.WithValues("LeafRefDependencies", leafRefDependencies).Info("Final LeafRef Dependencies")
-		return leafRefDependencies, localLeafRefPaths, nil
-	}
-*/
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec
 func (r *SrlNetworkinstanceStaticroutesReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlNetworkinstanceStaticroutes) (bool, *[]string, error) {
@@ -1282,6 +1348,16 @@ func (r *SrlNetworkinstanceStaticroutesReconciler) FindTarget(ctx context.Contex
 // SrlNetworkinstanceStaticrouteshasFinalizer checks if object has finalizer
 func SrlNetworkinstanceStaticrouteshasFinalizer(o *srlinuxv1alpha1.SrlNetworkinstanceStaticroutes) bool {
 	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlNetworkinstanceStaticroutesFinalizer)
+}
+
+// SSrlNetworkinstanceStaticrouteshasOtherFinalizer checks if object has other finalizers
+func SrlNetworkinstanceStaticrouteshasOtherFinalizer(o *srlinuxv1alpha1.SrlNetworkinstanceStaticroutes) bool {
+	for _, f := range o.Finalizers {
+		if f != srlinuxv1alpha1.SrlNetworkinstanceStaticroutesFinalizer {
+			return true
+		}
+	}
+	return false
 }
 
 func (info *SrlNetworkinstanceStaticroutesReconcileInfo) DeleteCache() error {

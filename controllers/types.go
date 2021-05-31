@@ -17,7 +17,10 @@
 package controllers
 
 import (
+	"context"
+
 	srlinuxv1alpha1 "github.com/srl-wim/srl-k8s-operator/api/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type ElementWithLeafRef struct {
@@ -42,7 +45,29 @@ type ElementWithLeafRef struct {
 
 // ElementKeyValue struct
 type ElementKeyValue struct {
-	Element  string
-	KeyName  string
-	KeyValue interface{}
+	Element  string      `json:"element"`
+	KeyName  string      `json:"keyName"`
+	KeyValue interface{} `json:"keyValue"`
+}
+
+/*
+type DeletePaths struct {
+	ObjectName  *string            `json:"objectName"`
+	DeletePaths *[]ElementKeyValue `json:"deletePaths"`
+}
+*/
+
+type DeletePaths struct {
+	DeletePaths *[]string `json:"deletePaths"`
+}
+
+type LeafRefResource struct {
+	ctx                       context.Context
+	client                    client.Client
+	nameSpace                 string
+	resourceName              string
+	resourceObjectName        string
+	leafRefResourceName       string
+	leafRefResourceObjectName string
+	target                    string
 }

@@ -17,13 +17,20 @@
 package controllers
 
 import (
+	"reflect"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (
-	targetNotFoundRetryDelay  = time.Second * 60
-	validationErrorRetyrDelay = time.Second * 60
+	targetNotFoundRetryDelay = time.Second * 60
+	//validationErrorRetyrDelay = time.Second * 60
+	internalLeafRefvalidationErrorretryDelay = time.Second * 20
+	externalLeafRefvalidationErrorretryDelay = time.Second * 10
+	parentDependencyRetyrDelay               = time.Second * 5
+	deleteDependencyRetryDelay               = time.Second * 10
 )
 
 // StringInList returns a boolean indicating whether strToSearch is a
@@ -66,7 +73,7 @@ func getHierarchicalElements(p string) (ekv []ElementKeyValue) {
 	skipElement := false
 
 	s1 := strings.Split(p, "/")
-	for i, _ := range s1 {
+	for i := range s1 {
 		if i > 0 && !skipElement {
 			if strings.Contains(s1[i], "[") {
 				s2 := strings.Split(s1[i], "[")
@@ -97,4 +104,30 @@ func getHierarchicalElements(p string) (ekv []ElementKeyValue) {
 		}
 	}
 	return ekv
+}
+
+func matchDeletePath(x1 interface{}, remoteLeafRefPath *string) (bool, *string) {
+	log.Debugf("matchDeletePath: X1 %v", x1)
+	switch x := x1.(type) {
+	case map[string]interface{}:
+		for k, x2 := range x {
+			log.Debugf("matchDeletePath map[string]interface{} Key %s", k)
+			if k == "deletePaths" {
+				return matchDeletePath(x2, remoteLeafRefPath)
+			}
+		}
+	case []interface{}:
+		for _, v := range x {
+			switch x2 := v.(type) {
+			case string:
+				log.Debugf("matchDeletePath []interface{} X2 %v", string(x2))
+				if strings.Contains(*remoteLeafRefPath, string(x2)) {
+					return true, stringPtr(x2)
+				}
+			}
+		}
+	default:
+		log.Debugf("matchDeletePath Default type %v", reflect.TypeOf(x))
+	}
+	return false, nil
 }

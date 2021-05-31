@@ -57,6 +57,8 @@ type RemoteLeafRefInfo struct {
 	// DependencyCheck validates if the remote leafref is present or not
 	// +kubebuilder:validation:Enum=Success;Failed
 	DependencyCheck *DependencyCheck `json:"dependencyCheck,omitempty"`
+	// RemoteResourceObject provides the reference to the resource the leafref is dependent upon
+	RemoteResourceObject *string `json:"remoteResourceObject,omitempty"`
 }
 
 // DependencyCheck defines the status of the leafref dependency

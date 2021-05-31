@@ -30,11 +30,11 @@ const (
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast struct {
+	// +kubebuilder:default:=true
+	Advertise *bool `json:"advertise,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	OriginatingIp *string `json:"originating-ip,omitempty"`
-	// +kubebuilder:default:=true
-	Advertise *bool `json:"advertise,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct
@@ -45,10 +45,10 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable struct {
-	// +kubebuilder:default:=use-system-ipv4-address
-	NextHop        *string                                                                    `json:"next-hop,omitempty"`
 	InclusiveMcast *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableInclusiveMcast `json:"inclusive-mcast,omitempty"`
 	MacIp          *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTableMacIp          `json:"mac-ip,omitempty"`
+	// +kubebuilder:default:=use-system-ipv4-address
+	NextHop *string `json:"next-hop,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp struct
@@ -70,15 +70,8 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct
 type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
-	// +kubebuilder:validation:Enum=`vxlan`
-	// +kubebuilder:default:=vxlan
-	EncapsulationType *string `json:"encapsulation-type,omitempty"`
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
-	Evi            *uint32                                           `json:"evi"`
-	Routes         *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
-	VxlanInterface *string                                           `json:"vxlan-interface,omitempty"`
-	Id             *string                                           `json:"id"`
+	VxlanInterface *string `json:"vxlan-interface,omitempty"`
+	Id             *string `json:"id"`
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
@@ -90,6 +83,13 @@ type NetworkinstanceProtocolsBgpevpnBgpInstance struct {
 	// +kubebuilder:validation:Maximum=8
 	// +kubebuilder:default:=1
 	Ecmp *uint8 `json:"ecmp,omitempty"`
+	// +kubebuilder:validation:Enum=`vxlan`
+	// +kubebuilder:default:=vxlan
+	EncapsulationType *string `json:"encapsulation-type,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Evi    *uint32                                           `json:"evi"`
+	Routes *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes `json:"routes,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpn struct
