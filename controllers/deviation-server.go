@@ -92,6 +92,7 @@ func (d *DeviationServer) StartDeviationGRPCServer() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	log.Info("deviation server is starting to listen on: ", *d.DeviationServerAddress)
 
 	// create a gRPC server object
 	grpcServer := grpc.NewServer()

@@ -20,7 +20,6 @@ import (
 	"context"
 	"flag"
 	"os"
-	"strings"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -81,13 +80,17 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// get deviationServerAddress ip from the environment
-	deviationServerAddress = os.Getenv("POD_IP") + ":" + strings.Split(deviationServerAddress, ":")[1]
+	//deviationServerAddress = os.Getenv("POD_IP") + ":" + strings.Split(deviationServerAddress, ":")[1]
 	setupLog.Info("deviationServerAddress", "address", deviationServerAddress)
 	o := []controllers.Option{
 		controllers.WithDeviationServer(&deviationServerAddress),
 	}
 	d := controllers.NewDeviationServer(o...)
-	setupDeviationServer(d)
+	go func() {
+		d.StartDeviationGRPCServer()
+	}()
+
+	//go setupDeviationServer(d)
 
 	// setup controller/mgr
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{

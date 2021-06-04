@@ -21,7 +21,7 @@ spec:
           name: https
       - name: manager
         args:
-        - "--deviation-server-address=:9998"
+        - "--deviation-server-address=127.0.0.1:9998"
         - "--health-probe-bind-address=:8081"
         - "--metrics-bind-address=127.0.0.1:8080"
         - "--leader-elect"
