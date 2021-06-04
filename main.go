@@ -82,7 +82,7 @@ func main() {
 
 	// get deviationServerAddress ip from the environment
 	deviationServerAddress = os.Getenv("POD_IP") + ":" + strings.Split(deviationServerAddress, ":")[1]
-	setupLog.Info("deviationServerAddress: %s", deviationServerAddress)
+	setupLog.Info("deviationServerAddress", "address", deviationServerAddress)
 	o := []controllers.Option{
 		controllers.WithDeviationServer(&deviationServerAddress),
 	}
@@ -127,10 +127,12 @@ func main() {
 }
 
 func setupDeviationServer(d *controllers.DeviationServer) error {
-	setupLog.Info("startting deviation server ...")
+	setupLog.Info("starting deviation server ...")
 	// stopCh to synchronize the finalization for a graceful shutdown
 	d.StopCh = make(chan struct{})
 	defer close(d.StopCh)
+
+	d.Ctx = context.Background()
 
 	// start grpc server
 	go func() {
