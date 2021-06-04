@@ -15828,6 +15828,21 @@ kind: Service
 metadata:
   labels:
     control-plane: controller-manager
+  name: srl-k8s-operator-controller-manager-deviation-service
+  namespace: srl-k8s-operator-system
+spec:
+  ports:
+  - name: https
+    port: 9998
+    targetPort: https
+  selector:
+    control-plane: controller-manager
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
   name: srl-k8s-operator-controller-manager-metrics-service
   namespace: srl-k8s-operator-system
 spec:
