@@ -30,14 +30,6 @@ const (
 
 // SystemMtu struct
 type SystemMtu struct {
-	// +kubebuilder:validation:Minimum=1500
-	// +kubebuilder:validation:Maximum=9500
-	// +kubebuilder:default:=9232
-	DefaultL2Mtu *uint16 `json:"default-l2-mtu,omitempty"`
-	// +kubebuilder:validation:Minimum=1500
-	// +kubebuilder:validation:Maximum=9500
-	// +kubebuilder:default:=9232
-	DefaultPortMtu *uint16 `json:"default-port-mtu,omitempty"`
 	// +kubebuilder:validation:Minimum=552
 	// +kubebuilder:validation:Maximum=9232
 	// +kubebuilder:default:=552
@@ -46,6 +38,14 @@ type SystemMtu struct {
 	// +kubebuilder:validation:Maximum=9486
 	// +kubebuilder:default:=1500
 	DefaultIpMtu *uint16 `json:"default-ip-mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=1500
+	// +kubebuilder:validation:Maximum=9500
+	// +kubebuilder:default:=9232
+	DefaultL2Mtu *uint16 `json:"default-l2-mtu,omitempty"`
+	// +kubebuilder:validation:Minimum=1500
+	// +kubebuilder:validation:Maximum=9500
+	// +kubebuilder:default:=9232
+	DefaultPortMtu *uint16 `json:"default-port-mtu,omitempty"`
 }
 
 // SrlSystemMtuSpec struct

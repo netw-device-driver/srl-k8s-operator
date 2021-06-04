@@ -64,8 +64,8 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable struct {
 
 // NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct
 type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutes struct {
-	BridgeTable *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
 	RouteTable  *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTable  `json:"route-table,omitempty"`
+	BridgeTable *NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesBridgeTable `json:"bridge-table,omitempty"`
 }
 
 // NetworkinstanceProtocolsBgpevpnBgpInstance struct

@@ -26,7 +26,6 @@ import (
 	"time"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/metal3-io/baremetal-operator/pkg/utils"
 	"github.com/stoewer/go-strcase"
 
 	"github.com/go-logr/logr"
@@ -37,9 +36,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
-	"sigs.k8s.io/controller-runtime/pkg/event"
+	//"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
-	"sigs.k8s.io/controller-runtime/pkg/predicate"
+	//"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
@@ -104,38 +103,30 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) publishEvent(request ctrl.R
 	return
 }
 
-func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) updateEventHandler(e event.UpdateEvent) bool {
-	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterface)
-	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterface)
-	if !(oldOK && newOK) {
-		// The thing that changed wasn't a host, so we
-		// need to assume that we must update. This
-		// happens when, for example, an owned Secret
-		// changes.
+/*
+	func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) updateEventHandler(e event.UpdateEvent) bool {
+		_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterface)
+		_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterface)
+		if !(oldOK && newOK) {
+			// The thing that changed wasn't a host, so we
+			// need to assume that we must update. This
+			// happens when, for example, an owned Secret
+			// changes.
+			return true
+		}
 		return true
 	}
-
-	//If the update increased the resource Generation then let's process it
-	//if e.MetaNew.GetGeneration() != e.MetaOld.GetGeneration() {
-	//	return true
-	//}
-
-	//Discard updates that did not increase the resource Generation (such as on Status.LastUpdated), except for the finalizers or annotations
-	//if reflect.DeepEqual(e.MetaNew.GetFinalizers(), e.MetaOld.GetFinalizers()) && reflect.DeepEqual(e.MetaNew.GetAnnotations(), e.MetaOld.GetAnnotations()) {
-	//	return false
-	//}
-
-	return true
-}
+*/
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
 		For(&srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterface{}).
-		WithEventFilter(
-			predicate.Funcs{
-				UpdateFunc: r.updateEventHandler,
-			}).
+		WithEventFilter(IgnoreUpdateWithoutGenerationChangePredicate()).
+		//WithEventFilter(
+		//	predicate.Funcs{
+		//		UpdateFunc: r.updateEventHandler,
+		//	}).
 		WithOptions(option).
 		Watches(
 			&source.Kind{Type: &nddv1.NetworkNode{}},
@@ -231,13 +222,13 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) ValidateExternalLeafRefs(ct
 		// check if the leafref is configured in the resource
 		// if not we dont have a leafref dependency in this resource
 		remoteLeafRefPaths, localLeafRefPaths := r.FindLocalLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
-		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("External Local/Remote LeafRef Paths")
+		//r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("External Local/Remote LeafRef Paths")
 
 		leafRefInfo.LocalResolvedLeafRefInfo = make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo)
 		for i, remoteLeafRefPath := range remoteLeafRefPaths {
 			rekvl := getHierarchicalElements(remoteLeafRefPath)
 			rlvs := r.FindRemoteLeafRef(remoteLeafRefPath, c, rekvl)
-			r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("External Remote LeafRef Values")
+			//r.Log.WithValues("Remote LeafRef Path ", remoteLeafRefPath, "remote leafref values", rlvs).Info("External Remote LeafRef Values")
 			found := false
 
 			for _, values := range rlvs {
@@ -248,7 +239,7 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) ValidateExternalLeafRefs(ct
 						RemoteLeafRef:   stringPtr(remoteLeafRefPath),
 						DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess),
 					}
-					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External Remote Leafref FOUND, all good")
+					//r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External Remote Leafref FOUND, all good")
 				}
 			}
 			if !found {
@@ -259,7 +250,7 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) ValidateExternalLeafRefs(ct
 				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External Remote Leafref NOT FOUND, missing leaf reference")
 			}
 		}
-		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External leafref STATUS")
+		//r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External leafref STATUS")
 	}
 	r.Log.WithValues("TunnelinterfaceVxlaninterfaceExternalResourceleafRef", TunnelinterfaceVxlaninterfaceExternalResourceleafRef).Info("External leafref STATUS All")
 
@@ -293,7 +284,7 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) ValidateLocalLeafRefs(ctx c
 		// check if the leafref is configured in the resource
 		// if not we dont have a leafref dependency in this resource
 		remoteLeafRefPaths, localLeafRefPaths := r.FindLocalLeafRef(localLeafRef, d, ekvl, leafRefInfo.REkvl)
-		r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("Local/Remote LeafRef Paths")
+		//r.Log.WithValues("Local LeafRef Path ", localLeafRef, "remoteLeafRefPaths", remoteLeafRefPaths, "localLeafRefPaths", localLeafRefPaths).Info("Local/Remote LeafRef Paths")
 
 		//leafRefInfo.Exists = false
 		//leafRefInfo.RemoteLeafRefs = make([]string, 0)
@@ -319,7 +310,7 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) ValidateLocalLeafRefs(ctx c
 						RemoteLeafRef:   stringPtr(remoteLeafRefPath),
 						DependencyCheck: srlinuxv1alpha1.DependencyCheckPtr(srlinuxv1alpha1.DependencyCheckSuccess),
 					}
-					r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
+					//r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref FOUND, all good")
 				}
 			}
 			if !found {
@@ -330,7 +321,7 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) ValidateLocalLeafRefs(ctx c
 				r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("remote Leafref NOT FOUND, missing leaf reference")
 			}
 		}
-		r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
+		//r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
 	r.Log.WithValues("TunnelinterfaceVxlaninterfaceInternalResourceleafRef", TunnelinterfaceVxlaninterfaceInternalResourceleafRef).Info("leafref STATUS All")
 	return nil
@@ -448,6 +439,35 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 			// delete the resource
 			// we can remove the finalizer w/o updating the device since no targets where found
 			if !o.DeletionTimestamp.IsZero() && SrlTunnelinterfaceVxlaninterfacehasFinalizer(o) {
+				// remove the leafref dependency finalizers from remote leafref objects
+				for targetName, ts := range o.Status.Target {
+					// localLeafRef, leafRefInfo
+					for _, leafRefInfo := range ts.ConfigurationDependencyExternalLeafrefValidationDetails {
+						// localLeafRefPath, RemoteLeafRefInfo
+						for _, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+							if RemoteLeafRefInfo.RemoteResourceObject != nil {
+								r.Log.WithValues("RemoteResourceObject", *RemoteLeafRefInfo.RemoteResourceObject).Info("Remote LeafRef Object")
+								if *RemoteLeafRefInfo.RemoteResourceObject != "" {
+									// first part of split, split[0] is the resource, 2nd part is the resourceName, split[1]
+									split := strings.Split(*RemoteLeafRefInfo.RemoteResourceObject, ".")
+									lrr := &LeafRefResource{
+										ctx:                       ctx,
+										client:                    r.Client,
+										nameSpace:                 o.GetNamespace(),
+										resourceName:              "VxlanInterface",
+										resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
+										leafRefResourceName:       split[0],
+										leafRefResourceObjectName: split[1],
+										target:                    targetName,
+									}
+									deleteFinalizer2Resource(lrr)
+								} else {
+									r.Log.Info("Remote LeafRef dependency is empty, somethign went wrong")
+								}
+							}
+						}
+					}
+				}
 				// remove our finalizer from the list and update it.
 				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterfaceFinalizer)
 				if err := r.Update(ctx, o); err != nil {
@@ -504,7 +524,7 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 	}
 	r.Log.WithValues("Targets", t).Info("Target Info")
 
-	// find object spec difference and interleafref dependencies if resource is not in deleting state
+	// find object spec difference if resource is not in deleting state
 	var diff bool
 	var dp *[]string
 	leafRefDependencies := make([]string, 0)
@@ -520,15 +540,6 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 		}
 		r.Log.WithValues("Spec is different, update resource", diff, "Spec Delete Paths", *dp).Info("Spec Diff")
 		// the diff handling is handled in the state machine later
-
-		// find leafref dependencies
-		/*
-			leafRefDependencies, localLeafRefPaths, err = r.FindInterLeafRefDependencies(ctx, o)
-			if err != nil {
-				r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to get leafRef dependencies ")
-			}
-			r.Log.WithValues("leafRefDependencies", leafRefDependencies, "localLeafRefPaths", localLeafRefPaths).Info("LeafRef Dependencies")
-		*/
 	}
 
 	// initialize the resource parameters
@@ -569,28 +580,33 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 				}
 			}
 
+			// check if shared memory was initialized
+			if _, ok := SrlSharedInfo[target.TargetName]; !ok {
+				SrlSharedInfo[target.TargetName] = make(map[string]string)
+			}
+			// add entry in shared memory
+			if err := addSharedMemoryEntry(stringPtr(target.TargetName), stringPtr("SrlTunnelinterfaceVxlaninterface"), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
+				return ctrl.Result{}, err
+			}
+			r.Log.WithValues("target", target.TargetName, "shared memory data", SrlSharedInfo[target.TargetName]).Info("shared memory info")
+
 			// get configmap
 			cm, err := r.getConfigMap(ctx, stringPtr(target.TargetName))
 			if err != nil {
 				return ctrl.Result{}, err
 			}
 			// update configmap with deletepaths
-			if err := r.addEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
-				return ctrl.Result{}, err
-			}
+			/*
+				if err := r.addEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
+					return ctrl.Result{}, err
+				}
+			*/
 			var x1 interface{}
 			json.Unmarshal([]byte(*cm), &x1)
 
 			// validate Parent Dependency
 			parentDependencyFound, err := r.ValidateParentDependency(ctx, cm, stringSlicePtr(dependencies))
 			r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", parentDependencyFound).Info("Parent Dependency")
-			/*
-				if parentDependencyFound {
-					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
-				} else {
-					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
-				}
-			*/
 
 			if o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == nil {
 				if parentDependencyFound {
@@ -637,7 +653,8 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 								DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
 							}
 						} else {
-							res, err := r.GetRemoteleafRefResource(ctx, stringPtr(target.TargetName), RemoteLeafRefInfo)
+							res, err := getRemoteleafRefResource(stringPtr(target.TargetName), RemoteLeafRefInfo)
+							//res, err := r.GetRemoteleafRefResource(ctx, stringPtr(target.TargetName), RemoteLeafRefInfo)
 							if err != nil {
 								return ctrl.Result{}, errors.Wrap(err,
 									fmt.Sprintf("failed to get remote leaf ref resource"))
@@ -781,36 +798,10 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 		}
 	}
 
-	if !o.DeletionTimestamp.IsZero() && SrlTunnelinterfaceVxlaninterfacehasFinalizer(o) {
-		deleted := true
-		for _, target := range t {
-			//Remove configmap entry
-			if err := r.deleteEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name)); err != nil {
-				return ctrl.Result{}, err
-			}
-			if result[target.TargetName].RequeueAfter != 0 {
-				deleted = false
-			}
-		}
-		if deleted {
-			// delete complete
-			// remove our finalizer from the list and update it.
-			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterfaceFinalizer)
-			if err := r.Update(ctx, o); err != nil {
-				return ctrl.Result{}, errors.Wrap(err,
-					fmt.Sprintf("failed to remove finalizer"))
-			}
-			r.Log.Info("cleanup is complete, removed finalizer",
-				"remaining", o.Finalizers)
-			// Stop reconciliation as the item is deleted
-			return ctrl.Result{}, nil
-		}
-	}
 	// Only save status when we're told to, otherwise we
 	// introduce an infinite loop reconciling the same object over and
 	// over when there is an unrecoverable error (tracked through the
 	// error state).
-
 	for _, target := range t {
 		dirty := false
 		if actResult[target.TargetName].Dirty() {
@@ -830,6 +821,71 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 		}
 	}
 
+	if !o.DeletionTimestamp.IsZero() && SrlTunnelinterfaceVxlaninterfacehasFinalizer(o) {
+		deleted := true
+		for _, target := range t {
+			// delete entry in shared memory
+			if err := deleteSharedMemoryEntry(stringPtr(target.TargetName), stringPtr("SrlInterface"), stringPtr(req.Name)); err != nil {
+				return ctrl.Result{}, err
+			}
+			r.Log.WithValues("target", target.TargetName, "shared memory data", SrlSharedInfo[target.TargetName]).Info("shared memory info")
+
+			//Remove configmap entry
+			/*
+				if err := r.deleteEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name)); err != nil {
+					return ctrl.Result{}, err
+				}
+			*/
+			if result[target.TargetName].RequeueAfter != 0 {
+				deleted = false
+			}
+		}
+		if deleted {
+			// delete complete
+			r.Log.WithValues("Finalizers", o.Finalizers).Info("Finalizers")
+			// remove the leafref dependency finalizers from remote leafref objects
+			for targetName, ts := range o.Status.Target {
+				// localLeafRef, leafRefInfo
+				for _, leafRefInfo := range ts.ConfigurationDependencyExternalLeafrefValidationDetails {
+					// localLeafRefPath, RemoteLeafRefInfo
+					for _, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+						if RemoteLeafRefInfo.RemoteResourceObject != nil {
+							r.Log.WithValues("RemoteResourceObject", *RemoteLeafRefInfo.RemoteResourceObject).Info("Remote LeafRef Object")
+							if *RemoteLeafRefInfo.RemoteResourceObject != "" {
+								// first part of split, split[0] is the resource, 2nd part is the resourceName, split[1]
+								split := strings.Split(*RemoteLeafRefInfo.RemoteResourceObject, ".")
+								lrr := &LeafRefResource{
+									ctx:                       ctx,
+									client:                    r.Client,
+									nameSpace:                 o.GetNamespace(),
+									resourceName:              "VxlanInterface",
+									resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
+									leafRefResourceName:       split[0],
+									leafRefResourceObjectName: split[1],
+									target:                    targetName,
+								}
+								deleteFinalizer2Resource(lrr)
+							} else {
+								r.Log.Info("Remote LeafRef dependency is empty, somethign went wrong")
+							}
+						}
+					}
+				}
+			}
+			// remove our finalizer from the list and update it.
+			r.Log.Info("removing finalizer")
+			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterfaceFinalizer)
+			if err := r.Update(ctx, o); err != nil {
+				return ctrl.Result{}, errors.Wrap(err,
+					fmt.Sprintf("failed to remove finalizer"))
+			}
+			r.Log.Info("cleanup is complete, removed finalizer",
+				"remaining", o.Finalizers)
+			// Stop reconciliation as the item is deleted
+			return ctrl.Result{}, nil
+		}
+	}
+
 	for _, ri := range info {
 		for _, e := range ri.events {
 			r.publishEvent(req, e)
@@ -841,14 +897,15 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) Reconcile(ctx context.Conte
 
 func SrlTunnelinterfaceVxlaninterfacelogResult(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo, result ctrl.Result) {
 	if result.Requeue || result.RequeueAfter != 0 ||
-		!utils.StringInList(info.o.Finalizers,
+		!StringInList(info.o.Finalizers,
 			srlinuxv1alpha1.SrlTunnelinterfaceVxlaninterfaceFinalizer) {
 		info.log.Info("done",
 			"requeue", result.Requeue,
 			"after", result.RequeueAfter)
 	} else {
-		info.log.Info("stopping on SrlTunnelinterfaceVxlaninterface",
-			"message", info.o.Status)
+		info.log.Info("stopping reconcile SrlTunnelinterfaceVxlaninterface")
+		//info.log.Info("stopping reconcile SrlTunnelinterfaceVxlaninterface",
+		//	"message", info.o.Status)
 	}
 }
 
@@ -881,104 +938,99 @@ func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) getConfigMap(ctx context.Co
 	if _, ok := cm.Data["config.json"]; !ok {
 		r.Log.WithValues("targetName", targetName).Info("ConfigMap is empty")
 	}
-	r.Log.WithValues("targetName", targetName).Info("ConfigMap content")
+	//r.Log.WithValues("targetName", targetName).Info("ConfigMap content")
 	return stringPtr(cm.Data["config.json"]), nil
 }
 
-func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) addEntryConfigMap(ctx context.Context, targetName, oName *string, deletepaths *[]string) error {
-	/*
-		dp := make([]DeletePaths, 0)
-		for _, dep := range *deletepaths {
-			ekvl := getHierarchicalElements(dep)
-			dpath := DeletePaths{
-				ObjectName:  oName,
-				DeletePaths: &ekvl,
-			}
-			dp = append(dp, dpath)
+/*
+	func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) addEntryConfigMap(ctx context.Context, targetName, oName *string, deletepaths *[]string) error {
+		dp := &DeletePaths{
+			DeletePaths: deletepaths,
 		}
-	*/
-	dp := &DeletePaths{
-		DeletePaths: deletepaths,
-	}
 
-	d, err := json.Marshal(dp)
-	if err != nil {
-		r.Log.Error(err, "Failed to marshal data")
-		return err
-	}
+		d, err := json.Marshal(dp)
+		if err != nil {
+			r.Log.Error(err, "Failed to marshal data")
+			return err
+		}
 
-	cmKey := types.NamespacedName{
-		Namespace: "nddriver-system",
-		Name:      "nddriver-cm-" + *targetName,
-	}
-	cm := &corev1.ConfigMap{}
-	if err := r.Get(ctx, cmKey, cm); err != nil {
-		r.Log.Error(err, "Failed to get configmap")
-		return err
-	}
+		cmKey := types.NamespacedName{
+			Namespace: "nddriver-system",
+			Name:      "nddriver-cm-" + *targetName,
+		}
+		cm := &corev1.ConfigMap{}
+		if err := r.Get(ctx, cmKey, cm); err != nil {
+			r.Log.Error(err, "Failed to get configmap")
+			return err
+		}
 
-	//cm.Data["SrlTunnelinterfaceVxlaninterface"] = string(d)
-	cm.Data[fmt.Sprintf("SrlTunnelinterfaceVxlaninterface.%s", *oName)] = string(d)
+		//cm.Data["SrlTunnelinterfaceVxlaninterface"] = string(d)
+		cm.Data[fmt.Sprintf("SrlTunnelinterfaceVxlaninterface.%s",*oName)] = string(d)
 
-	if err := r.Update(ctx, cm); err != nil {
-		r.Log.Error(err, "Failed to update configmap")
-		return err
-	}
-
-	return nil
-}
-
-func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) deleteEntryConfigMap(ctx context.Context, targetName, oName *string) error {
-	cmKey := types.NamespacedName{
-		Namespace: "nddriver-system",
-		Name:      "nddriver-cm-" + *targetName,
-	}
-	cm := &corev1.ConfigMap{}
-	if err := r.Get(ctx, cmKey, cm); err != nil {
-		r.Log.Error(err, "Failed to get configmap")
-		return err
-	}
-
-	if _, ok := cm.Data[fmt.Sprintf("SrlTunnelinterfaceVxlaninterface.%s", *oName)]; ok {
-		delete(cm.Data, fmt.Sprintf("SrlTunnelinterfaceVxlaninterface.%s", *oName))
 		if err := r.Update(ctx, cm); err != nil {
 			r.Log.Error(err, "Failed to update configmap")
 			return err
 		}
-	}
-	return nil
-}
 
-func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) GetRemoteleafRefResource(ctx context.Context, targetName *string, remoteleafRef *srlinuxv1alpha1.RemoteLeafRefInfo) (*string, error) {
-	// get configmap
-	cmKey := types.NamespacedName{
-		Namespace: "nddriver-system",
-		Name:      "nddriver-cm-" + *targetName,
+		return nil
 	}
-	cm := &corev1.ConfigMap{}
-	if err := r.Get(ctx, cmKey, cm); err != nil {
-		r.Log.Error(err, "Failed to get configmap")
-		return nil, err
+*/
+
+/*
+	func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) deleteEntryConfigMap(ctx context.Context, targetName, oName *string) error {
+		cmKey := types.NamespacedName{
+			Namespace: "nddriver-system",
+			Name:      "nddriver-cm-" + *targetName,
+		}
+		cm := &corev1.ConfigMap{}
+		if err := r.Get(ctx, cmKey, cm); err != nil {
+			r.Log.Error(err, "Failed to get configmap")
+			return err
+		}
+
+		if _, ok := cm.Data[fmt.Sprintf("SrlTunnelinterfaceVxlaninterface.%s",*oName)]; ok {
+			delete(cm.Data, fmt.Sprintf("SrlTunnelinterfaceVxlaninterface.%s",*oName))
+			if err := r.Update(ctx, cm); err != nil {
+				r.Log.Error(err, "Failed to update configmap")
+				return err
+			}
+		}
+		return nil
 	}
-	resource := new(string)
-	p := new(string)
-	for res, dps := range cm.Data {
-		if strings.HasPrefix(res, "Srl") {
-			//r.Log.WithValues("DeletePaths", dps, "Remote Leafref", *remoteleafRef.RemoteLeafRef).Info("GetRemoteleafRefResource info")
-			var x1 interface{}
-			json.Unmarshal([]byte(dps), &x1)
-			f, dp := matchDeletePath(x1, remoteleafRef.RemoteLeafRef)
-			if f {
-				//r.Log.WithValues("DeletePath", *dp).Info("Path Found")
-				if len(*dp) > len(*p) {
-					resource = stringPtr(res)
-					*p = *dp
+*/
+
+/*
+	func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) GetRemoteleafRefResource(ctx context.Context, targetName *string, remoteleafRef *srlinuxv1alpha1.RemoteLeafRefInfo) (*string, error) {
+		// get configmap
+		cmKey := types.NamespacedName{
+			Namespace: "nddriver-system",
+			Name:      "nddriver-cm-" + *targetName,
+		}
+		cm := &corev1.ConfigMap{}
+		if err := r.Get(ctx, cmKey, cm); err != nil {
+			r.Log.Error(err, "Failed to get configmap")
+			return nil, err
+		}
+		resource := new(string)
+		p := new(string)
+		for res, dps := range cm.Data {
+			if strings.HasPrefix(res, "Srl") {
+				//r.Log.WithValues("DeletePaths", dps, "Remote Leafref", *remoteleafRef.RemoteLeafRef).Info("GetRemoteleafRefResource info")
+				var x1 interface{}
+				json.Unmarshal([]byte(dps), &x1)
+				f, dp := matchDeletePath(x1, remoteleafRef.RemoteLeafRef)
+				if f {
+					//r.Log.WithValues("DeletePath", *dp).Info("Path Found")
+					if len(*dp) > len(*p) {
+						resource = stringPtr(res)
+						*p = *dp
+					}
 				}
 			}
 		}
+		return resource, nil
 	}
-	return resource, nil
-}
+*/
 
 func (r *SrlTunnelinterfaceVxlaninterfaceReconciler) findPathInTree(x1 interface{}, ekvl []ElementKeyValue, idx int) bool {
 	//r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1).Info("findPathInTree")
@@ -1462,9 +1514,11 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handlers() map[srlinuxv1a
 	return map[srlinuxv1alpha1.ConfigStatus]SrlTunnelinterfaceVxlaninterfacestateHandler{
 		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
 		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
-		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,
-		srlinuxv1alpha1.ConfigStatusConfigureFailed:  o.handleConfigStatusConfigureFailed,
+		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigureSuccess,
+		srlinuxv1alpha1.ConfigStatusConfigureFailed:  o.handleConfigureFailed,
 		srlinuxv1alpha1.ConfigStatusDeleting:         o.handleDeleting,
+		srlinuxv1alpha1.ConfigStatusDeleteSuccess:    o.handleDeleteSuccess,
+		srlinuxv1alpha1.ConfigStatusDeleteFailed:     o.handleDeleteFailed,
 	}
 }
 
@@ -1488,8 +1542,6 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) ReconcileState(info *SrlT
 		// initiate cache delete
 		info.log.Info("Initiating SrlTunnelinterfaceVxlaninterfaceStateMachine deletion")
 		info.DeleteCache()
-		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
-		//time.Sleep(15 * time.Second)
 	}
 
 	if stateHandler, found := o.handlers()[*initialState]; found {
@@ -1503,13 +1555,13 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) ReconcileState(info *SrlT
 func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) checkInitiateDelete() bool {
 	if !o.Object.DeletionTimestamp.IsZero() && SrlTunnelinterfaceVxlaninterfacehasFinalizer(o.Object) {
 		// Delete requested
-		switch o.NextState {
+		switch *o.NextState {
 		default:
 			// new state deleting
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting)
-		case srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting),
-			srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed),
-			srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess):
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+		case srlinuxv1alpha1.ConfigStatusDeleting,
+			srlinuxv1alpha1.ConfigStatusDeleteFailed,
+			srlinuxv1alpha1.ConfigStatusDeleteSuccess:
 			// Already in deleting state. Allow state machine to run.
 			return false
 		}
@@ -1524,13 +1576,13 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleNone(info *SrlTunne
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
 	}
-	info.log.Info("CacheStatusResponse", "Response", cr)
+	//info.log.Info("CacheStatusResponse", "Response", cr)
 	if cr.Exists {
 		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
 			info.log.Info("object status",
 				"target", o.Target,
 				"status", o.Object.Status)
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusConfigureSuccess
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
 			o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(""))
 			return actionComplete{}
@@ -1539,17 +1591,17 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleNone(info *SrlTunne
 	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
 		// delete action
 		if !cr.Exists {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleteSuccess
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
 			return actionComplete{}
 		} else {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
-			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
-			return actionComplete{}
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
+			return actionUpdate{delay: 10 * time.Second}
 		}
 	} else {
 		// update action
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
+		*o.NextState = srlinuxv1alpha1.ConfigStatusConfiguring
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
 		o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(cr.Status.String()))
 	}
@@ -1561,35 +1613,35 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfiguring(info *S
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
 	}
-	info.log.Info("CacheStatusResponse", "Response", cr)
+	//info.log.Info("CacheStatusResponse", "Response", cr)
 	if cr.Exists {
 		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusConfigureSuccess
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
 			o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(""))
 			return actionComplete{}
 		}
 		if cr.Data.Action == netwdevpb.CacheUpdateRequest_Delete {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
 			return actionContinue{}
 		}
 	} else {
 		info.log.Info("Object got removed by the device driver, most likely due to restart of device driver")
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone)
+		*o.NextState = srlinuxv1alpha1.ConfigStatusNone
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone))
 		return actionUpdate{delay: 1 * time.Second}
 	}
 	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
 		// delete action
 		if !cr.Exists {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleteSuccess
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
 			return actionComplete{}
 		} else {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
-			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
-			return actionComplete{}
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
+			return actionUpdate{delay: 10 * time.Second}
 		}
 	} else {
 		// update action
@@ -1599,27 +1651,24 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfiguring(info *S
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfigStatusConfigureSuccess(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
+func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfigureSuccess(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
 	}
-	info.log.Info("CacheStatusResponse", "Response", cr)
-	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
+	info.log.Info("handleConfigStatusConfigureSuccess CacheStatusResponse", "Response", cr)
+	info.log.Info("handleConfigStatusConfigureSuccess NextState", "NextState", *o.NextState)
+	if *o.NextState == srlinuxv1alpha1.ConfigStatusDeleting {
+		info.log.Info("handleConfigStatusConfigureSuccess -> Next State ConfigStatusDeleting")
 		// delete action
-		if !cr.Exists {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
-			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
-			return actionComplete{}
-		} else {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
-			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
-		}
-		return actionUpdate{delay: 10 * time.Second}
+		*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
+		// this was done to handle a recirculation and allow time for the leafref dependency finalizers to be removed
+		return actionUpdate{delay: 5 * time.Second}
 	}
 	if !cr.Exists {
 		info.log.Info("Object got removed by the device driver, most likely due to restart of device driver")
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone)
+		*o.NextState = srlinuxv1alpha1.ConfigStatusNone
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusNone))
 		return actionUpdate{delay: 1 * time.Second}
 	}
@@ -1627,34 +1676,36 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfigStatusConfigu
 	return actionComplete{}
 }
 
-func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfigStatusConfigureFailed(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
+func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleConfigureFailed(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
 	}
-	info.log.Info("CacheStatusResponse", "Response", cr)
+	//info.log.Info("CacheStatusResponse", "Response", cr)
 	if cr.Exists {
 		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusConfigureSuccess
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfigureSuccess))
 			o.Object.SetConfigStatusDetails(o.TargetName, stringPtr(""))
 			return actionComplete{}
 		}
 	}
-	if o.NextState == srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting) {
+	if *o.NextState == srlinuxv1alpha1.ConfigStatusDeleting {
 		// delete action
 		if !cr.Exists {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleteSuccess
 			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
 			return actionComplete{}
 		} else {
-			o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
-			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
-			return actionComplete{}
+			// delete action
+			*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+			o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
+			// this was done to handle a recirculation and allow time for the leafref dependency finalizers to be removed
+			return actionUpdate{delay: 5 * time.Second}
 		}
 	} else {
 		// update action
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring)
+		*o.NextState = srlinuxv1alpha1.ConfigStatusConfiguring
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusConfiguring))
 	}
 	return actionUpdate{delay: 10 * time.Second}
@@ -1672,31 +1723,35 @@ func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleDeleting(info *SrlT
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
 		return actionComplete{}
 	} else {
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
-		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+		// delete action
+		*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
+		// this was done to handle a recirculation and allow time for the leafref dependency finalizers to be removed
+		return actionUpdate{delay: 10 * time.Second}
 	}
-	return actionUpdate{delay: 10 * time.Second}
 
 }
 
-func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) DeleteFailed(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
+func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleDeleteSuccess(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
+	return actionFinished{}
+}
+
+func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) handleDeleteFailed(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
 	}
-	info.log.Info("CacheStatusResponse", "Response", cr)
+	//info.log.Info("CacheStatusResponse", "Response", cr)
 
 	if !cr.Exists {
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess)
+		*o.NextState = srlinuxv1alpha1.ConfigStatusDeleteSuccess
 		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteSuccess))
-		return actionComplete{}
+		return actionFinished{}
 	} else {
-		o.NextState = srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed)
-		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleteFailed))
+		// delete action
+		*o.NextState = srlinuxv1alpha1.ConfigStatusDeleting
+		o.Object.SetConfigStatus(o.TargetName, srlinuxv1alpha1.ConfigStatusPtr(srlinuxv1alpha1.ConfigStatusDeleting))
+		// this was done to handle a recirculation and allow time for the leafref dependency finalizers to be removed
+		return actionUpdate{delay: 10 * time.Second}
 	}
-	return actionUpdate{delay: 10 * time.Second}
-}
-
-func (o *SrlTunnelinterfaceVxlaninterfaceStateMachine) DeleteSuccess(info *SrlTunnelinterfaceVxlaninterfaceReconcileInfo) actionResult {
-	return actionComplete{}
 }

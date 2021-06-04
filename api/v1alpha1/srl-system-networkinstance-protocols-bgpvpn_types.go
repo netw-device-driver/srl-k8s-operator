@@ -38,11 +38,11 @@ type SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 
 // SystemNetworkinstanceProtocolsBgpvpnBgpInstance struct
 type SystemNetworkinstanceProtocolsBgpvpnBgpInstance struct {
+	RouteTarget *SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget `json:"route-target,omitempty"`
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=2
 	Id                 *uint8                                                             `json:"id"`
 	RouteDistinguisher *SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
-	RouteTarget        *SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsBgpvpn struct

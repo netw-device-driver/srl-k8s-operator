@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	//"reflect"
 	"strconv"
 	"strings"
@@ -36,9 +37,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
-	//"sigs.k8s.io/controller-runtime/pkg/event"
+	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
-	//"sigs.k8s.io/controller-runtime/pkg/predicate"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
@@ -50,39 +51,67 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var InterfaceInternalResourceleafRef = map[string]*ElementWithLeafRef{}
+var RoutingpolicyPolicyInternalResourceleafRef = map[string]*ElementWithLeafRef{}
 
-var InterfaceExternalResourceleafRef = map[string]*ElementWithLeafRef{
-	"/interface[name=]/ethernet/aggregate-id": {
+var RoutingpolicyPolicyExternalResourceleafRef = map[string]*ElementWithLeafRef{
+	"/policy[name=]/default-action/accept/bgp/communities/add": {
 		REkvl: []ElementKeyValue{
-			{"interface", "name", "string"},
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
 		},
 	},
-	"/interface[name=]/qos/output/multicast-queue[queue-id=]/template": {
+	"/policy[name=]/default-action/accept/bgp/communities/remove": {
 		REkvl: []ElementKeyValue{
-			{"qos", "", ""},
-			{"queue-templates", "", ""},
-			{"queue-template", "name", "string"},
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
 		},
 	},
-	"/interface[name=]/qos/output/unicast-queue[queue-id=]/template": {
+	"/policy[name=]/default-action/accept/bgp/communities/replace": {
 		REkvl: []ElementKeyValue{
-			{"qos", "", ""},
-			{"queue-templates", "", ""},
-			{"queue-template", "name", "string"},
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
 		},
 	},
-	"/interface[name=]/qos/output/unicast-queue[queue-id=]/voq-template": {
+	"/policy[name=]/statement[sequence-id=]/action/accept/bgp/communities/add": {
 		REkvl: []ElementKeyValue{
-			{"qos", "", ""},
-			{"queue-templates", "", ""},
-			{"queue-template", "name", "string"},
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
+		},
+	},
+	"/policy[name=]/statement[sequence-id=]/action/accept/bgp/communities/remove": {
+		REkvl: []ElementKeyValue{
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
+		},
+	},
+	"/policy[name=]/statement[sequence-id=]/action/accept/bgp/communities/replace": {
+		REkvl: []ElementKeyValue{
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
+		},
+	},
+	"/policy[name=]/statement[sequence-id=]/match/bgp/as-path-set": {
+		REkvl: []ElementKeyValue{
+			{"routing-policy", "", ""},
+			{"as-path-set", "name", "string"},
+		},
+	},
+	"/policy[name=]/statement[sequence-id=]/match/bgp/community-set": {
+		REkvl: []ElementKeyValue{
+			{"routing-policy", "", ""},
+			{"community-set", "name", "string"},
+		},
+	},
+	"/policy[name=]/statement[sequence-id=]/match/prefix-set": {
+		REkvl: []ElementKeyValue{
+			{"routing-policy", "", ""},
+			{"prefix-set", "name", "string"},
 		},
 	},
 }
 
-// SrlInterfaceReconciler reconciles a SrlInterface object
-type SrlInterfaceReconciler struct {
+// SrlRoutingpolicyPolicyReconciler reconciles a SrlRoutingpolicyPolicy object
+type SrlRoutingpolicyPolicyReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
@@ -91,14 +120,14 @@ type SrlInterfaceReconciler struct {
 
 // Instead of passing a zillion arguments to the action of a phase,
 // hold them in a context per device
-type SrlInterfaceTargetReconcileInfo struct {
-	Target map[string]*SrlInterfaceReconcileInfo
+type SrlRoutingpolicyPolicyTargetReconcileInfo struct {
+	Target map[string]*SrlRoutingpolicyPolicyReconcileInfo
 }
 
-type SrlInterfaceReconcileInfo struct {
+type SrlRoutingpolicyPolicyReconcileInfo struct {
 	target              *string
 	resource            *string
-	o                   *srlinuxv1alpha1.SrlInterface
+	o                   *srlinuxv1alpha1.SrlRoutingpolicyPolicy
 	level               *int32
 	dependencies        *[]string
 	leafRefDependencies *[]string
@@ -112,15 +141,15 @@ type SrlInterfaceReconcileInfo struct {
 }
 
 // +kubebuilder:rbac:groups=ndd.henderiw.be,resources=networknodes,verbs=get;list;watch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlinterfaces,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlinterfaces/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlinterfaces/finalizers,verbs=update
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlroutingpolicypolicies,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlroutingpolicypolicies/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=srlinux.henderiw.be,resources=srlroutingpolicypolicies/finalizers,verbs=update
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
 // +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;update
 
-func (r *SrlInterfaceReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
-	reqLogger := r.Log.WithValues("SrlInterface", request.NamespacedName)
+func (r *SrlRoutingpolicyPolicyReconciler) publishEvent(request ctrl.Request, event corev1.Event) {
+	reqLogger := r.Log.WithValues("SrlRoutingpolicyPolicy", request.NamespacedName)
 	reqLogger.Info("publishing event", "reason", event.Reason, "message", event.Message)
 	err := r.Create(r.Ctx, &event)
 	if err != nil {
@@ -130,30 +159,28 @@ func (r *SrlInterfaceReconciler) publishEvent(request ctrl.Request, event corev1
 	return
 }
 
-/*
-	func (r *SrlInterfaceReconciler) updateEventHandler(e event.UpdateEvent) bool {
-		_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlInterface)
-		_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlInterface)
-		if !(oldOK && newOK) {
-			// The thing that changed wasn't a host, so we
-			// need to assume that we must update. This
-			// happens when, for example, an owned Secret
-			// changes.
-			return true
-		}
+func (r *SrlRoutingpolicyPolicyReconciler) updateEventHandler(e event.UpdateEvent) bool {
+	_, oldOK := e.ObjectOld.(*srlinuxv1alpha1.SrlRoutingpolicyPolicy)
+	_, newOK := e.ObjectNew.(*srlinuxv1alpha1.SrlRoutingpolicyPolicy)
+	if !(oldOK && newOK) {
+		// The thing that changed wasn't a host, so we
+		// need to assume that we must update. This
+		// happens when, for example, an owned Secret
+		// changes.
 		return true
 	}
-*/
+
+	return true
+}
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *SrlInterfaceReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
+func (r *SrlRoutingpolicyPolicyReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, option controller.Options) error {
 	b := ctrl.NewControllerManagedBy(mgr).
-		For(&srlinuxv1alpha1.SrlInterface{}).
-		WithEventFilter(IgnoreUpdateWithoutGenerationChangePredicate()).
-		//WithEventFilter(
-		//	predicate.Funcs{
-		//		UpdateFunc: r.updateEventHandler,
-		//	}).
+		For(&srlinuxv1alpha1.SrlRoutingpolicyPolicy{}).
+		WithEventFilter(
+			predicate.Funcs{
+				UpdateFunc: r.updateEventHandler,
+			}).
 		WithOptions(option).
 		Watches(
 			&source.Kind{Type: &nddv1.NetworkNode{}},
@@ -169,8 +196,8 @@ func (r *SrlInterfaceReconciler) SetupWithManager(ctx context.Context, mgr ctrl.
 }
 
 // NetworkNodeMapFunc is a handler.ToRequestsFunc to be used to enqeue
-// request for reconciliation of SrlInterface.
-func (r *SrlInterfaceReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Request {
+// request for reconciliation of SrlRoutingpolicyPolicy.
+func (r *SrlRoutingpolicyPolicyReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Request {
 	result := []ctrl.Request{}
 
 	nn, ok := o.(*nddv1.NetworkNode)
@@ -183,7 +210,7 @@ func (r *SrlInterfaceReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Requ
 		client.InNamespace(nn.Namespace),
 		client.MatchingLabels{},
 	}
-	os := &srlinuxv1alpha1.SrlInterfaceList{}
+	os := &srlinuxv1alpha1.SrlRoutingpolicyPolicyList{}
 	if err := r.Client.List(context.TODO(), os, selectors...); err != nil {
 		return result
 	}
@@ -203,7 +230,7 @@ func (r *SrlInterfaceReconciler) NetworkNodeMapFunc(o client.Object) []ctrl.Requ
 	return result
 }
 
-func (r *SrlInterfaceReconciler) ValidateParentDependency(ctx context.Context, cm *string, dependencies *[]string) (bool, error) {
+func (r *SrlRoutingpolicyPolicyReconciler) ValidateParentDependency(ctx context.Context, cm *string, dependencies *[]string) (bool, error) {
 	var x1 interface{}
 	json.Unmarshal([]byte(*cm), &x1)
 
@@ -219,18 +246,18 @@ func (r *SrlInterfaceReconciler) ValidateParentDependency(ctx context.Context, c
 	return parentDependencyFound, nil
 }
 
-func (r *SrlInterfaceReconciler) ValidateExternalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlInterface, cm *string) (err error) {
+func (r *SrlRoutingpolicyPolicyReconciler) ValidateExternalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyPolicy, cm *string) (err error) {
 	r.Log.Info("Validate External LeafRef Dependencies ...")
 
 	// marshal data to json
 	d := make([][]byte, 0)
-	for _, obj := range *o.Spec.SrlInterface {
-		o := make([]srlinuxv1alpha1.Interface, 0)
+	for _, obj := range *o.Spec.SrlRoutingpolicyPolicy {
+		o := make([]srlinuxv1alpha1.RoutingpolicyPolicy, 0)
 		o = append(o, obj)
 		dd := struct {
-			Interface *[]srlinuxv1alpha1.Interface `json:"interface"`
+			Policy *[]srlinuxv1alpha1.RoutingpolicyPolicy `json:"policy"`
 		}{
-			Interface: &o,
+			Policy: &o,
 		}
 		dj, err := json.Marshal(dd)
 		if err != nil {
@@ -242,7 +269,7 @@ func (r *SrlInterfaceReconciler) ValidateExternalLeafRefs(ctx context.Context, o
 	c := make([][]byte, 0)
 	c = append(d, []byte(*cm))
 
-	for localLeafRef, leafRefInfo := range InterfaceExternalResourceleafRef {
+	for localLeafRef, leafRefInfo := range RoutingpolicyPolicyExternalResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 
@@ -279,23 +306,23 @@ func (r *SrlInterfaceReconciler) ValidateExternalLeafRefs(ctx context.Context, o
 		}
 		//r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("External leafref STATUS")
 	}
-	r.Log.WithValues("InterfaceExternalResourceleafRef", InterfaceExternalResourceleafRef).Info("External leafref STATUS All")
+	r.Log.WithValues("RoutingpolicyPolicyExternalResourceleafRef", RoutingpolicyPolicyExternalResourceleafRef).Info("External leafref STATUS All")
 
 	return nil
 }
 
-func (r *SrlInterfaceReconciler) ValidateLocalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlInterface) (err error) {
+func (r *SrlRoutingpolicyPolicyReconciler) ValidateLocalLeafRefs(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyPolicy) (err error) {
 	r.Log.Info("Validate Local LeafRef Dependencies ...")
 
 	// marshal data to json
 	d := make([][]byte, 0)
-	for _, obj := range *o.Spec.SrlInterface {
-		o := make([]srlinuxv1alpha1.Interface, 0)
+	for _, obj := range *o.Spec.SrlRoutingpolicyPolicy {
+		o := make([]srlinuxv1alpha1.RoutingpolicyPolicy, 0)
 		o = append(o, obj)
 		dd := struct {
-			Interface *[]srlinuxv1alpha1.Interface `json:"interface"`
+			Policy *[]srlinuxv1alpha1.RoutingpolicyPolicy `json:"policy"`
 		}{
-			Interface: &o,
+			Policy: &o,
 		}
 		dj, err := json.Marshal(dd)
 		if err != nil {
@@ -304,7 +331,7 @@ func (r *SrlInterfaceReconciler) ValidateLocalLeafRefs(ctx context.Context, o *s
 		d = append(d, dj)
 	}
 
-	for localLeafRef, leafRefInfo := range InterfaceInternalResourceleafRef {
+	for localLeafRef, leafRefInfo := range RoutingpolicyPolicyInternalResourceleafRef {
 		// get the ekvl for the local leafref
 		ekvl := getHierarchicalElements(localLeafRef)
 
@@ -350,23 +377,23 @@ func (r *SrlInterfaceReconciler) ValidateLocalLeafRefs(ctx context.Context, o *s
 		}
 		//r.Log.WithValues("localLeafRef", localLeafRef, "leafRefInfo", leafRefInfo).Info("leafref STATUS")
 	}
-	r.Log.WithValues("InterfaceInternalResourceleafRef", InterfaceInternalResourceleafRef).Info("leafref STATUS All")
+	r.Log.WithValues("RoutingpolicyPolicyInternalResourceleafRef", RoutingpolicyPolicyInternalResourceleafRef).Info("leafref STATUS All")
 	return nil
 }
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = r.Log.WithValues("SrlInterface", req.NamespacedName)
+func (r *SrlRoutingpolicyPolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = r.Log.WithValues("SrlRoutingpolicyPolicy", req.NamespacedName)
 
-	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlInterface")
+	r.Log.WithValues("ObjectName", req.NamespacedName).Info("reconciling SrlRoutingpolicyPolicy")
 
-	o := &srlinuxv1alpha1.SrlInterface{}
+	o := &srlinuxv1alpha1.SrlRoutingpolicyPolicy{}
 	if err := r.Client.Get(ctx, req.NamespacedName, o); err != nil {
 		if apierrors.IsNotFound(err) {
 			return ctrl.Result{}, nil
 		}
-		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlInterface config")
+		r.Log.WithValues(req.Name, req.Namespace).Error(err, "Failed to get SrlRoutingpolicyPolicy config")
 		return ctrl.Result{}, err
 	}
 	o.DeepCopy()
@@ -374,14 +401,14 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	//r.Log.WithValues("Object", o).Info("Object Info")
 
 	// Add a finalizer to newly created objects.
-	if o.DeletionTimestamp.IsZero() && !SrlInterfacehasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && !SrlRoutingpolicyPolicyhasFinalizer(o) {
 		r.Log.Info(
 			"adding finalizer",
 			"existingFinalizers", o.Finalizers,
-			"newValue", srlinuxv1alpha1.SrlInterfaceFinalizer,
+			"newValue", srlinuxv1alpha1.SrlRoutingpolicyPolicyFinalizer,
 		)
 		o.Finalizers = append(o.Finalizers,
-			srlinuxv1alpha1.SrlInterfaceFinalizer)
+			srlinuxv1alpha1.SrlRoutingpolicyPolicyFinalizer)
 		err := r.Update(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to add finalizer")
@@ -390,8 +417,8 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	// check other dependencies, if so we cannot delete the object
-	if !o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o) {
-		if SrlInterfacehasOtherFinalizer(o) {
+	if !o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
+		if SrlRoutingpolicyPolicyhasOtherFinalizer(o) {
 			// other dependencies block the deletion, requeue the request
 			return ctrl.Result{Requeue: true, RequeueAfter: deleteDependencyRetryDelay}, nil
 		}
@@ -399,14 +426,14 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	// validate local leaf refs if resource is not in deleting state
-	if o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
 		err := r.ValidateLocalLeafRefs(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err, "failed to validate local leafRef")
 		}
 		validationSuccess := true
 		o.Status.ConfigurationDependencyInternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-		for localLeafRef, leafRefInfo := range InterfaceInternalResourceleafRef {
+		for localLeafRef, leafRefInfo := range RoutingpolicyPolicyInternalResourceleafRef {
 			if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
 				o.Status.ConfigurationDependencyInternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
 					LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
@@ -449,7 +476,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 		}
 
-		if err := r.saveSrlInterfaceStatus(ctx, o); err != nil {
+		if err := r.saveSrlRoutingpolicyPolicyStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -465,7 +492,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		case *TargetNotFoundError:
 			// delete the resource
 			// we can remove the finalizer w/o updating the device since no targets where found
-			if !o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o) {
+			if !o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
 				// remove the leafref dependency finalizers from remote leafref objects
 				for targetName, ts := range o.Status.Target {
 					// localLeafRef, leafRefInfo
@@ -481,7 +508,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 										ctx:                       ctx,
 										client:                    r.Client,
 										nameSpace:                 o.GetNamespace(),
-										resourceName:              "Interface",
+										resourceName:              "Policy",
 										resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
 										leafRefResourceName:       split[0],
 										leafRefResourceObjectName: split[1],
@@ -496,7 +523,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 					}
 				}
 				// remove our finalizer from the list and update it.
-				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlInterfaceFinalizer)
+				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlRoutingpolicyPolicyFinalizer)
 				if err := r.Update(ctx, o); err != nil {
 					return ctrl.Result{}, errors.Wrap(err,
 						fmt.Sprintf("failed to remove finalizer"))
@@ -519,7 +546,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 			o.Status.ConfigurationDependencyTargetFound = srlinuxv1alpha1.TargetFoundStatusPtr(srlinuxv1alpha1.TargetFoundStatusFailed)
 			// save resource status since last target got deleted
-			if err = r.saveSrlInterfaceStatus(ctx, o); err != nil {
+			if err = r.saveSrlRoutingpolicyPolicyStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
@@ -543,20 +570,22 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	}
 	// save resource status since items got deleted
-	if dirty {
-		if err = r.saveSrlInterfaceStatus(ctx, o); err != nil {
-			return ctrl.Result{}, errors.Wrap(err,
-				fmt.Sprintf("failed to save status"))
+	if o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
+		if dirty {
+			if err = r.saveSrlRoutingpolicyPolicyStatus(ctx, o); err != nil {
+				return ctrl.Result{}, errors.Wrap(err,
+					fmt.Sprintf("failed to save status"))
+			}
 		}
 	}
 	r.Log.WithValues("Targets", t).Info("Target Info")
 
-	// find object spec difference if resource is not in deleting state
+	// find object spec difference and interleafref dependencies if resource is not in deleting state
 	var diff bool
 	var dp *[]string
 	leafRefDependencies := make([]string, 0)
 	//localLeafRefPaths := make([]string, 0)
-	if o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
 		diff, dp, err = r.FindSpecDiff(ctx, o)
 		if err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
@@ -567,13 +596,22 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 		r.Log.WithValues("Spec is different, update resource", diff, "Spec Delete Paths", *dp).Info("Spec Diff")
 		// the diff handling is handled in the state machine later
+
+		// find leafref dependencies
+		/*
+			leafRefDependencies, localLeafRefPaths, err = r.FindInterLeafRefDependencies(ctx, o)
+			if err != nil {
+				r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to get leafRef dependencies ")
+			}
+			r.Log.WithValues("leafRefDependencies", leafRefDependencies, "localLeafRefPaths", localLeafRefPaths).Info("LeafRef Dependencies")
+		*/
 	}
 
 	// initialize the resource parameters
-	level := int32(1)
-	resource := "srlinux.henderiw.be" + "." + "SrlInterface" + "." + strcase.UpperCamelCase(o.Name)
+	level := int32(2)
+	resource := "srlinux.henderiw.be" + "." + "SrlRoutingpolicyPolicy" + "." + strcase.UpperCamelCase(o.Name)
 	hkeys0 := make([]string, 0)
-	for _, n := range *o.Spec.SrlInterface {
+	for _, n := range *o.Spec.SrlRoutingpolicyPolicy {
 		hkeys0 = append(hkeys0, *n.Name)
 	}
 
@@ -581,14 +619,14 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	deletepaths := make([]string, 0)
 	for _, hkey0 := range hkeys0 {
-		deletepaths = append(deletepaths, fmt.Sprintf("/interface[name=%s]", hkey0))
+		deletepaths = append(deletepaths, fmt.Sprintf("/routing-policy/policy[name=%s]", hkey0))
 	}
 
 	// path to be used for this object
-	path := "/"
+	path := "/routing-policy"
 
 	// validate parent dependency and external leafref dependencies if not in deleteing status
-	if o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o) {
+	if o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
 		for _, target := range t {
 			// initialize the status if not yet done
 			// the object was not processed on the target if len is 0
@@ -604,33 +642,28 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				}
 			}
 
-			// check if shared memory was initialized
-			if _, ok := SrlSharedInfo[target.TargetName]; !ok {
-				SrlSharedInfo[target.TargetName] = make(map[string]string)
-			}
-			// add entry in shared memory
-			if err := addSharedMemoryEntry(stringPtr(target.TargetName), stringPtr("SrlInterface"), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
-				return ctrl.Result{}, err
-			}
-			r.Log.WithValues("target", target.TargetName, "shared memory data", SrlSharedInfo[target.TargetName]).Info("shared memory info")
-
 			// get configmap
 			cm, err := r.getConfigMap(ctx, stringPtr(target.TargetName))
 			if err != nil {
 				return ctrl.Result{}, err
 			}
 			// update configmap with deletepaths
-			/*
-				if err := r.addEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
-					return ctrl.Result{}, err
-				}
-			*/
+			if err := r.addEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name), stringSlicePtr(deletepaths)); err != nil {
+				return ctrl.Result{}, err
+			}
 			var x1 interface{}
 			json.Unmarshal([]byte(*cm), &x1)
 
 			// validate Parent Dependency
 			parentDependencyFound, err := r.ValidateParentDependency(ctx, cm, stringSlicePtr(dependencies))
 			r.Log.WithValues("Target", target.TargetName, "ParentDependencyFound", parentDependencyFound).Info("Parent Dependency")
+			/*
+				if parentDependencyFound {
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusSuccess)
+				} else {
+					o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus = srlinuxv1alpha1.ValidationStatusPtr(srlinuxv1alpha1.ValidationStatusFailed)
+				}
+			*/
 
 			if o.Status.Target[target.TargetName].ConfigurationDependencyParentValidationStatus == nil {
 				if parentDependencyFound {
@@ -663,7 +696,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 			validationSuccess := true
 			o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails = make(map[string]*srlinuxv1alpha1.ValidationDetails, 0)
-			for localLeafRef, leafRefInfo := range InterfaceExternalResourceleafRef {
+			for localLeafRef, leafRefInfo := range RoutingpolicyPolicyExternalResourceleafRef {
 				if len(leafRefInfo.LocalResolvedLeafRefInfo) > 0 {
 					o.Status.Target[target.TargetName].ConfigurationDependencyExternalLeafrefValidationDetails[localLeafRef] = &srlinuxv1alpha1.ValidationDetails{
 						LocalResolvedLeafRefInfo: make(map[string]*srlinuxv1alpha1.RemoteLeafRefInfo),
@@ -677,8 +710,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 								DependencyCheck: RemoteLeafRefInfo.DependencyCheck,
 							}
 						} else {
-							res, err := getRemoteleafRefResource(stringPtr(target.TargetName), RemoteLeafRefInfo)
-							//res, err := r.GetRemoteleafRefResource(ctx, stringPtr(target.TargetName), RemoteLeafRefInfo)
+							res, err := r.GetRemoteleafRefResource(ctx, stringPtr(target.TargetName), RemoteLeafRefInfo)
 							if err != nil {
 								return ctrl.Result{}, errors.Wrap(err,
 									fmt.Sprintf("failed to get remote leaf ref resource"))
@@ -692,7 +724,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 									ctx:                       ctx,
 									client:                    r.Client,
 									nameSpace:                 o.GetNamespace(),
-									resourceName:              "Interface",
+									resourceName:              "Policy",
 									resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
 									leafRefResourceName:       split[0],
 									leafRefResourceObjectName: split[1],
@@ -738,7 +770,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				}
 			}
 		}
-		if err := r.saveSrlInterfaceStatus(ctx, o); err != nil {
+		if err := r.saveSrlRoutingpolicyPolicyStatus(ctx, o); err != nil {
 			return ctrl.Result{}, errors.Wrap(err,
 				fmt.Sprintf("failed to save status"))
 		}
@@ -753,7 +785,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	}
 
-	info := make(map[string]*SrlInterfaceReconcileInfo)
+	info := make(map[string]*SrlRoutingpolicyPolicyReconcileInfo)
 	result := make(map[string]reconcile.Result)
 	actResult := make(map[string]actionResult)
 	for _, target := range t {
@@ -785,7 +817,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		r.Log.Info("configuration status in reconcile",
 			"target", target.TargetName,
 			"status", initialState)
-		info[target.TargetName] = &SrlInterfaceReconcileInfo{
+		info[target.TargetName] = &SrlRoutingpolicyPolicyReconcileInfo{
 			ctx:                 ctx,
 			target:              &target.Target,
 			log:                 r.Log.WithValues("ConfigState", initialState).WithValues("targetName", target.TargetName),
@@ -813,7 +845,7 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		r.Log.Info("object status",
 			"target", target.TargetName,
 			"status", o.Status.Target[target.TargetName])
-		stateMachine := newSrlInterfaceStateMachine(o, r, &target.TargetName, info[target.TargetName])
+		stateMachine := newSrlRoutingpolicyPolicyStateMachine(o, r, &target.TargetName, info[target.TargetName])
 		actResult[target.TargetName] = stateMachine.ReconcileState(info[target.TargetName])
 		result[target.TargetName], err = actResult[target.TargetName].Result()
 		if err != nil {
@@ -832,79 +864,82 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			dirty = true
 		}
 		if dirty {
-			if err := r.saveSrlInterfaceStatus(ctx, o); err != nil {
+			if err := r.saveSrlRoutingpolicyPolicyStatus(ctx, o); err != nil {
 				return ctrl.Result{}, errors.Wrap(err,
 					fmt.Sprintf("failed to save status"))
 			}
 		}
-		SrlInterfacelogResult(info[target.TargetName], result[target.TargetName])
+		SrlRoutingpolicyPolicylogResult(info[target.TargetName], result[target.TargetName])
 
 		// requeue for action update and action continue
 		if result[target.TargetName].Requeue {
 			return ctrl.Result{Requeue: true, RequeueAfter: result[target.TargetName].RequeueAfter}, nil
 		}
+		// stop reconciliation
+		//if *o.Status.Target[target.TargetName].ConfigStatus == srlinuxv1alpha1.ConfigStatusDeleteSuccess {
+		//	return ctrl.Result{}, err
+		//}
+
 	}
 
-	if !o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o) {
+	// if all targets are deleted we come in this state
+	o.DeepCopy()
+	if !o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o) {
 		deleted := true
-		for _, target := range t {
-			// delete entry in shared memory
-			if err := deleteSharedMemoryEntry(stringPtr(target.TargetName), stringPtr("SrlInterface"), stringPtr(req.Name)); err != nil {
+		for targetName := range o.Status.Target {
+			//Remove configmap entry
+			if err := r.deleteEntryConfigMap(ctx, stringPtr(targetName), stringPtr(req.Name)); err != nil {
 				return ctrl.Result{}, err
 			}
-			r.Log.WithValues("target", target.TargetName, "shared memory data", SrlSharedInfo[target.TargetName]).Info("shared memory info")
-
-			//Remove configmap entry
-			/*
-				if err := r.deleteEntryConfigMap(ctx, stringPtr(target.TargetName), stringPtr(req.Name)); err != nil {
-					return ctrl.Result{}, err
-				}
-			*/
-			if result[target.TargetName].RequeueAfter != 0 {
+			if result[targetName].RequeueAfter != 0 {
 				deleted = false
 			}
 		}
 		if deleted {
-			// delete complete
 			r.Log.WithValues("Finalizers", o.Finalizers).Info("Finalizers")
-			// remove the leafref dependency finalizers from remote leafref objects
-			for targetName, ts := range o.Status.Target {
-				// localLeafRef, leafRefInfo
-				for _, leafRefInfo := range ts.ConfigurationDependencyExternalLeafrefValidationDetails {
-					// localLeafRefPath, RemoteLeafRefInfo
-					for _, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
-						if RemoteLeafRefInfo.RemoteResourceObject != nil {
-							r.Log.WithValues("RemoteResourceObject", *RemoteLeafRefInfo.RemoteResourceObject).Info("Remote LeafRef Object")
-							if *RemoteLeafRefInfo.RemoteResourceObject != "" {
-								// first part of split, split[0] is the resource, 2nd part is the resourceName, split[1]
-								split := strings.Split(*RemoteLeafRefInfo.RemoteResourceObject, ".")
-								lrr := &LeafRefResource{
-									ctx:                       ctx,
-									client:                    r.Client,
-									nameSpace:                 o.GetNamespace(),
-									resourceName:              "Interface",
-									resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
-									leafRefResourceName:       split[0],
-									leafRefResourceObjectName: split[1],
-									target:                    targetName,
+			if SrlRoutingpolicyPolicyhasFinalizer(o) {
+				// delete complete
+				// remove the leafref dependency finalizers from remote leafref objects
+				for targetName, ts := range o.Status.Target {
+					// localLeafRef, leafRefInfo
+					for _, leafRefInfo := range ts.ConfigurationDependencyExternalLeafrefValidationDetails {
+						// localLeafRefPath, RemoteLeafRefInfo
+						for _, RemoteLeafRefInfo := range leafRefInfo.LocalResolvedLeafRefInfo {
+							if RemoteLeafRefInfo.RemoteResourceObject != nil {
+								r.Log.WithValues("RemoteResourceObject", *RemoteLeafRefInfo.RemoteResourceObject).Info("Remote LeafRef Object")
+								if *RemoteLeafRefInfo.RemoteResourceObject != "" {
+									// first part of split, split[0] is the resource, 2nd part is the resourceName, split[1]
+									split := strings.Split(*RemoteLeafRefInfo.RemoteResourceObject, ".")
+									lrr := &LeafRefResource{
+										ctx:                       ctx,
+										client:                    r.Client,
+										nameSpace:                 o.GetNamespace(),
+										resourceName:              "Policy",
+										resourceObjectName:        strcase.UpperCamelCase(o.GetName()),
+										leafRefResourceName:       split[0],
+										leafRefResourceObjectName: split[1],
+										target:                    targetName,
+									}
+									deleteFinalizer2Resource(lrr)
+								} else {
+									r.Log.Info("Remote LeafRef dependency is empty, somethign went wrong")
 								}
-								deleteFinalizer2Resource(lrr)
-							} else {
-								r.Log.Info("Remote LeafRef dependency is empty, somethign went wrong")
 							}
 						}
 					}
 				}
+				// remove our finalizer from the list and update it.
+
+				r.Log.Info("removing finalizer")
+				o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlRoutingpolicyPolicyFinalizer)
+				if err := r.Update(ctx, o); err != nil {
+					return ctrl.Result{}, errors.Wrap(err,
+						fmt.Sprintf("failed to remove finalizer"))
+				}
+				r.Log.Info("cleanup is complete, removed finalizer",
+					"remaining", o.Finalizers)
 			}
-			// remove our finalizer from the list and update it.
-			r.Log.Info("removing finalizer")
-			o.Finalizers = removeString(o.Finalizers, srlinuxv1alpha1.SrlInterfaceFinalizer)
-			if err := r.Update(ctx, o); err != nil {
-				return ctrl.Result{}, errors.Wrap(err,
-					fmt.Sprintf("failed to remove finalizer"))
-			}
-			r.Log.Info("cleanup is complete, removed finalizer",
-				"remaining", o.Finalizers)
+
 			// Stop reconciliation as the item is deleted
 			return ctrl.Result{}, nil
 		}
@@ -919,36 +954,35 @@ func (r *SrlInterfaceReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	return ctrl.Result{}, nil
 }
 
-func SrlInterfacelogResult(info *SrlInterfaceReconcileInfo, result ctrl.Result) {
-	if result.Requeue || result.RequeueAfter != 0 ||
-		!StringInList(info.o.Finalizers,
-			srlinuxv1alpha1.SrlInterfaceFinalizer) {
+func SrlRoutingpolicyPolicylogResult(info *SrlRoutingpolicyPolicyReconcileInfo, result ctrl.Result) {
+	info.log.Info("SrlRoutingpolicyPolicylogResult", "result", result)
+	if result.Requeue || result.RequeueAfter != 0 {
 		info.log.Info("done",
 			"requeue", result.Requeue,
 			"after", result.RequeueAfter)
 	} else {
-		info.log.Info("stopping reconcile SrlInterface")
-		//info.log.Info("stopping reconcile SrlInterface",
+		info.log.Info("stopping reconcile SrlRoutingpolicyPolicy")
+		//info.log.Info("stopping reconcile SrlRoutingpolicyPolicy",
 		//	"message", info.o.Status)
 	}
 }
 
-func (r *SrlInterfaceReconciler) saveSrlInterfaceStatus(ctx context.Context, o *srlinuxv1alpha1.SrlInterface) error {
+func (r *SrlRoutingpolicyPolicyReconciler) saveSrlRoutingpolicyPolicyStatus(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyPolicy) error {
 	t := metav1.Now()
 	o.Status.DeepCopy()
 	o.Status.LastUpdated = &t
 
-	r.Log.Info("SrlInterface",
+	r.Log.Info("SrlRoutingpolicyPolicy",
 		"status", o.Status)
 
 	if err := r.Client.Status().Update(ctx, o); err != nil {
-		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlInterface ")
+		r.Log.WithValues(o.Name, o.Namespace).Error(err, "Failed to update SrlRoutingpolicyPolicy ")
 		return err
 	}
 	return nil
 }
 
-func (r *SrlInterfaceReconciler) getConfigMap(ctx context.Context, targetName *string) (*string, error) {
+func (r *SrlRoutingpolicyPolicyReconciler) getConfigMap(ctx context.Context, targetName *string) (*string, error) {
 	cmKey := types.NamespacedName{
 		Namespace: "nddriver-system",
 		Name:      "nddriver-cm-" + *targetName,
@@ -966,97 +1000,102 @@ func (r *SrlInterfaceReconciler) getConfigMap(ctx context.Context, targetName *s
 	return stringPtr(cm.Data["config.json"]), nil
 }
 
-/*
-	func (r *SrlInterfaceReconciler) addEntryConfigMap(ctx context.Context, targetName, oName *string, deletepaths *[]string) error {
-		dp := &DeletePaths{
-			DeletePaths: deletepaths,
+func (r *SrlRoutingpolicyPolicyReconciler) addEntryConfigMap(ctx context.Context, targetName, oName *string, deletepaths *[]string) error {
+	/*
+		dp := make([]DeletePaths, 0)
+		for _, dep := range *deletepaths {
+			ekvl := getHierarchicalElements(dep)
+			dpath := DeletePaths{
+				ObjectName:  oName,
+				DeletePaths: &ekvl,
+			}
+			dp = append(dp, dpath)
 		}
+	*/
+	dp := &DeletePaths{
+		DeletePaths: deletepaths,
+	}
 
-		d, err := json.Marshal(dp)
-		if err != nil {
-			r.Log.Error(err, "Failed to marshal data")
-			return err
-		}
+	d, err := json.Marshal(dp)
+	if err != nil {
+		r.Log.Error(err, "Failed to marshal data")
+		return err
+	}
 
-		cmKey := types.NamespacedName{
-			Namespace: "nddriver-system",
-			Name:      "nddriver-cm-" + *targetName,
-		}
-		cm := &corev1.ConfigMap{}
-		if err := r.Get(ctx, cmKey, cm); err != nil {
-			r.Log.Error(err, "Failed to get configmap")
-			return err
-		}
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
+	}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return err
+	}
 
-		//cm.Data["SrlInterface"] = string(d)
-		cm.Data[fmt.Sprintf("SrlInterface.%s",*oName)] = string(d)
+	//cm.Data["SrlRoutingpolicyPolicy"] = string(d)
+	cm.Data[fmt.Sprintf("SrlRoutingpolicyPolicy.%s", *oName)] = string(d)
 
+	if err := r.Update(ctx, cm); err != nil {
+		r.Log.Error(err, "Failed to update configmap")
+		return err
+	}
+
+	return nil
+}
+
+func (r *SrlRoutingpolicyPolicyReconciler) deleteEntryConfigMap(ctx context.Context, targetName, oName *string) error {
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
+	}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return err
+	}
+
+	if _, ok := cm.Data[fmt.Sprintf("SrlRoutingpolicyPolicy.%s", *oName)]; ok {
+		delete(cm.Data, fmt.Sprintf("SrlRoutingpolicyPolicy.%s", *oName))
 		if err := r.Update(ctx, cm); err != nil {
 			r.Log.Error(err, "Failed to update configmap")
 			return err
 		}
-
-		return nil
 	}
-*/
+	return nil
+}
 
-/*
-	func (r *SrlInterfaceReconciler) deleteEntryConfigMap(ctx context.Context, targetName, oName *string) error {
-		cmKey := types.NamespacedName{
-			Namespace: "nddriver-system",
-			Name:      "nddriver-cm-" + *targetName,
-		}
-		cm := &corev1.ConfigMap{}
-		if err := r.Get(ctx, cmKey, cm); err != nil {
-			r.Log.Error(err, "Failed to get configmap")
-			return err
-		}
-
-		if _, ok := cm.Data[fmt.Sprintf("SrlInterface.%s",*oName)]; ok {
-			delete(cm.Data, fmt.Sprintf("SrlInterface.%s",*oName))
-			if err := r.Update(ctx, cm); err != nil {
-				r.Log.Error(err, "Failed to update configmap")
-				return err
-			}
-		}
-		return nil
+func (r *SrlRoutingpolicyPolicyReconciler) GetRemoteleafRefResource(ctx context.Context, targetName *string, remoteleafRef *srlinuxv1alpha1.RemoteLeafRefInfo) (*string, error) {
+	// get configmap
+	cmKey := types.NamespacedName{
+		Namespace: "nddriver-system",
+		Name:      "nddriver-cm-" + *targetName,
 	}
-*/
-
-/*
-	func (r *SrlInterfaceReconciler) GetRemoteleafRefResource(ctx context.Context, targetName *string, remoteleafRef *srlinuxv1alpha1.RemoteLeafRefInfo) (*string, error) {
-		// get configmap
-		cmKey := types.NamespacedName{
-			Namespace: "nddriver-system",
-			Name:      "nddriver-cm-" + *targetName,
-		}
-		cm := &corev1.ConfigMap{}
-		if err := r.Get(ctx, cmKey, cm); err != nil {
-			r.Log.Error(err, "Failed to get configmap")
-			return nil, err
-		}
-		resource := new(string)
-		p := new(string)
-		for res, dps := range cm.Data {
-			if strings.HasPrefix(res, "Srl") {
-				//r.Log.WithValues("DeletePaths", dps, "Remote Leafref", *remoteleafRef.RemoteLeafRef).Info("GetRemoteleafRefResource info")
-				var x1 interface{}
-				json.Unmarshal([]byte(dps), &x1)
-				f, dp := matchDeletePath(x1, remoteleafRef.RemoteLeafRef)
-				if f {
-					//r.Log.WithValues("DeletePath", *dp).Info("Path Found")
-					if len(*dp) > len(*p) {
-						resource = stringPtr(res)
-						*p = *dp
-					}
+	cm := &corev1.ConfigMap{}
+	if err := r.Get(ctx, cmKey, cm); err != nil {
+		r.Log.Error(err, "Failed to get configmap")
+		return nil, err
+	}
+	resource := new(string)
+	p := new(string)
+	for res, dps := range cm.Data {
+		if strings.HasPrefix(res, "Srl") {
+			//r.Log.WithValues("DeletePaths", dps, "Remote Leafref", *remoteleafRef.RemoteLeafRef).Info("GetRemoteleafRefResource info")
+			var x1 interface{}
+			json.Unmarshal([]byte(dps), &x1)
+			f, dp := matchDeletePath(x1, remoteleafRef.RemoteLeafRef)
+			if f {
+				//r.Log.WithValues("DeletePath", *dp).Info("Path Found")
+				if len(*dp) > len(*p) {
+					resource = stringPtr(res)
+					*p = *dp
 				}
 			}
 		}
-		return resource, nil
 	}
-*/
+	return resource, nil
+}
 
-func (r *SrlInterfaceReconciler) findPathInTree(x1 interface{}, ekvl []ElementKeyValue, idx int) bool {
+func (r *SrlRoutingpolicyPolicyReconciler) findPathInTree(x1 interface{}, ekvl []ElementKeyValue, idx int) bool {
 	//r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1).Info("findPathInTree")
 
 	switch x := x1.(type) {
@@ -1118,7 +1157,7 @@ func (r *SrlInterfaceReconciler) findPathInTree(x1 interface{}, ekvl []ElementKe
 	return false
 }
 
-func (r *SrlInterfaceReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues, localLeafRefPaths []string, lridx int) ([]string, []string) {
+func (r *SrlRoutingpolicyPolicyReconciler) findLeafRefInTree(x1 interface{}, ekvl []ElementKeyValue, idx int, leafRefValues, localLeafRefPaths []string, lridx int) ([]string, []string) {
 	//r.Log.WithValues("ekvl", ekvl, "idx", idx, "Data", x1, "leafRefValues", leafRefValues, "localLeafRefPath", localLeafRefPaths).Info("findLeafRefInTree")
 
 	var tlrv []string
@@ -1252,7 +1291,7 @@ func (r *SrlInterfaceReconciler) findLeafRefInTree(x1 interface{}, ekvl []Elemen
 	return leafRefValues, localLeafRefPaths
 }
 
-func (r *SrlInterfaceReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]byte, rekvl []ElementKeyValue) []string {
+func (r *SrlRoutingpolicyPolicyReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]byte, rekvl []ElementKeyValue) []string {
 	//r.Log.WithValues("remoteLeafRef", remoteLeafRef, "rekvl", rekvl).Info("Find Remote LeafRef")
 	leafRefValues := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
@@ -1267,7 +1306,7 @@ func (r *SrlInterfaceReconciler) FindRemoteLeafRef(remoteLeafRef string, d [][]b
 	return leafRefValues
 }
 
-func (r *SrlInterfaceReconciler) FindLocalLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) ([]string, []string) {
+func (r *SrlRoutingpolicyPolicyReconciler) FindLocalLeafRef(localLeafRef string, d [][]byte, ekvl, rekvl []ElementKeyValue) ([]string, []string) {
 	//r.Log.WithValues("ekvl", ekvl, "rekvl", rekvl).Info("find LeafRef")
 	leafRefDependencies := make([]string, 0)
 	localLeafRefPaths := make([]string, 0)
@@ -1302,7 +1341,7 @@ func (r *SrlInterfaceReconciler) FindLocalLeafRef(localLeafRef string, d [][]byt
 }
 
 // FindSpecDiff tries to understand the difference from the latest spec to the newest spec
-func (r *SrlInterfaceReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlInterface) (bool, *[]string, error) {
+func (r *SrlRoutingpolicyPolicyReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyPolicy) (bool, *[]string, error) {
 	r.Log.Info("Find Spec Delta ...")
 
 	deletepaths := make([]string, 0)
@@ -1332,7 +1371,7 @@ func (r *SrlInterfaceReconciler) FindSpecDiff(ctx context.Context, o *srlinuxv1a
 }
 
 // FindTarget finds the SRL target for Object
-func (r *SrlInterfaceReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlInterface) ([]*Target, bool, error) {
+func (r *SrlRoutingpolicyPolicyReconciler) FindTarget(ctx context.Context, o *srlinuxv1alpha1.SrlRoutingpolicyPolicy) ([]*Target, bool, error) {
 	r.Log.Info("Find target ...")
 
 	// get the target name the resource should get applied to
@@ -1427,23 +1466,23 @@ func (r *SrlInterfaceReconciler) FindTarget(ctx context.Context, o *srlinuxv1alp
 	return targets, dirty, nil
 }
 
-// SrlInterfacehasFinalizer checks if object has finalizer
-func SrlInterfacehasFinalizer(o *srlinuxv1alpha1.SrlInterface) bool {
-	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlInterfaceFinalizer)
+// SrlRoutingpolicyPolicyhasFinalizer checks if object has finalizer
+func SrlRoutingpolicyPolicyhasFinalizer(o *srlinuxv1alpha1.SrlRoutingpolicyPolicy) bool {
+	return StringInList(o.Finalizers, srlinuxv1alpha1.SrlRoutingpolicyPolicyFinalizer)
 }
 
-// SSrlInterfacehasOtherFinalizer checks if object has other finalizers
-func SrlInterfacehasOtherFinalizer(o *srlinuxv1alpha1.SrlInterface) bool {
+// SSrlRoutingpolicyPolicyhasOtherFinalizer checks if object has other finalizers
+func SrlRoutingpolicyPolicyhasOtherFinalizer(o *srlinuxv1alpha1.SrlRoutingpolicyPolicy) bool {
 	for _, f := range o.Finalizers {
-		if f != srlinuxv1alpha1.SrlInterfaceFinalizer {
+		if f != srlinuxv1alpha1.SrlRoutingpolicyPolicyFinalizer {
 			return true
 		}
 	}
 	return false
 }
 
-func (info *SrlInterfaceReconcileInfo) DeleteCache() error {
-	if !info.o.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(info.o) {
+func (info *SrlRoutingpolicyPolicyReconcileInfo) DeleteCache() error {
+	if !info.o.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(info.o) {
 
 		// prepare the grpc data
 		req := &netwdevpb.CacheUpdateRequest{
@@ -1466,17 +1505,17 @@ func (info *SrlInterfaceReconcileInfo) DeleteCache() error {
 }
 
 // Update Cache
-func (info *SrlInterfaceReconcileInfo) UpdateCache(path string) error {
+func (info *SrlRoutingpolicyPolicyReconcileInfo) UpdateCache(path string) error {
 
 	// marshal data to json
 	d := make([][]byte, 0)
-	for _, obj := range *info.o.Spec.SrlInterface {
-		o := make([]srlinuxv1alpha1.Interface, 0)
+	for _, obj := range *info.o.Spec.SrlRoutingpolicyPolicy {
+		o := make([]srlinuxv1alpha1.RoutingpolicyPolicy, 0)
 		o = append(o, obj)
 		dd := struct {
-			Interface *[]srlinuxv1alpha1.Interface `json:"interface"`
+			Policy *[]srlinuxv1alpha1.RoutingpolicyPolicy `json:"policy"`
 		}{
-			Interface: &o,
+			Policy: &o,
 		}
 		dj, err := json.Marshal(dd)
 		if err != nil {
@@ -1505,24 +1544,24 @@ func (info *SrlInterfaceReconcileInfo) UpdateCache(path string) error {
 	return nil
 }
 
-type SrlInterfaceStateMachine struct {
-	Object     *srlinuxv1alpha1.SrlInterface
-	Reconciler *SrlInterfaceReconciler
+type SrlRoutingpolicyPolicyStateMachine struct {
+	Object     *srlinuxv1alpha1.SrlRoutingpolicyPolicy
+	Reconciler *SrlRoutingpolicyPolicyReconciler
 	Target     *string
 	TargetName *string
 	NextState  *srlinuxv1alpha1.ConfigStatus
 }
 
 // appendEvent
-func (info *SrlInterfaceReconcileInfo) appendEvent(reason, message string) {
+func (info *SrlRoutingpolicyPolicyReconcileInfo) appendEvent(reason, message string) {
 	info.events = append(info.events, info.o.NewEvent(reason, message))
 }
 
-func newSrlInterfaceStateMachine(o *srlinuxv1alpha1.SrlInterface,
-	reconciler *SrlInterfaceReconciler, n *string,
-	info *SrlInterfaceReconcileInfo) *SrlInterfaceStateMachine {
+func newSrlRoutingpolicyPolicyStateMachine(o *srlinuxv1alpha1.SrlRoutingpolicyPolicy,
+	reconciler *SrlRoutingpolicyPolicyReconciler, n *string,
+	info *SrlRoutingpolicyPolicyReconcileInfo) *SrlRoutingpolicyPolicyStateMachine {
 	currentState := o.Status.Target[*n].ConfigStatus
-	r := SrlInterfaceStateMachine{
+	r := SrlRoutingpolicyPolicyStateMachine{
 		Object:     o,
 		NextState:  currentState, // Remain in current state by default
 		Reconciler: reconciler,
@@ -1532,22 +1571,22 @@ func newSrlInterfaceStateMachine(o *srlinuxv1alpha1.SrlInterface,
 	return &r
 }
 
-type SrlInterfacestateHandler func(*SrlInterfaceReconcileInfo) actionResult
+type SrlRoutingpolicyPolicystateHandler func(*SrlRoutingpolicyPolicyReconcileInfo) actionResult
 
-func (o *SrlInterfaceStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlInterfacestateHandler {
-	return map[srlinuxv1alpha1.ConfigStatus]SrlInterfacestateHandler{
+func (o *SrlRoutingpolicyPolicyStateMachine) handlers() map[srlinuxv1alpha1.ConfigStatus]SrlRoutingpolicyPolicystateHandler {
+	return map[srlinuxv1alpha1.ConfigStatus]SrlRoutingpolicyPolicystateHandler{
 		srlinuxv1alpha1.ConfigStatusNone:             o.handleNone,
 		srlinuxv1alpha1.ConfigStatusConfiguring:      o.handleConfiguring,
-		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigureSuccess,
-		srlinuxv1alpha1.ConfigStatusConfigureFailed:  o.handleConfigureFailed,
+		srlinuxv1alpha1.ConfigStatusConfigureSuccess: o.handleConfigStatusConfigureSuccess,
+		srlinuxv1alpha1.ConfigStatusConfigureFailed:  o.handleConfigStatusConfigureFailed,
 		srlinuxv1alpha1.ConfigStatusDeleting:         o.handleDeleting,
 		srlinuxv1alpha1.ConfigStatusDeleteSuccess:    o.handleDeleteSuccess,
 		srlinuxv1alpha1.ConfigStatusDeleteFailed:     o.handleDeleteFailed,
 	}
 }
 
-func (o *SrlInterfaceStateMachine) updateSrlInterfaceStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
-	info *SrlInterfaceReconcileInfo) {
+func (o *SrlRoutingpolicyPolicyStateMachine) updateSrlRoutingpolicyPolicyStateFrom(initialState *srlinuxv1alpha1.ConfigStatus,
+	info *SrlRoutingpolicyPolicyReconcileInfo) {
 	if o.NextState != initialState {
 		info.log.Info("changing configuration state",
 			"old", initialState,
@@ -1558,16 +1597,17 @@ func (o *SrlInterfaceStateMachine) updateSrlInterfaceStateFrom(initialState *srl
 	}
 }
 
-func (o *SrlInterfaceStateMachine) ReconcileState(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) ReconcileState(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	initialState := o.Object.Status.Target[*o.TargetName].ConfigStatus
-	defer o.updateSrlInterfaceStateFrom(initialState, info)
+	defer o.updateSrlRoutingpolicyPolicyStateFrom(initialState, info)
 
 	if o.checkInitiateDelete() {
 		// initiate cache delete
-		info.log.Info("Initiating SrlInterfaceStateMachine deletion")
+		info.log.Info("Initiating SrlRoutingpolicyPolicyStateMachine deletion")
 		info.DeleteCache()
+		// DONT LIKE THIS BELOW BUT REQUE SEEMS TO REQUE IMEEDIATELY
+		//time.Sleep(15 * time.Second)
 	}
-
 	if stateHandler, found := o.handlers()[*initialState]; found {
 		return stateHandler(info)
 	}
@@ -1576,8 +1616,8 @@ func (o *SrlInterfaceStateMachine) ReconcileState(info *SrlInterfaceReconcileInf
 	return actionError{fmt.Errorf("No handler found for state \"%s\"", *initialState)}
 }
 
-func (o *SrlInterfaceStateMachine) checkInitiateDelete() bool {
-	if !o.Object.DeletionTimestamp.IsZero() && SrlInterfacehasFinalizer(o.Object) {
+func (o *SrlRoutingpolicyPolicyStateMachine) checkInitiateDelete() bool {
+	if !o.Object.DeletionTimestamp.IsZero() && SrlRoutingpolicyPolicyhasFinalizer(o.Object) {
 		// Delete requested
 		switch *o.NextState {
 		default:
@@ -1595,12 +1635,12 @@ func (o *SrlInterfaceStateMachine) checkInitiateDelete() bool {
 	return false
 }
 
-func (o *SrlInterfaceStateMachine) handleNone(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleNone(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
 	}
-	//info.log.Info("CacheStatusResponse", "Response", cr)
+	info.log.Info("CacheStatusResponse", "Response", cr)
 	if cr.Exists {
 		if cr.Status == netwdevpb.CacheStatusReply_UpdateProcessedSuccess {
 			info.log.Info("object status",
@@ -1632,7 +1672,7 @@ func (o *SrlInterfaceStateMachine) handleNone(info *SrlInterfaceReconcileInfo) a
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlInterfaceStateMachine) handleConfiguring(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleConfiguring(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1675,7 +1715,7 @@ func (o *SrlInterfaceStateMachine) handleConfiguring(info *SrlInterfaceReconcile
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlInterfaceStateMachine) handleConfigureSuccess(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleConfigStatusConfigureSuccess(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1700,7 +1740,7 @@ func (o *SrlInterfaceStateMachine) handleConfigureSuccess(info *SrlInterfaceReco
 	return actionComplete{}
 }
 
-func (o *SrlInterfaceStateMachine) handleConfigureFailed(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleConfigStatusConfigureFailed(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1735,7 +1775,7 @@ func (o *SrlInterfaceStateMachine) handleConfigureFailed(info *SrlInterfaceRecon
 	return actionUpdate{delay: 10 * time.Second}
 }
 
-func (o *SrlInterfaceStateMachine) handleDeleting(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleDeleting(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1756,11 +1796,11 @@ func (o *SrlInterfaceStateMachine) handleDeleting(info *SrlInterfaceReconcileInf
 
 }
 
-func (o *SrlInterfaceStateMachine) handleDeleteSuccess(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleDeleteSuccess(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	return actionFinished{}
 }
 
-func (o *SrlInterfaceStateMachine) handleDeleteFailed(info *SrlInterfaceReconcileInfo) actionResult {
+func (o *SrlRoutingpolicyPolicyStateMachine) handleDeleteFailed(info *SrlRoutingpolicyPolicyReconcileInfo) actionResult {
 	cr, err := getCachStatus(o.Reconciler.Ctx, o.Target, info.resource, *info.level)
 	if err != nil {
 		return actionFailed{dirty: true, errorCount: *info.o.Status.Target[*o.TargetName].ErrorCount}
@@ -1778,4 +1818,5 @@ func (o *SrlInterfaceStateMachine) handleDeleteFailed(info *SrlInterfaceReconcil
 		// this was done to handle a recirculation and allow time for the leafref dependency finalizers to be removed
 		return actionUpdate{delay: 10 * time.Second}
 	}
+
 }

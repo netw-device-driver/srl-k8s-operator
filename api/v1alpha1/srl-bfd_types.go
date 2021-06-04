@@ -30,14 +30,6 @@ const (
 
 // BfdMicroBfdSessionsLagInterface struct
 type BfdMicroBfdSessionsLagInterface struct {
-	Name *string `json:"name"`
-	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
-	AdminState *string `json:"admin-state,omitempty"`
-	// +kubebuilder:validation:Minimum=10000
-	// +kubebuilder:validation:Maximum=100000000
-	// +kubebuilder:default:=1000000
-	DesiredMinimumTransmitInterval *uint32 `json:"desired-minimum-transmit-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=3
 	// +kubebuilder:validation:Maximum=20
 	// +kubebuilder:default:=3
@@ -52,6 +44,14 @@ type BfdMicroBfdSessionsLagInterface struct {
 	// +kubebuilder:validation:Maximum=100000000
 	// +kubebuilder:default:=1000000
 	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
+	Name                   *string `json:"name"`
+	// +kubebuilder:validation:Enum=`disable`;`enable`
+	// +kubebuilder:default:=disable
+	AdminState *string `json:"admin-state,omitempty"`
+	// +kubebuilder:validation:Minimum=10000
+	// +kubebuilder:validation:Maximum=100000000
+	// +kubebuilder:default:=1000000
+	DesiredMinimumTransmitInterval *uint32 `json:"desired-minimum-transmit-interval,omitempty"`
 }
 
 // BfdMicroBfdSessions struct
@@ -61,6 +61,10 @@ type BfdMicroBfdSessions struct {
 
 // BfdSubinterface struct
 type BfdSubinterface struct {
+	// +kubebuilder:validation:Minimum=10000
+	// +kubebuilder:validation:Maximum=100000000
+	// +kubebuilder:default:=1000000
+	DesiredMinimumTransmitInterval *uint32 `json:"desired-minimum-transmit-interval,omitempty"`
 	// +kubebuilder:validation:Minimum=3
 	// +kubebuilder:validation:Maximum=20
 	// +kubebuilder:default:=3
@@ -81,10 +85,6 @@ type BfdSubinterface struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
 	// +kubebuilder:default:=disable
 	AdminState *string `json:"admin-state,omitempty"`
-	// +kubebuilder:validation:Minimum=10000
-	// +kubebuilder:validation:Maximum=100000000
-	// +kubebuilder:default:=1000000
-	DesiredMinimumTransmitInterval *uint32 `json:"desired-minimum-transmit-interval,omitempty"`
 }
 
 // Bfd struct

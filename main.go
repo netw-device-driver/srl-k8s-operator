@@ -20,9 +20,11 @@ import (
 	"context"
 	"flag"
 	"os"
+	"strings"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -56,9 +58,11 @@ func init() {
 }
 
 func main() {
+	var deviationServerAddress string
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
+	flag.StringVar(&deviationServerAddress, "deviation-server-address", ":9998", "The address the deviation grpc server binds to.")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -76,6 +80,16 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
+	// get deviationServerAddress ip from the environment
+	deviationServerAddress = os.Getenv("POD_IP") + ":" + strings.Split(deviationServerAddress, ":")[1]
+	setupLog.Info("deviationServerAddress: %s", deviationServerAddress)
+	o := []controllers.Option{
+		controllers.WithDeviationServer(&deviationServerAddress),
+	}
+	d := controllers.NewDeviationServer(o...)
+	setupDeviationServer(d)
+
+	// setup controller/mgr
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
@@ -110,6 +124,26 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+func setupDeviationServer(d *controllers.DeviationServer) error {
+	setupLog.Info("startting deviation server ...")
+	// stopCh to synchronize the finalization for a graceful shutdown
+	d.StopCh = make(chan struct{})
+	defer close(d.StopCh)
+
+	// start grpc server
+	go func() {
+		d.StartDeviationGRPCServer()
+	}()
+
+	select {
+	case <-d.Ctx.Done():
+		setupLog.Info("context cancelled")
+	}
+	close(d.StopCh)
+
+	return nil
 }
 
 func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {

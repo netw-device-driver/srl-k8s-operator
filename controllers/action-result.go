@@ -108,6 +108,19 @@ func (r actionComplete) Dirty() bool {
 	return true
 }
 
+// actionFinished is a result indicating that the current action has completed,
+// and that the resource will be deleted.
+type actionFinished struct {
+}
+
+func (r actionFinished) Result() (result reconcile.Result, err error) {
+	return
+}
+
+func (r actionFinished) Dirty() bool {
+	return false
+}
+
 // actionFailed is a result indicating that the current action has failed,
 // and that the resource should be marked as in error.
 type actionFailed struct {

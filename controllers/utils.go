@@ -58,7 +58,7 @@ func FilterStringFromList(list []string, strToFilter string) (newList []string) 
 func removeString(slice []string, s string) (result []string) {
 	for _, v := range slice {
 		if v != s {
-			result = append(result, s)
+			result = append(result, v)
 		}
 	}
 	return result
